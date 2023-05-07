@@ -20,7 +20,6 @@ export default function AuthProvider({ children }) {
         setUser(user);
         if (user.accessToken !== localStorage.getItem('accessToken')) {
           localStorage.setItem('accessToken', user.accessToken);
-          const data = await AlgoPostRequest("account/test")
         }
         setIsLoading(false);
         return;

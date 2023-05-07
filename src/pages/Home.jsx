@@ -2,6 +2,7 @@ import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
 import UserMenu from '../components/UserMenu';
+import PushNotification from '../components/PushNotification'
 
 export default function Home() {
 
@@ -14,6 +15,7 @@ export default function Home() {
       </Typography>
       <Box sx={{ display: 'flex', justifyContent: 'right', mb: '10px' }}>
         <UserMenu />
+        <PushNotification />
       </Box>
     </>
   );

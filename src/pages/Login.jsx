@@ -1,15 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Typography } from '@mui/material';
-import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import { useContext } from 'react';
+import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import { AuthContext } from '../context/AuthProvider';
 import { Navigate } from 'react-router-dom';
-
-const clientId = '305741284989-3mn8l3cl8bul185sdp5h3sn7sqqkd4ia.apps.googleusercontent.com';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import GoogleIcon from '@mui/icons-material/Google';
 
 export default function Login() {
   const auth = getAuth();
-  // const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
   const handleLoginWithGoogle = async () => {
@@ -19,6 +17,15 @@ export default function Login() {
       user: { uid, displayName },
     } = await signInWithPopup(auth, provider);
 
+    console.log({ user });
+  };
+
+  const handleLoginWithFacebook = async () => {
+    const provider = new FacebookAuthProvider();
+
+    const {
+      user: { uid, displayName },
+    } = await signInWithPopup(auth, provider);
 
     console.log({ user });
   };
@@ -32,8 +39,11 @@ export default function Login() {
       <Typography variant='h5' sx={{ marginBottom: '10px' }}>
         Welcome
       </Typography>
-      <Button variant='outlined' onClick={handleLoginWithGoogle}>
+      <Button variant='outlined' sx={{ marginLeft: '10px' }} onClick={handleLoginWithGoogle} startIcon={<GoogleIcon />}>
         Login with Google
+      </Button>
+      <Button variant='outlined' sx={{ marginLeft: '10px' }} onClick={handleLoginWithFacebook} startIcon={<FacebookIcon />}>
+        Login with Facebook
       </Button>
     </>
   );
