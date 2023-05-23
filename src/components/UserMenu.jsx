@@ -1,6 +1,6 @@
 import { Avatar, Menu, MenuItem, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useState } from 'react';
 import { AuthContext } from '../context/AuthProvider';
 

@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
 import UserMenu from '../components/UserMenu';
 import PushNotification from '../components/PushNotification'
+import ToDo from './Todo';
 
 export default function Home() {
 
@@ -17,6 +17,7 @@ export default function Home() {
         <UserMenu />
         <PushNotification />
       </Box>
+      <ToDo />
     </>
   );
 }

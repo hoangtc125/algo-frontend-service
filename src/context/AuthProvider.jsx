@@ -1,8 +1,7 @@
-import React, { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
-import { AlgoPostRequest } from '../utils/request';
 
 export const AuthContext = createContext();
 

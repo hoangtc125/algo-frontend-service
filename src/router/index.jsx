@@ -1,14 +1,15 @@
-import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import AuthProvider from '../context/AuthProvider';
 import ErrorPage from '../pages/ErrorPage';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import ProtectedRoute from './ProtectedRoute';
+import MainLayout from '../layouts';
 
 const AuthLayout = () => {
   return (
     <AuthProvider>
-      <Outlet />
+      <MainLayout />
     </AuthProvider>
   );
 };
