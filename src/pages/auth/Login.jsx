@@ -26,7 +26,7 @@ export default function Login() {
       if (!account) {
         dispatch(aboutMe())
       } else {
-        navigate("/")
+        navigate("/home")
       }
     }
   }, [token, account])

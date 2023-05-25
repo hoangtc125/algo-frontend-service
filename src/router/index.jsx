@@ -1,13 +1,12 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Outlet, createBrowserRouter } from 'react-router-dom';
 import ErrorPage from '../pages/ErrorPage';
 import Home from '../pages/Home';
 import Login from '../pages/auth/Login';
 import ProtectedRoute from './ProtectedRoute';
-import MainLayout from '../layouts';
 
 export default createBrowserRouter([
   {
-    element: <MainLayout />,
+    element: <Outlet />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -19,7 +18,7 @@ export default createBrowserRouter([
         children: [
           {
             element: <Home />,
-            path: '/',
+            path: '/home',
             children: [
               
             ]

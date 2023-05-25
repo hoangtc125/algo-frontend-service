@@ -35,11 +35,11 @@ export default function UserMenu() {
         sx={{ display: 'flex', '&:hover': { cursor: 'pointer' } }}
         onClick={handleClick}
       >
-        <Typography>{account?.name}</Typography>
+        <Typography className='hidden sm:inline-block'>{account?.name}</Typography>
         <Avatar
           alt='avatar'
           src={account?.photo_url}
-          sx={{ width: 24, height: 24, marginLeft: '5px' }}
+          sx={{ width: 24, height: 24, marginLeft: '10px' }}
         />
       </Box>
       <Menu

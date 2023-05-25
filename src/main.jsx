@@ -7,7 +7,6 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './index.css';
 import router from './router';
-import { Container } from '@mui/system';
 import './firebase/config';
 // import './firebase/emulator';
 import store from './redux/store';
@@ -16,8 +15,6 @@ import 'antd/dist/reset.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <Container maxWidth='xl' sx={{ textAlign: 'center', marginTop: '50px' }}>
-      <RouterProvider router={router} />
-    </Container>
+    <RouterProvider router={router} />
   </Provider>,
 );
