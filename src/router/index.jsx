@@ -1,22 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
-import AuthProvider from '../context/AuthProvider';
 import ErrorPage from '../pages/ErrorPage';
 import Home from '../pages/Home';
-import Login from '../pages/Login';
+import Login from '../pages/auth/Login';
 import ProtectedRoute from './ProtectedRoute';
 import MainLayout from '../layouts';
 
-const AuthLayout = () => {
-  return (
-    <AuthProvider>
-      <MainLayout />
-    </AuthProvider>
-  );
-};
-
 export default createBrowserRouter([
   {
-    element: <AuthLayout />,
+    element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
       {

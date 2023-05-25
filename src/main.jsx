@@ -9,7 +9,7 @@ import './index.css';
 import router from './router';
 import { Container } from '@mui/system';
 import './firebase/config';
-import './firebase/emulator';
+// import './firebase/emulator';
 import store from './redux/store';
 import { Provider } from 'react-redux';
 import 'antd/dist/reset.css';

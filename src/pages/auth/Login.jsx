@@ -1,56 +1,88 @@
-import React, { useContext } from 'react';
+import { useEffect } from 'react';
 import { Button, Typography } from '@mui/material';
 import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider, GithubAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import { AuthContext } from '../context/AuthProvider';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import WindowSharpIcon from '@mui/icons-material/WindowSharp';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
+import appSlice, { loginFirebase, aboutMe } from '../../layouts/appSlice';
+import { accountSelector, tokenSelector } from '../../redux/selectors';
+
 export default function Login() {
   const auth = getAuth();
-  const { user } = useContext(AuthContext);
+  const dispatch = useDispatch()
+  const account = useSelector(accountSelector)
+  const token = useSelector(tokenSelector)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (localStorage.getItem("accessToken")) {
+      if (!token) {
+        dispatch(appSlice.actions.addToken(localStorage.getItem("accessToken")))
+      }
+      if (!account) {
+        dispatch(aboutMe())
+      } else {
+        navigate("/")
+      }
+    }
+  }, [token, account])
+
+  const handleLoginFirebase = () => {
+    const unsubcribed = auth.onIdTokenChanged(async (user) => {
+      console.log('[From AuthProvider]', { user });
+      if (user?.uid) {
+        if (user.accessToken !== localStorage.getItem('accessToken')) {
+          localStorage.setItem('accessToken', user.accessToken);
+        }
+        dispatch(loginFirebase(user.accessToken))
+      }
+    });
+    unsubcribed()
+  }
 
   const handleLoginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    const {
-      user: { uid, displayName },
-    } = await signInWithPopup(auth, provider);
-
-    console.log({ user });
+    try {
+      await signInWithPopup(auth, provider);
+      handleLoginFirebase()
+    } catch(e) {
+      console.log({e});
+    }
   };
 
   const handleLoginWithFacebook = async () => {
     const provider = new FacebookAuthProvider();
-    const {
-      user: { uid, displayName },
-    } = await signInWithPopup(auth, provider);
-
-    console.log({ user });
+    try {
+      await signInWithPopup(auth, provider);
+      handleLoginFirebase()
+    } catch(e) {
+      console.log({e});
+    }
   };
 
   const handleLoginWithMicrosoft = async () => {
     const provider = new OAuthProvider('microsoft.com');
-    const {
-      user: { uid, displayName },
-    } = await signInWithPopup(auth, provider);
-
-    console.log({ user });
+    try {
+      await signInWithPopup(auth, provider);
+      handleLoginFirebase()
+    } catch(e) {
+      console.log({e});
+    }
   };
 
   const handleLoginWithGithub = async () => {
     const provider = new GithubAuthProvider();
-    const {
-      user: { uid, displayName },
-    } = await signInWithPopup(auth, provider);
-
-    console.log({ user });
+    try {
+      await signInWithPopup(auth, provider);
+      handleLoginFirebase()
+    } catch(e) {
+      console.log({e});
+    }
   };
-
-  if (localStorage.getItem('accessToken')) {
-    return <Navigate to="/" />
-  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

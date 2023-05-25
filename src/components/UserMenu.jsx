@@ -1,20 +1,25 @@
 import { Avatar, Menu, MenuItem, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { useContext } from 'react';
 import { useState } from 'react';
-import { AuthContext } from '../context/AuthProvider';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { accountSelector } from '../redux/selectors';
+import appSlice from '../layouts/appSlice';
 
 export default function UserMenu() {
-  const {
-    user: { displayName, photoURL, auth },
-  } = useContext(AuthContext);
+  const account = useSelector(accountSelector)
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const open = Boolean(anchorEl);
-  // console.log({user})
 
   const handleLogout = () => {
-    auth.signOut();
+    localStorage.clear()
+    dispatch(appSlice.actions.addToken(null))
+    dispatch(appSlice.actions.removeAccount())
+    navigate("/login")
   };
 
   const handleClose = () => {
@@ -30,10 +35,10 @@ export default function UserMenu() {
         sx={{ display: 'flex', '&:hover': { cursor: 'pointer' } }}
         onClick={handleClick}
       >
-        <Typography>{displayName}</Typography>
+        <Typography>{account?.name}</Typography>
         <Avatar
           alt='avatar'
-          src={photoURL}
+          src={account?.photo_url}
           sx={{ width: 24, height: 24, marginLeft: '5px' }}
         />
       </Box>
