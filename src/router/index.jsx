@@ -4,6 +4,7 @@ import Home from '../pages/Home';
 import LoginPage from '../pages/auth/Login';
 import ProtectedRoute from './ProtectedRoute';
 import RegisterPage from '../pages/auth/Register';
+import ResetPasswordPage from '../pages/auth/ResetPassword';
 
 export default createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export default createBrowserRouter([
       {
         element: <RegisterPage />,
         path: '/register',
+      },
+      {
+        element: <ResetPasswordPage />,
+        path: '/reset-password',
       },
       {
         element: <ProtectedRoute />,

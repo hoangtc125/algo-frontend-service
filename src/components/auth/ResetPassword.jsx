@@ -1,12 +1,12 @@
-import { Button, Typography, Box, Grid, TextField } from '@mui/material';
-import { useNavigate, Link } from 'react-router-dom';
+import { Box, Button, TextField, Typography, Grid } from '@mui/material';
 import { useFormik } from 'formik';
-import { post } from '../utils/request';
-import { openNotification } from '../utils/notification';
+import React from 'react';
+import { useLocation, Link } from 'react-router-dom';
+import { openNotification } from '../../utils/notification';
+import { post } from '../../utils/request';
 
 const validate = values => {
     const errors = {};
-
     if (!values.password) {
         errors.password = 'Required';
     } else if (values.password.length > 15) {
@@ -18,38 +18,28 @@ const validate = values => {
     } else if (values.repassword != values.password) {
         errors.repassword = 'Not match password';
     }
-
-    if (!values.name) {
-        errors.name = 'Required';
-    } else if (values.name.length > 100) {
-        errors.name = 'Must be 100 characters or less';
-    }
-
-    if (!values.email) {
-        errors.email = 'Required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = 'Invalid email address';
-    }
-
     return errors;
 };
 
-export default function Register() {
-    const navigate = useNavigate()
+const ResetPassword = () => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const _id = queryParams.get('_id');
+    
     const formik = useFormik({
         initialValues: {
             password: '',
             repassword: '',
-            email: '',
-            name: '',
         },
         validate,
         onSubmit: async (values) => {
-            const data = await post(`/account/register`, values)
-            if (data?.status_code != 200) {
-              openNotification(data.status_code, data.msg, "bottomRight")
-            } else {
-                openNotification("Success", "Check your email to active account", "bottomRight")
+            openNotification("Wait a second", "Your action has been processed", "bottomRight")
+            const data = await post("/account/reset-password", {
+                id: _id,
+                password: values.password,
+            })
+            if (data?.status_code == 200) {
+                openNotification("Reset Successfull", "Please login with new password", "bottomRight")
             }
         },
     });
@@ -65,7 +55,7 @@ export default function Register() {
             }}
         >
             <Typography component="h1" variant="h5">
-                Register to Algo
+                Reset Password
             </Typography>
             <Box
                 component="form"
@@ -78,33 +68,7 @@ export default function Register() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Email Address"
-                    name='email'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.email}
-                />
-                {formik.touched.email && formik.errors.email ? (
-                    <div className='text-red-600'>{formik.errors.email}</div>
-                ) : null}
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Your Name"
-                    name='name'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.name}
-                />
-                {formik.touched.name && formik.errors.name ? (
-                    <div className='text-red-600'>{formik.errors.name}</div>
-                ) : null}
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Password"
+                    label="New Password"
                     type="password"
                     name='password'
                     onChange={formik.handleChange}
@@ -135,7 +99,7 @@ export default function Register() {
                     sx={{ mt: 3, mb: 2 }}
                     className='text-lg sm:text-sm'
                 >
-                    Sign Up
+                    Update
                 </Button>
                 <Grid container>
                     <Grid item>
@@ -148,3 +112,5 @@ export default function Register() {
         </Box>
     );
 }
+
+export default ResetPassword;

@@ -9,9 +9,11 @@ import WindowSharpIcon from '@mui/icons-material/WindowSharp';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useFormik } from 'formik';
 
-import appSlice, { loginFirebase, aboutMe, login } from '../layouts/appSlice';
-import { accountSelector, tokenSelector } from '../redux/selectors';
-import { openNotification } from '../utils/notification';
+import appSlice, { loginFirebase, aboutMe, login } from '../../layouts/appSlice';
+import { accountSelector, tokenSelector } from '../../redux/selectors';
+import { openNotification } from '../../utils/notification';
+import { Modal } from 'antd';
+import ForgotPassword from './ForgotPassword';
 
 
 const validate = values => {
@@ -62,6 +64,21 @@ export default function Login() {
             }
         }
     }, [token, account])
+
+    const handleForgotPassword = () => {
+        Modal.info({
+            closable: true,
+            title: 'Reset Password',
+            content: (
+                <div className='pr-8'>
+                    <p>A link to reset password will be sent to your email</p>
+                    <ForgotPassword />
+                </div>
+            ),
+            okText:"Cancel",
+            okType:"dashed"
+        });
+    };
 
     const handleLoginFirebase = () => {
         const unsubcribed = auth.onIdTokenChanged(async (user) => {
@@ -175,7 +192,7 @@ export default function Login() {
                 </Button>
                 <Grid container>
                     <Grid item xs>
-                        <Link href="#" variant="body2" className='underline'>
+                        <Link href="#" variant="body2" className='underline' onClick={handleForgotPassword}>
                             Forgot password?
                         </Link>
                     </Grid>

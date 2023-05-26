@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box, CssBaseline, Grid, Paper } from '@mui/material';
 
-import Register from '../../components/Register';
+import Register from '../../components/auth/Register';
+import loginImage from '../../assets/images/login.png'
 
 const RegisterPage = () => {
   return (
@@ -14,7 +15,7 @@ const RegisterPage = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(src/assets/images/login.png)",
+            backgroundImage: `url(${loginImage})`,
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"

@@ -44,7 +44,7 @@ export default function PushNotification() {
 
     useEffect(() => {
         const loadNoti = async () => {
-            const noti = await post(`/account/notification?page_size=5&page_number=${page}&orderby=created_at&sort=1`, {"to": account.id})
+            const noti = await post(`/account/notification?page_size=5&page_number=${page}&orderby=created_at&sort=-1`, {"to": account.id})
             setInitLoading(false);
             setData(noti?.data || []);
             setNotification(noti?.data || []);

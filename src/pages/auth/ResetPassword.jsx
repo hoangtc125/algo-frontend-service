@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, CssBaseline, Grid, Paper } from '@mui/material';
 
-import Login from '../../components/auth/Login';
 import loginImage from '../../assets/images/login.png'
+import ResetPassword from '../../components/auth/ResetPassword';
 
-const LoginPage = () => {
+const ResetPasswordPage = () => {
   return (
     <Box>
       <Grid container>
@@ -35,11 +35,11 @@ const LoginPage = () => {
           elevation={6}
           square
         >
-          <Login />
+          <ResetPassword />
         </Grid>
       </Grid>
     </Box>
   );
 }
 
-export default LoginPage;
+export default ResetPasswordPage;
