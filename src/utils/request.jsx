@@ -12,7 +12,6 @@ export const post = async (path, payload, options = {}) => {
         body: JSON.stringify(payload),
     });
     const data = await res.json();
-    console.log({ data });
     return data;
 };
 
@@ -28,6 +27,5 @@ export const get = async (path, options = {}) => {
         },
     });
     const data = await res.json();
-    console.log({ data });
     return data;
 };

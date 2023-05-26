@@ -140,6 +140,7 @@ export default function Login() {
                     margin="normal"
                     required
                     fullWidth
+                    autoFocus={true}
                     label="Email Address"
                     name='username'
                     onChange={formik.handleChange}
@@ -188,7 +189,7 @@ export default function Login() {
                     component="h1"
                     variant="h5"
                     align="center"
-                    className="center-text opacity-50 pb-1"
+                    className="center-text opacity-50 py-3"
                 >
                     Or
                 </Typography>

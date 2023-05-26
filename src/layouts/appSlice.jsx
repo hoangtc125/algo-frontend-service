@@ -64,7 +64,7 @@ export const login = createAsyncThunk(
   'app/login',
   async (body) => {
     const data = await post(`/account/login`, body, {"Content-Type": "application/x-www-form-urlencoded"})
-    if (data?.status_code != 200) {
+    if (data?.status_code && data?.status_code != 200) {
       openNotification(data.status_code, data.msg, "bottomRight")
     }
     return data;
@@ -75,7 +75,7 @@ export const aboutMe = createAsyncThunk(
   'app/aboutMe',
   async () => {
     const data = await get(`/account/me`)
-    if (data?.status_code != 200) {
+    if (data?.status_code && data?.status_code != 200) {
       openNotification(data.status_code, data.msg, "bottomRight")
     }
     return data.data;

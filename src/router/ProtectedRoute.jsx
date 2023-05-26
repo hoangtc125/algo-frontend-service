@@ -35,6 +35,13 @@ export default function ProtectedRoute() {
   const token = useSelector(tokenSelector)
   const location = useLocation();
   const pathParts = location.pathname.split('/').filter(path => path !== '');
+  const breadcrumbItems = pathParts.map((part, index) => {
+    const itemPath = `/${pathParts.slice(0, index + 1).join('/')}`;
+    return {
+      title: part,
+      link: itemPath,
+    };
+  });
 
   if (!localStorage.getItem('accessToken')) {
     return <Navigate to="/login" />
@@ -78,16 +85,8 @@ export default function ProtectedRoute() {
             style={{
               margin: '16px 0',
             }}
-          >
-            {pathParts.map((part, index) => {
-              const itemPath = `/${pathParts.slice(0, index + 1).join('/')}`;
-              return (
-                <Breadcrumb.Item key={index}>
-                  <Link to={itemPath}>{part}</Link>
-                </Breadcrumb.Item>
-              );
-            })}
-          </Breadcrumb>
+            items={breadcrumbItems}
+          />
           <div
             style={{
               padding: 24,
