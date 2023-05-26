@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, CssBaseline, Grid, Paper } from '@mui/material';
 
-import Login from '../../components/Login';
+import Register from '../../components/Register';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   return (
     <Box>
       <Grid container>
@@ -34,11 +34,11 @@ const LoginPage = () => {
           elevation={6}
           square
         >
-          <Login />
+          <Register />
         </Grid>
       </Grid>
     </Box>
   );
 }
 
-export default LoginPage;
+export default RegisterPage;

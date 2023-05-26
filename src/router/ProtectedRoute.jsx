@@ -51,7 +51,7 @@ export default function ProtectedRoute() {
         minHeight: '100vh',
       }}
     >
-      <Sider collapsed={true} theme='light'>
+      <Sider collapsed={true} theme='light' className='w-[50px] sm:w-[200px]'>
         <Image
           preview={false}
           src="src/assets/images/algo.png"
@@ -103,7 +103,7 @@ export default function ProtectedRoute() {
             textAlign: 'center',
           }}
         >
-          Ant Design ©2023 Created by Ant UED
+          DATN HUST ©2023 Created by Cong Hoang Tran
         </Footer>
       </Layout>
     </Layout>
