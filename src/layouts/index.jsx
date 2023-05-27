@@ -37,7 +37,7 @@ const MainLayout = () => {
                 {
                     account ?
                         (
-                            <div className='flex flex-row items-center space-x-1 sm:space-x-4'>
+                            <div className='flex flex-row items-center space-x-1 sm:space-x-4 lg:space-x-6'>
                                 {getProviderIcon(account?.provider)}
                                 <PushNotification />
                                 <UserMenu />

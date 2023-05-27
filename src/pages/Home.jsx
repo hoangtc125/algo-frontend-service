@@ -1,10 +1,10 @@
-import AccountProfile from "../components/account/AccountProfile";
+import Camera from "../components/camera";
 
 export default function Home() {
 
   return (
     <>
-      <AccountProfile />
+      <Camera />
     </>
   );
 }

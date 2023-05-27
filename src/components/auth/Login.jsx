@@ -176,7 +176,7 @@ export default function Login() {
                     name='password'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.lastName}
+                    value={formik.values.password}
                 />
                 {formik.touched.password && formik.errors.password ? (
                     <div className='text-red-600'>{formik.errors.password}</div>

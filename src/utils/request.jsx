@@ -29,3 +29,12 @@ export const get = async (path, options = {}) => {
     const data = await res.json();
     return data;
 };
+
+export const get_webcam = async (url, options = {}) => {
+    const res = await fetch(`${url}`, {
+        method: 'GET',
+        headers: {
+            ...options,
+        },
+    });
+};

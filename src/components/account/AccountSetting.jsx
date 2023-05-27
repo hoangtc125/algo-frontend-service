@@ -77,7 +77,7 @@ const AccountSetting = () => {
                     name='password'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.lastName}
+                    value={formik.values.password}
                 />
                 {formik.touched.password && formik.errors.password ? (
                     <div className='text-red-600'>{formik.errors.password}</div>
@@ -91,7 +91,7 @@ const AccountSetting = () => {
                     name='newpassword'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.lastName}
+                    value={formik.values.newpassword}
                 />
                 {formik.touched.newpassword && formik.errors.newpassword ? (
                     <div className='text-red-600'>{formik.errors.newpassword}</div>
@@ -105,7 +105,7 @@ const AccountSetting = () => {
                     name='repassword'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.lastName}
+                    value={formik.values.repassword}
                 />
                 {formik.touched.repassword && formik.errors.repassword ? (
                     <div className='text-red-600'>{formik.errors.repassword}</div>
