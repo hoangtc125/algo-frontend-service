@@ -23,7 +23,7 @@ const RegisterPage = () => {
                 : t.palette.grey[900],
             backgroundSize: "cover",
             backgroundPosition: "center",
-            height: "100vh"
+            height: "90vh"
           }}
         />
         <Grid
@@ -32,7 +32,6 @@ const RegisterPage = () => {
           sm={8}
           md={5}
           component={Paper}
-          elevation={6}
           square
         >
           <Register />

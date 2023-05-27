@@ -24,7 +24,7 @@ const validate = values => {
 const ResetPassword = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const _id = queryParams.get('_id');
+    const token = queryParams.get('token');
     
     const formik = useFormik({
         initialValues: {
@@ -35,11 +35,13 @@ const ResetPassword = () => {
         onSubmit: async (values) => {
             openNotification("Wait a second", "Your action has been processed", "bottomRight")
             const data = await post("/account/reset-password", {
-                id: _id,
+                token: token,
                 password: values.password,
             })
             if (data?.status_code == 200) {
                 openNotification("Reset Successfull", "Please login with new password", "bottomRight")
+            } else {
+                openNotification(data.status_code, data.msg, "bottomRight")
             }
         },
     });

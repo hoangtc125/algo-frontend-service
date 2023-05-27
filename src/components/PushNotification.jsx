@@ -101,7 +101,7 @@ export default function PushNotification() {
             </div>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                 <List
-                    className="demo-loadmore-list overflow-auto scroll-auto w-[300px] sm:w-[500px] max-h-[80vh] px-2 py-1"
+                    className="demo-loadmore-list overflow-auto scroll-auto w-[300px] sm:w-[500px] max-h-[50vh] sm:max-h-[80vh] px-2 py-1"
                     loading={initLoading}
                     itemLayout="horizontal"
                     loadMore={loadMore}
@@ -112,7 +112,7 @@ export default function PushNotification() {
                             <Skeleton avatar title={false} loading={item?.loading} active>
                                 <List.Item.Meta
                                     title={<p className='text-base'>{item?.content}</p>}
-                                    description={<p className='text-sm'>{moment(item?.created_at * 1000).format('DD-MM-YYYY HH:mm:ss')}</p>}
+                                    description={<p className='text-sm text-right'>{moment(item?.created_at * 1000).format('DD-MM-YYYY HH:mm:ss')}</p>}
                                 />
                             </Skeleton>
                         </List.Item>

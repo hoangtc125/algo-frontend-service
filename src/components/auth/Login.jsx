@@ -210,7 +210,7 @@ export default function Login() {
                 >
                     Or
                 </Typography>
-                <Grid container spacing={{ xs: 2, md: 3 }}>
+                <Grid container spacing={{ xs: 1, md: 2 }}>
                     <Grid item xs={6} sm={6}>
                         <Button
                             variant="outlined"

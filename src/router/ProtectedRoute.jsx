@@ -1,12 +1,10 @@
-import { Outlet, Navigate, useLocation, Link } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FileOutlined, PieChartOutlined, UserOutlined, DesktopOutlined, TeamOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, Image, Space } from 'antd';
+import { Breadcrumb, Layout, Menu, Image } from 'antd';
 
 import appSlice from '../layouts/appSlice';
 import { accountSelector, tokenSelector } from '../redux/selectors';
-import UserMenu from '../components/UserMenu';
-import PushNotification from '../components/PushNotification'
 
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -53,11 +51,7 @@ export default function ProtectedRoute() {
     dispatch(appSlice.actions.addAccount(JSON.parse(localStorage.getItem("account"))))
   }
   return (
-    <Layout
-      style={{
-        minHeight: '100vh',
-      }}
-    >
+    <Layout className='min-h-screen'>
       <Sider collapsed={true} theme='light' className='w-[50px] sm:w-[200px]'>
         <Image
           preview={false}
@@ -66,45 +60,27 @@ export default function ProtectedRoute() {
         />
         <Menu theme="light" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
-      <Layout>
-        <Header
-          className='flex items-center justify-end sm:justify-between bg-white'
-        >
-          <Menu className='grow max-w-full sm:block' theme="light" mode="horizontal" items={items} />
-          <Space size={20}>
-            <PushNotification />
-            <UserMenu />
-          </Space>
-        </Header>
-        <Content
+      <Content
+        style={{
+          margin: '0 16px',
+        }}
+      >
+        <Breadcrumb
           style={{
-            margin: '0 16px',
+            margin: '16px 0',
+          }}
+          items={breadcrumbItems}
+        />
+        <div
+          style={{
+            padding: 24,
+            minHeight: 360,
+            background: "#fff",
           }}
         >
-          <Breadcrumb
-            style={{
-              margin: '16px 0',
-            }}
-            items={breadcrumbItems}
-          />
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: "#fff",
-            }}
-          >
-            <Outlet />
-          </div>
-        </Content>
-        <Footer
-          style={{
-            textAlign: 'center',
-          }}
-        >
-          DATN HUST ©2023 Created by Cong Hoang Tran
-        </Footer>
-      </Layout>
+          <Outlet />
+        </div>
+      </Content>
     </Layout>
   );
 }

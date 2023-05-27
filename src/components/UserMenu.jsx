@@ -1,4 +1,5 @@
-import { Avatar, Menu, MenuItem, Typography } from '@mui/material';
+import { Avatar, Badge, Menu, MenuItem, Typography } from '@mui/material';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import { Box } from '@mui/system';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,12 +36,20 @@ export default function UserMenu() {
         sx={{ display: 'flex', '&:hover': { cursor: 'pointer' } }}
         onClick={handleClick}
       >
-        <Typography className='hidden sm:inline-block'>{account?.name}</Typography>
-        <Avatar
-          alt='avatar'
-          src={account?.photo_url}
-          sx={{ width: 24, height: 24, marginLeft: '10px' }}
-        />
+        <Typography className='hidden sm:inline-block' variant="h6">{account?.name}</Typography>
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          badgeContent={
+            account?.verify?.status ? <VerifiedIcon fontSize="small" color="primary" /> : <></>
+          }
+        >
+          <Avatar
+            alt='avatar'
+            src={account?.photo_url}
+            sx={{ width: 30, height: 30, marginLeft: '10px' }}
+          />
+        </Badge>
       </Box>
       <Menu
         id='basic-menu'

@@ -25,6 +25,8 @@ const ForgotPassword = () => {
             const data = await get(`/account/reset-password?email=${values.username}`)
             if (data?.status_code == 200) {
                 openNotification("Check your email", "A link to reset password has been sent", "bottomRight")
+            } else {
+                openNotification(data.status_code, data.msg, "bottomRight")
             }
         },
     });
