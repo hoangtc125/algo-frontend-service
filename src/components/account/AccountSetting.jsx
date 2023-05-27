@@ -1,56 +1,50 @@
-import { Button, Typography, Box, Grid, TextField } from '@mui/material';
-import { useNavigate, Link } from 'react-router-dom';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
-import { post } from '../../utils/request';
+import React from 'react';
 import { errorNotification, infoNotification, successNotification } from '../../utils/notification';
+import { post } from '../../utils/request';
 
 const validate = values => {
     const errors = {};
-
     if (!values.password) {
         errors.password = 'Required';
     } else if (values.password.length > 15) {
         errors.password = 'Must be 15 characters or less';
     }
 
+    if (!values.newpassword) {
+        errors.newpassword = 'Required';
+    } else if (values.newpassword.length > 15) {
+        errors.newpassword = 'Must be 15 characters or less';
+    }
+
     if (!values.repassword) {
         errors.repassword = 'Required';
-    } else if (values.repassword != values.password) {
+    } else if (values.repassword != values.newpassword) {
         errors.repassword = 'Not match password';
     }
-
-    if (!values.name) {
-        errors.name = 'Required';
-    } else if (values.name.length > 100) {
-        errors.name = 'Must be 100 characters or less';
-    }
-
-    if (!values.email) {
-        errors.email = 'Required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = 'Invalid email address';
-    }
-
     return errors;
 };
 
-export default function Register() {
-    const navigate = useNavigate()
+const AccountSetting = () => {
+    
     const formik = useFormik({
         initialValues: {
             password: '',
+            newpassword: '',
             repassword: '',
-            email: '',
-            name: '',
         },
         validate,
         onSubmit: async (values) => {
             infoNotification("Wait a second", "Your action has been processed", "bottomRight")
-            const data = await post(`/account/register`, values)
-            if (data?.status_code != 200) {
-              errorNotification(data.status_code, data.msg, "bottomRight")
+            const data = await post("/account/update-password", {
+                password: values.password,
+                newpassword: values.newpassword,
+            })
+            if (data?.status_code == 200) {
+                successNotification("Update Successfull", "Your password has been updated", "bottomRight")
             } else {
-                successNotification("Success", "Check your email to active account", "bottomRight")
+                errorNotification(data.status_code, data.msg, "bottomRight")
             }
         },
     });
@@ -58,54 +52,27 @@ export default function Register() {
     return (
         <Box
             sx={{
-                my: 16,
-                mx: 8,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
             }}
+            className="p-0 sm:p-4"
         >
             <Typography component="h1" variant="h5">
-                Register to Algo
+                Update Password
             </Typography>
             <Box
                 component="form"
                 noValidate
                 onSubmit={formik.handleSubmit}
-                className='w-full'
+                className='w-full sm:w-3/6'
                 sx={{ mt: 1 }}
             >
                 <TextField
                     margin="normal"
                     required
                     fullWidth
-                    label="Email Address"
-                    name='email'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.email}
-                />
-                {formik.touched.email && formik.errors.email ? (
-                    <div className='text-red-600'>{formik.errors.email}</div>
-                ) : null}
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Your Name"
-                    name='name'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.name}
-                />
-                {formik.touched.name && formik.errors.name ? (
-                    <div className='text-red-600'>{formik.errors.name}</div>
-                ) : null}
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Password"
+                    label="Current Password"
                     type="password"
                     name='password'
                     onChange={formik.handleChange}
@@ -114,6 +81,20 @@ export default function Register() {
                 />
                 {formik.touched.password && formik.errors.password ? (
                     <div className='text-red-600'>{formik.errors.password}</div>
+                ) : null}
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="New Password"
+                    type="password"
+                    name='newpassword'
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.lastName}
+                />
+                {formik.touched.newpassword && formik.errors.newpassword ? (
+                    <div className='text-red-600'>{formik.errors.newpassword}</div>
                 ) : null}
                 <TextField
                     margin="normal"
@@ -136,16 +117,11 @@ export default function Register() {
                     sx={{ mt: 3, mb: 2 }}
                     className='text-lg sm:text-sm'
                 >
-                    Sign Up
+                    Update
                 </Button>
-                <Grid container>
-                    <Grid item>
-                        <Link to="/login" variant="body2" className='underline'>
-                            Have an account? Sign In
-                        </Link>
-                    </Grid>
-                </Grid>
             </Box>
         </Box>
     );
 }
+
+export default AccountSetting;

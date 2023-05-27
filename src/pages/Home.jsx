@@ -1,10 +1,10 @@
-import ResetPassword from "../components/auth/ResetPassword";
+import AccountProfile from "../components/account/AccountProfile";
 
 export default function Home() {
 
   return (
     <>
-      <ResetPassword />
+      <AccountProfile />
     </>
   );
 }

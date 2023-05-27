@@ -2,7 +2,7 @@ import { Box, Button, TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import React from 'react';
 import { get } from '../../utils/request';
-import { openNotification } from '../../utils/notification';
+import { errorNotification, infoNotification, successNotification } from '../../utils/notification';
 
 const validate = values => {
     const errors = {};
@@ -21,12 +21,12 @@ const ForgotPassword = () => {
         },
         validate,
         onSubmit: async (values) => {
-            openNotification("Wait a second", "Your action has been processed", "bottomRight")
+            infoNotification("Wait a second", "Your action has been processed", "bottomRight")
             const data = await get(`/account/reset-password?email=${values.username}`)
             if (data?.status_code == 200) {
-                openNotification("Check your email", "A link to reset password has been sent", "bottomRight")
+                successNotification("Check your email", "A link to reset password has been sent", "bottomRight")
             } else {
-                openNotification(data.status_code, data.msg, "bottomRight")
+                errorNotification(data.status_code, data.msg, "bottomRight")
             }
         },
     });

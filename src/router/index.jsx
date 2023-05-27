@@ -6,6 +6,8 @@ import ProtectedRoute from './ProtectedRoute';
 import RegisterPage from '../pages/auth/Register';
 import ResetPasswordPage from '../pages/auth/ResetPassword';
 import MainLayout from '../layouts';
+import AccountProfile from '../components/account/AccountProfile';
+import AccountSetting from '../components/account/AccountSetting';
 
 export default createBrowserRouter([
   {
@@ -31,8 +33,16 @@ export default createBrowserRouter([
             element: <Home />,
             path: '/home',
             children: [
-              
+
             ]
+          },
+          {
+            element: <AccountProfile />,
+            path: '/account',
+          },
+          {
+            element: <AccountSetting />,
+            path: '/account/setting',
           },
         ],
       },

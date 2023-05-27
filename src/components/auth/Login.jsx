@@ -11,7 +11,7 @@ import { useFormik } from 'formik';
 
 import appSlice, { loginFirebase, aboutMe, login } from '../../layouts/appSlice';
 import { accountSelector, tokenSelector } from '../../redux/selectors';
-import { openNotification } from '../../utils/notification';
+import { infoNotification } from '../../utils/notification';
 import { Modal } from 'antd';
 import ForgotPassword from './ForgotPassword';
 
@@ -47,7 +47,7 @@ export default function Login() {
         },
         validate,
         onSubmit: values => {
-            openNotification("Wait a second", "Your action has been processed", "bottomRight")
+            infoNotification("Wait a second", "Your action has been processed", "bottomRight")
             dispatch(login(`grant_type=&username=${values.username}&password=${values.password}&scope=&client_id=&client_secret=`))
         },
     });

@@ -2,7 +2,7 @@ import { Box, Button, TextField, Typography, Grid } from '@mui/material';
 import { useFormik } from 'formik';
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { openNotification } from '../../utils/notification';
+import { errorNotification, infoNotification, successNotification } from '../../utils/notification';
 import { post } from '../../utils/request';
 
 const validate = values => {
@@ -33,15 +33,15 @@ const ResetPassword = () => {
         },
         validate,
         onSubmit: async (values) => {
-            openNotification("Wait a second", "Your action has been processed", "bottomRight")
+            infoNotification("Wait a second", "Your action has been processed", "bottomRight")
             const data = await post("/account/reset-password", {
                 token: token,
                 password: values.password,
             })
             if (data?.status_code == 200) {
-                openNotification("Reset Successfull", "Please login with new password", "bottomRight")
+                successNotification("Reset Successfull", "Please login with new password", "bottomRight")
             } else {
-                openNotification(data.status_code, data.msg, "bottomRight")
+                errorNotification(data.status_code, data.msg, "bottomRight")
             }
         },
     });

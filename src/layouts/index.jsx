@@ -1,6 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
-import { Layout, Menu, Space } from 'antd';
-import { FileOutlined, PieChartOutlined, UserOutlined, DesktopOutlined, TeamOutlined } from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+import { FileOutlined, PieChartOutlined, DesktopOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { accountSelector } from '../redux/selectors';
 import { Button } from '@mui/material';
@@ -8,6 +8,7 @@ const { Header, Footer } = Layout;
 
 import UserMenu from '../components/UserMenu';
 import PushNotification from '../components/PushNotification'
+import { getProviderIcon } from '../utils/kind';
 
 function getItem(label, key, icon, children) {
     return {
@@ -19,15 +20,9 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-    getItem('Option 1', '1', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-        getItem('Tom', '3'),
-        getItem('Bill', '4'),
-        getItem('Alex', '5'),
-    ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    getItem('Files', '9', <FileOutlined />),
+    getItem('Club', '1', <PieChartOutlined />),
+    getItem('Event', '2', <DesktopOutlined />),
+    getItem('User', '9', <FileOutlined />),
 ];
 
 const MainLayout = () => {
@@ -36,16 +31,17 @@ const MainLayout = () => {
     return (
         <Layout className='min-h-screen'>
             <Header
-                className='flex items-center justify-end sm:justify-between bg-white drop-shadow-md'
+                className='flex items-center justify-end sm:justify-between bg-white drop-shadow-md mb-1 px-1 sm:px-10'
             >
                 <Menu className='grow max-w-full sm:block' theme="light" mode="horizontal" items={items} />
                 {
                     account ?
                         (
-                            <Space size={20}>
+                            <div className='flex flex-row items-center space-x-1 sm:space-x-4'>
+                                {getProviderIcon(account?.provider)}
                                 <PushNotification />
                                 <UserMenu />
-                            </Space>
+                            </div>
                         ) : (
                             <Button variant="contained"><Link to="/login">Login</Link></Button>
                         )

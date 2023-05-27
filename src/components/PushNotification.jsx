@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { accountSelector } from '../redux/selectors';
 import { post } from '../utils/request';
 import { openNotification } from '../utils/notification';
+import { getIconInfo } from '../utils/kind';
 
 export default function PushNotification() {
     const [initLoading, setInitLoading] = useState(true);
@@ -29,22 +30,22 @@ export default function PushNotification() {
     };
 
     useEffect(() => {
-        const socket = io(`ws://localhost:8001?client_id=${account.id}`, {path: "/ws/socket.io", transports: ['websocket']})
+        const socket = io(`ws://localhost:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
         socket.on("notification", (message) => {
             setNotification(prev => [message, ...prev])
             openNotification("Notification", message?.content, "bottomLeft")
         });
 
         return () => {
-          socket.off("notification");
-          socket.disconnect();
+            socket.off("notification");
+            socket.disconnect();
         };
     }, []);
 
 
     useEffect(() => {
         const loadNoti = async () => {
-            const noti = await post(`/account/notification?page_size=5&page_number=${page}&orderby=created_at&sort=-1`, {"to": account.id})
+            const noti = await post(`/account/notification?page_size=5&page_number=${page}&orderby=created_at&sort=-1`, { "to": account.id })
             setInitLoading(false);
             setData(noti?.data || []);
             setNotification(noti?.data || []);
@@ -63,7 +64,7 @@ export default function PushNotification() {
                 })),
             ),
         );
-        const noti = await post(`/account/notification?page_size=5&page_number=${page + 1}&orderby=created_at&sort=1`, {"to": account.id})
+        const noti = await post(`/account/notification?page_size=5&page_number=${page + 1}&orderby=created_at&sort=1`, { "to": account.id })
         const newData = data.concat(noti?.data || []);
         setData(newData);
         setNotification(newData);
@@ -71,7 +72,6 @@ export default function PushNotification() {
         setPage(prev => prev + 1)
         window.dispatchEvent(new Event('resize'));
     };
-
 
     const loadMore =
         !initLoading && !loading ? (
@@ -101,7 +101,7 @@ export default function PushNotification() {
             </div>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                 <List
-                    className="demo-loadmore-list overflow-auto scroll-auto w-[300px] sm:w-[500px] max-h-[50vh] sm:max-h-[80vh] px-2 py-1"
+                    className="demo-loadmore-list overflow-auto scroll-auto w-[300px] sm:w-[500px] max-h-[50vh] sm:max-h-[80vh] px-5 py-1"
                     loading={initLoading}
                     itemLayout="horizontal"
                     loadMore={loadMore}
@@ -111,6 +111,7 @@ export default function PushNotification() {
                         <List.Item>
                             <Skeleton avatar title={false} loading={item?.loading} active>
                                 <List.Item.Meta
+                                    avatar={getIconInfo(item?.kind)}
                                     title={<p className='text-base'>{item?.content}</p>}
                                     description={<p className='text-sm text-right'>{moment(item?.created_at * 1000).format('DD-MM-YYYY HH:mm:ss')}</p>}
                                 />

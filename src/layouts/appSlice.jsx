@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { get, post } from '../utils/request';
-import { openNotification } from '../utils/notification';
+import { errorNotification } from '../utils/notification';
 
 const appSlice = createSlice({
   name: 'app',
@@ -65,7 +65,7 @@ export const login = createAsyncThunk(
   async (body) => {
     const data = await post(`/account/login`, body, {"Content-Type": "application/x-www-form-urlencoded"})
     if (data?.status_code && data?.status_code != 200) {
-      openNotification(data.status_code, data.msg, "bottomRight")
+      errorNotification(data.status_code, data.msg, "bottomRight")
     }
     return data;
   }
@@ -76,7 +76,7 @@ export const aboutMe = createAsyncThunk(
   async () => {
     const data = await get(`/account/me`)
     if (data?.status_code && data?.status_code != 200) {
-      openNotification(data.status_code, data.msg, "bottomRight")
+      errorNotification(data.status_code, data.msg, "bottomRight")
     }
     return data.data;
   }
