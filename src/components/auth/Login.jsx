@@ -11,7 +11,7 @@ import { useFormik } from 'formik';
 
 import appSlice, { loginFirebase, aboutMe, login } from '../../layouts/appSlice';
 import { accountSelector, tokenSelector } from '../../redux/selectors';
-import { infoNotification } from '../../utils/notification';
+import { infoNotification, errorNotification } from '../../utils/notification';
 import { Modal } from 'antd';
 import ForgotPassword from './ForgotPassword';
 
@@ -99,7 +99,7 @@ export default function Login() {
             await signInWithPopup(auth, provider);
             handleLoginFirebase()
         } catch (e) {
-            console.log({ e });
+            errorNotification("Account already in used", "Please login with another method", "bottomRight")
         }
     };
 
@@ -109,7 +109,7 @@ export default function Login() {
             await signInWithPopup(auth, provider);
             handleLoginFirebase()
         } catch (e) {
-            console.log({ e });
+            errorNotification("Account already in used", "Please login with another method", "bottomRight")
         }
     };
 
@@ -119,7 +119,7 @@ export default function Login() {
             await signInWithPopup(auth, provider);
             handleLoginFirebase()
         } catch (e) {
-            console.log({ e });
+            errorNotification("Account already in used", "Please login with another method", "bottomRight")
         }
     };
 
@@ -129,7 +129,7 @@ export default function Login() {
             await signInWithPopup(auth, provider);
             handleLoginFirebase()
         } catch (e) {
-            console.log({ e });
+            errorNotification("Account already in used", "Please login with another method", "bottomRight")
         }
     };
 

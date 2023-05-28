@@ -1,7 +1,12 @@
-import { message, Modal, Steps, Image } from 'antd';
+import { Modal, Steps, Image } from 'antd';
 import { Box, Button, Chip, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import io from 'socket.io-client';
 
 import { IMAGE } from '../../utils/constant';
@@ -9,7 +14,7 @@ import cameraSlice from '../camera/cameraSlice';
 import Camera from '../camera';
 import { accountSelector, imagesSelector } from '../../redux/selectors';
 import ImagesReview from '../camera/imagesReview';
-import { post } from '../../utils/request';
+import { get, post } from '../../utils/request';
 import { errorNotification, successNotification } from '../../utils/notification';
 import { LoadingButton } from '@mui/lab';
 import { aboutMe } from '../../layouts/appSlice';
@@ -18,25 +23,42 @@ const AccountVerify = () => {
     const dispatch = useDispatch()
     const images = useSelector(imagesSelector)
     const account = useSelector(accountSelector)
+    const [school, setSchool] = useState('HUST');
     const [current, setCurrent] = useState(0);
     const [loading, isLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCardOpen, setIsCardOpen] = useState(false);
 
     useEffect(() => {
-        if (account?.verify?.image?.url) {
-            dispatch(cameraSlice.actions.addSingleImage(account?.verify?.image))
-        }
         if (account?.verify?.status) {
             setCurrent(2)
         } else {
-            setCurrent(1)
+            if (account?.verify?.image) {
+                setCurrent(1)
+            } else {
+                setCurrent(0)
+            }
         }
+        if (account?.verify?.type) {
+            setSchool(account?.verify?.type)
+        }
+        const getVerifyImage = async () => {
+            if (account?.verify?.image) {
+                try {
+                    const data = await get(`/image/get?id=${account?.verify?.image}`)
+                    if (data?.data) {
+                        dispatch(cameraSlice.actions.addSingleImage(data?.data))
+                    }
+                } catch { }
+            }
+        }
+        getVerifyImage()
     }, []);
 
     const handleVerifyCard = async () => {
         isLoading(true)
         try {
-            const data = await post("/account/verify", images[0])
+            const data = await post(`/account/verify?school=${school}`, images[0])
             if (data?.status_code == 200) {
                 successNotification("Card has been verifed", "Check your student email to continue", "bottomRight")
                 dispatch(aboutMe())
@@ -66,8 +88,8 @@ const AccountVerify = () => {
         setIsModalOpen(false);
     };
 
-    const handleCancel = () => {
-        setIsModalOpen(false);
+    const handleOkCard = () => {
+        setIsCardOpen(false);
     };
 
     const steps = [
@@ -96,20 +118,34 @@ const AccountVerify = () => {
         <>
             <Steps current={current} items={items} />
             <Grid container spacing={2}>
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} md={3}>
                     <Box
-                        className="flex min-h-[60vh] flex-col justify-center items-center p-0 sm:p-4 space-y-5"
+                        className="flex min-h-[60vh] flex-col justify-center items-center p-0 sm:p-4 space-y-2"
+                    >
+                        <div className="flex flex-col justify-center items-center">
+                            <Image className='max-w-full' src={IMAGE} />
+                            <Typography>{school}</Typography>
+                        </div>
+                        <Button className='w-fit' variant="outlined" onClick={() => { setIsCardOpen(true) }}>
+                            Change Shool
+                        </Button>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Box
+                        className="flex min-h-[60vh] flex-col justify-center items-center p-0 sm:p-4 space-y-2"
                     >
                         <Image
                             src={images[0]?.url || IMAGE}
                             className='max-w-full max-h-[50vh] shadow-md'
                         />
+                        <Typography>Your Card Student Image</Typography>
                         <Button className='w-fit' variant="outlined" onClick={handleUploadImage}>
                             Change Image
                         </Button>
                     </Box>
                 </Grid>
-                <Grid item xs={12} md={4} className='w-full flex justify-center'>
+                <Grid item xs={12} md={3} className='w-full flex justify-center'>
                     <List className='w-full grid grid-cols-1 '>
                         <ListItem>
                             <ListItemText primary="School" secondary={account?.verify?.detail?.school} />
@@ -155,7 +191,7 @@ const AccountVerify = () => {
                     Verify Card
                 </LoadingButton>
 
-                <Modal centered title="Upload Student Card" width={1000} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okType='default' destroyOnClose={true}>
+                <Modal centered title="Upload Student Card" width={1000} open={isModalOpen} onOk={handleOk} onCancel={handleOk} okType='default' destroyOnClose={true}>
                     <Typography variant="body2">
                         Take a shoot
                     </Typography>
@@ -164,6 +200,50 @@ const AccountVerify = () => {
                         Update from device
                     </Typography>
                     <ImagesReview />
+                </Modal>
+                <Modal centered title="Select Student School" width={1000} open={isCardOpen} onOk={handleOkCard} onCancel={handleOkCard} okType='default' destroyOnClose={true}>
+                    <FormControl className='w-full flex flex-col justify-center items-center'>
+                        <FormLabel id="card-controlled-radio-buttons-group">Card Type</FormLabel>
+                        <RadioGroup
+                            aria-labelledby="card-controlled-radio-buttons-group"
+                            name="controlled-radio-buttons-group"
+                            value={school}
+                            row
+                            onChange={(e) => { setSchool(e.target.value) }}
+                            className='w-full flex justify-center'
+                        >
+                            <FormControlLabel className="w-fit" labelPlacement="top" value="HUST" control={<Radio />} label={
+                                <div className="flex flex-col justify-center items-center">
+                                    <Image width={200} preview={false} src={IMAGE} />
+                                    <Typography>HUST</Typography>
+                                </div>
+                            } />
+                            <FormControlLabel className="w-fit" labelPlacement="top" value="HUST2" control={<Radio />} label={
+                                <div className="flex flex-col justify-center items-center">
+                                    <Image width={200} preview={false} src={IMAGE} />
+                                    <Typography>HUST2</Typography>
+                                </div>
+                            } />
+                            <FormControlLabel className="w-fit" labelPlacement="top" value="HUCE" control={<Radio />} label={
+                                <div className="flex flex-col justify-center items-center">
+                                    <Image width={200} preview={false} src={IMAGE} />
+                                    <Typography>HUCE</Typography>
+                                </div>
+                            } />
+                            <FormControlLabel className="w-fit" labelPlacement="top" value="NEU" control={<Radio />} label={
+                                <div className="flex flex-col justify-center items-center">
+                                    <Image width={200} preview={false} src={IMAGE} />
+                                    <Typography>NEU</Typography>
+                                </div>
+                            } />
+                            <FormControlLabel className="w-fit" labelPlacement="top" value="NEU2" control={<Radio />} label={
+                                <div className="flex flex-col justify-center items-center">
+                                    <Image width={200} preview={false} src={IMAGE} />
+                                    <Typography>NEU2</Typography>
+                                </div>
+                            } />
+                        </RadioGroup>
+                    </FormControl>
                 </Modal>
             </div>
         </>

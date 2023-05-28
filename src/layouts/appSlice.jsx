@@ -14,9 +14,11 @@ const appSlice = createSlice({
       state.account = action.payload["account"]
       state.api_permissions = action.payload["api_permissions"]
     },
-    removeAccount: (state, action) => {
+    clear: (state, action) => {
+      state.token = null
       state.account = null
       state.api_permissions = null
+      state.loading = false
     },
   },
   extraReducers: (builder) => {

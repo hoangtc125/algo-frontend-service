@@ -1,8 +1,8 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
 import { useState } from 'react';
+import { v4 } from 'uuid';
 
-import { IMAGE } from '../../utils/constant'
 import { useDispatch, useSelector } from 'react-redux';
 import { imagesSelector, singleSelector } from '../../redux/selectors';
 import cameraSlice from './cameraSlice';
@@ -45,7 +45,7 @@ const ImagesReview = () => {
             return
         } 
             let image = {
-                uid: file.uid,
+                uid: v4(),
                 name: file.name,
                 status: 'done',
                 url: file.url,

@@ -23,7 +23,13 @@ const cameraSlice = createSlice({
     },
     removeImage: (state, action) => {
       state.images = state.images.filter(item => item.uid != action.payload.uid);
-    }
+    },
+    clear: (state, action) => {
+      state.images = []
+      state.single = false
+      state.ip = "192.168.1.9"
+      state.loading = false
+    },
   },
 });
 
