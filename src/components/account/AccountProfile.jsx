@@ -1,4 +1,4 @@
-import { Typography, Avatar, List, ListItem, ListItemText, Box, Grid, Badge } from '@mui/material';
+import { Typography, Avatar, List, ListItem, ListItemText, Box, Grid, Badge, Chip } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { useSelector } from 'react-redux';
 
@@ -60,6 +60,15 @@ const AccountProfile = () => {
                         </ListItem>
                         <ListItem>
                             <ListItemText primary="Student Email" secondary={account?.verify?.detail?.email} />
+                        </ListItem>
+                        <ListItem>
+                            {
+                                account?.verify?.status
+                                    ?
+                                    <Chip label="Verified" color="success" variant="outlined" />
+                                    :
+                                    <Chip label="No verify" color="error" variant="outlined" />
+                            }
                         </ListItem>
                     </List>
                 </Grid>

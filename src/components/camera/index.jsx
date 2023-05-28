@@ -113,12 +113,12 @@ const Camera = () => {
         >
             <Grid container>
                 <Grid item xs={12} md={8}>
-                    <List className='w-full flex flex-col items-center space-y-5'>
+                    <List className='w-full h-full flex flex-col items-center space-y-5 justify-end'>
                         <Image
                             id='ip-webcam'
                             preview={false}
                             src={`http://${ip}:8080/video`}
-                            className='max-w-full max-h-96 shadow-md'
+                            className='max-w-full max-h-[50vh] shadow-md'
                             onError={() => {
                                 document.getElementById("ip-webcam").firstChild.src = IMAGE
                             }}

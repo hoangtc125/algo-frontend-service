@@ -8,6 +8,7 @@ import ResetPasswordPage from '../pages/auth/ResetPassword';
 import MainLayout from '../layouts';
 import AccountProfile from '../components/account/AccountProfile';
 import AccountSetting from '../components/account/AccountSetting';
+import AccountVerify from '../components/account/AccountVerify';
 
 export default createBrowserRouter([
   {
@@ -39,6 +40,10 @@ export default createBrowserRouter([
           {
             element: <AccountProfile />,
             path: '/account',
+          },
+          {
+            element: <AccountVerify />,
+            path: '/account/verify',
           },
           {
             element: <AccountSetting />,
