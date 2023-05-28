@@ -1,16 +1,20 @@
 import { Box, Grid, Typography, List, ListItem, Button, TextField, Slider, Switch } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { Image } from 'antd';
-import React from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Image, Space } from 'antd';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
+import { v4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { ipSelector } from '../../redux/selectors';
+import { cameraLoadingSelector, ipSelector, singleSelector } from '../../redux/selectors';
 import { validateIP } from '../../utils/validIP'
 import cameraSlice from './cameraSlice';
-import { useEffect } from 'react';
 import { IMAGE } from '../../utils/constant';
 import { get_webcam } from '../../utils/request'
+import { errorNotification } from '../../utils/notification'
 
 const validate = values => {
     const errors = {};
@@ -23,37 +27,80 @@ const validate = values => {
 };
 
 const Camera = () => {
-    const ip = useSelector(ipSelector)
     const dispatch = useDispatch()
+    const ip = useSelector(ipSelector)
+    const loading = useSelector(cameraLoadingSelector)
+    const single = useSelector(singleSelector)
+    const [image, setImage] = useState()
+
+    const setUpCamera = async () => {
+        dispatch(cameraSlice.actions.setLoading(true))
+        document.getElementById("ip-webcam").firstChild.src = IMAGE
+        try {
+            const res = await get_webcam(`http://${ip}:8080/status.json?show_avail=1`)
+            const data = await res.json();
+            if (data?.curvals?.video_size != "1280x720") {
+                await get_webcam(`http://${ip}:8080/settings/video_size?set=1280x720`)
+            }
+            if (data?.curvals?.photo_size != "1280x720") {
+                await get_webcam(`http://${ip}:8080/settings/photo_size?set=1280x720`)
+            }
+            if (data?.curvals?.ffc != "off") {
+                await get_webcam(`http://${ip}:8080/settings/ffc?set=off`)
+            }
+            document.getElementById("ip-webcam").firstChild.src = `http://${ip}:8080/video`
+        } catch {
+            errorNotification("Camera Error", "Make sure start server IP Webcam", "bottomRight")
+        } finally {
+            dispatch(cameraSlice.actions.setLoading(false))
+        }
+    }
 
     const formik = useFormik({
         initialValues: {
             ip: ip || "",
         },
         validate,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             dispatch(cameraSlice.actions.changeIP(values.ip))
+            if (image) {
+                setImage()
+            }
+            await setUpCamera()
         },
     });
 
-    useEffect(() => {
-        const setUpCamera = async () => {
-            await get_webcam(`http://${ip}:8080/settings/video_size?set=1280x720`)
-            await get_webcam(`http://${ip}:8080/settings/photo_size?set=1280x720`)
+    const handleTakePhoto = async () => {
+        dispatch(cameraSlice.actions.setLoading(true))
+        document.getElementById("ip-webcam").firstChild.src = `http://${ip}:8080/photo.jpg`
+        try {
+            const data = await fetch(`http://${ip}:8080/photo.jpg`);
+            const blob = await data.blob();
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => {
+                const base64data = reader.result;
+                document.getElementById("ip-webcam").firstChild.src = base64data
+                const uuid = v4()
+                setImage(
+                    {
+                        uid: uuid,
+                        name: `${uuid}.png`,
+                        status: 'done',
+                        url: base64data,
+                        type: "image/jpeg",
+                    }
+                )
+            }
+        } catch { } finally {
+            dispatch(cameraSlice.actions.setLoading(false))
         }
-        setUpCamera()
-    }, [])
+    }
 
-    useEffect(() => {
-        const connectInterval = setInterval(() => {
-            document.getElementById("ip-webcam").firstChild.src = "http://${ip}:8080/shot.jpg"
-            document.getElementById("ip-webcam").firstChild.src = `http://${ip}:8080/video`
-        }, 10000);
-
-        return () => {
-            clearInterval(connectInterval)
-        }
-    }, [ip])
+    const handleContinue = () => {
+        document.getElementById("ip-webcam").firstChild.src = `http://${ip}:8080/video`
+        setImage()
+    }
 
     return (
         <Box
@@ -76,7 +123,32 @@ const Camera = () => {
                                 document.getElementById("ip-webcam").firstChild.src = IMAGE
                             }}
                         />
-                        <Button variant="contained" startIcon={<CameraAltIcon />} className='w-fit'>Shoot</Button>
+                        {
+                            image
+                                ?
+                                <Space size={20}>
+                                    <LoadingButton loading={loading} loadingPosition='start' variant="contained" startIcon={<DeleteIcon />} color="error" className='w-28' onClick={() => { handleContinue() }}>Remove</LoadingButton>
+                                    <LoadingButton loading={loading} loadingPosition='start' variant="contained" startIcon={<SendIcon />} color="success" className='w-28' onClick={() => {
+                                        if (single) {
+                                            dispatch(cameraSlice.actions.addSingleImage(image))
+                                        } else {
+                                            dispatch(cameraSlice.actions.addImage(image))
+                                        }
+                                        handleContinue()
+                                    }}>Take</LoadingButton>
+                                </Space>
+                                :
+                                <LoadingButton
+                                    loading={loading}
+                                    onClick={handleTakePhoto}
+                                    loadingPosition="start"
+                                    className='w-28'
+                                    startIcon={<CameraAltIcon />}
+                                    variant="contained"
+                                >
+                                    Shoot
+                                </LoadingButton>
+                        }
                     </List>
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -104,25 +176,29 @@ const Camera = () => {
                                         <div className='text-red-600'>{formik.errors.ip}</div>
                                     ) : null}
                                 </div>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='text-lg sm:text-sm'
-                                >
-                                    Connect
-                                </Button>
+                                <div className='flex space-x-2 items-end'>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        className='text-lg sm:text-sm'
+                                    >
+                                        Connect
+                                    </Button>
+                                    <Typography variant='body2'>Press again if loss connection</Typography>
+                                </div>
                             </Box>
                         </ListItem>
                     </List>
                     <List className='w-full flex flex-col items-center'>
-                        <ListItem className='w-full space-x-5'>
+                        <ListItem className='w-full space-x-5 mt-4'>
                             <Typography>Zoom</Typography>
                             <Slider
-                                defaultValue={1}
-                                step={1}
+                                defaultValue={0}
+                                step={10}
                                 marks
-                                min={1}
-                                max={10}
+                                min={0}
+                                max={100}
+                                valueLabelDisplay="on"
                                 onChange={async (e, value) => {
                                     await get_webcam(`http://${ip}:8080/ptz?zoom=${value}`)
                                 }}

@@ -37,4 +37,5 @@ export const get_webcam = async (url, options = {}) => {
             ...options,
         },
     });
+    return res
 };
