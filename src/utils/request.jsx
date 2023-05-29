@@ -1,7 +1,8 @@
 import { BACKEND_URL } from "./constant";
+import { env } from "./env";
 
 export const post = async (path, payload, options = {}) => {
-    const res = await fetch(`${BACKEND_URL}${path}`, {
+    const res = await fetch(`${env().backend_url || BACKEND_URL}${path}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -17,7 +18,7 @@ export const post = async (path, payload, options = {}) => {
 
 
 export const get = async (path, options = {}) => {
-    const res = await fetch(`${BACKEND_URL}${path}`, {
+    const res = await fetch(`${env().backend_url || BACKEND_URL}${path}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

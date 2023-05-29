@@ -4,11 +4,13 @@ import { FileOutlined, PieChartOutlined, DesktopOutlined } from '@ant-design/ico
 import { useSelector } from 'react-redux';
 import { accountSelector } from '../redux/selectors';
 import { Button } from '@mui/material';
+import { useEffect } from 'react';
 const { Header, Footer } = Layout;
 
 import UserMenu from '../components/UserMenu';
 import PushNotification from '../components/PushNotification'
 import { getProviderIcon } from '../utils/kind';
+import { BACKEND_URL } from '../utils/constant';
 
 function getItem(label, key, icon, children) {
     return {
@@ -27,6 +29,21 @@ const items = [
 
 const MainLayout = () => {
     const account = useSelector(accountSelector)
+
+    useEffect(() => {
+        const fetchEnv = async () => {
+            try {
+                const resp = await fetch(`http://${window.location.hostname}:5173/env.json`)
+                const env = await resp.json()
+                sessionStorage.setItem("env", JSON.stringify(env))
+            } catch {
+                sessionStorage.setItem("env", JSON.stringify({
+                    backend_url: BACKEND_URL
+                }))
+            }
+        }
+        fetchEnv()
+    }, [])
 
     return (
         <Layout className='min-h-screen'>

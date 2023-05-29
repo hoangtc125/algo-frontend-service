@@ -1,4 +1,4 @@
-import { Modal, Steps, Image } from 'antd';
+import { Modal, Steps, Image, Anchor } from 'antd';
 import { Box, Button, Chip, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,12 +18,15 @@ import { get, post } from '../../utils/request';
 import { errorNotification, successNotification } from '../../utils/notification';
 import { LoadingButton } from '@mui/lab';
 import { aboutMe } from '../../layouts/appSlice';
+import { STUDENT_CARD } from '../../utils/constant';
+import HUST from '../../assets/images/hust.png'
 
 const AccountVerify = () => {
     const dispatch = useDispatch()
     const images = useSelector(imagesSelector)
     const account = useSelector(accountSelector)
     const [school, setSchool] = useState('HUST');
+    const [card, setCard] = useState(HUST);
     const [current, setCurrent] = useState(0);
     const [loading, isLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,6 +43,8 @@ const AccountVerify = () => {
             }
         }
         if (account?.verify?.type) {
+            const card = STUDENT_CARD.find(s => s.cards.find(c => c.key == account?.verify?.type)).cards.find(s => s.key == account?.verify?.type).card
+            setCard(card)
             setSchool(account?.verify?.type)
         }
         const getVerifyImage = async () => {
@@ -123,7 +128,7 @@ const AccountVerify = () => {
                         className="flex min-h-[60vh] flex-col justify-center items-center p-0 sm:p-4 space-y-2"
                     >
                         <div className="flex flex-col justify-center items-center">
-                            <Image className='max-w-full' src={IMAGE} />
+                            <Image className='max-w-full' src={card} />
                             <Typography>{school}</Typography>
                         </div>
                         <Button className='w-fit' variant="outlined" onClick={() => { setIsCardOpen(true) }}>
@@ -201,47 +206,58 @@ const AccountVerify = () => {
                     </Typography>
                     <ImagesReview />
                 </Modal>
-                <Modal centered title="Select Student School" width={1000} open={isCardOpen} onOk={handleOkCard} onCancel={handleOkCard} okType='default' destroyOnClose={true}>
-                    <FormControl className='w-full flex flex-col justify-center items-center'>
+                <Modal centered width={1250} open={isCardOpen} onOk={handleOkCard} onCancel={handleOkCard} okType='default' destroyOnClose={true}>
+                    <FormControl className='w-full flex flex-col justify-center items-center space-y-5'>
                         <FormLabel id="card-controlled-radio-buttons-group">Card Type</FormLabel>
                         <RadioGroup
                             aria-labelledby="card-controlled-radio-buttons-group"
                             name="controlled-radio-buttons-group"
                             value={school}
                             row
-                            onChange={(e) => { setSchool(e.target.value) }}
-                            className='w-full flex justify-center'
+                            onChange={(e) => { 
+                                const card = STUDENT_CARD.find(s => s.cards.find(c => c.key == e.target.value)).cards.find(s => s.key == e.target.value).card
+                                setCard(card)
+                                setSchool(e.target.value) 
+                            }}
+                            className='w-full flex justify-start'
                         >
-                            <FormControlLabel className="w-fit" labelPlacement="top" value="HUST" control={<Radio />} label={
-                                <div className="flex flex-col justify-center items-center">
-                                    <Image width={200} preview={false} src={IMAGE} />
-                                    <Typography>HUST</Typography>
-                                </div>
-                            } />
-                            <FormControlLabel className="w-fit" labelPlacement="top" value="HUST2" control={<Radio />} label={
-                                <div className="flex flex-col justify-center items-center">
-                                    <Image width={200} preview={false} src={IMAGE} />
-                                    <Typography>HUST2</Typography>
-                                </div>
-                            } />
-                            <FormControlLabel className="w-fit" labelPlacement="top" value="HUCE" control={<Radio />} label={
-                                <div className="flex flex-col justify-center items-center">
-                                    <Image width={200} preview={false} src={IMAGE} />
-                                    <Typography>HUCE</Typography>
-                                </div>
-                            } />
-                            <FormControlLabel className="w-fit" labelPlacement="top" value="NEU" control={<Radio />} label={
-                                <div className="flex flex-col justify-center items-center">
-                                    <Image width={200} preview={false} src={IMAGE} />
-                                    <Typography>NEU</Typography>
-                                </div>
-                            } />
-                            <FormControlLabel className="w-fit" labelPlacement="top" value="NEU2" control={<Radio />} label={
-                                <div className="flex flex-col justify-center items-center">
-                                    <Image width={200} preview={false} src={IMAGE} />
-                                    <Typography>NEU2</Typography>
-                                </div>
-                            } />
+                            <Grid container>
+                                <Grid item xs={12} md={3}>
+                                    <Anchor
+                                        className='w-fit p-4 lg:fixed bg-white'
+                                        items={
+                                            STUDENT_CARD.map(e => {
+                                                return {
+                                                    key: e.school,
+                                                    href: `#${e.school}`,
+                                                    title: e.school,
+                                                }
+                                            })
+                                        }
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={9}>
+                                    {
+                                        STUDENT_CARD.map(e => (
+                                            <div id={e.school} className='w-full flex flex-col space-y-3' key={e.school}>
+                                                <Typography variant='h6'>{e.school}</Typography>
+                                                <div className='flex justify-center w-full flex-wrap'>
+                                                    {
+                                                        e.cards.map(c => (
+                                                            <FormControlLabel key={c.key} className="w-fit" labelPlacement="top" value={c.key} control={<Radio />} label={
+                                                                <div className="flex flex-col justify-center items-center">
+                                                                    <Image className='w-full' preview={false} src={c.card} />
+                                                                    <Typography>{c.key}</Typography>
+                                                                </div>
+                                                            } />
+                                                        ))
+                                                    }
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </Grid>
+                            </Grid>
                         </RadioGroup>
                     </FormControl>
                 </Modal>
