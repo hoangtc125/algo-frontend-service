@@ -1,6 +1,6 @@
-import { Modal, Steps, Image, Anchor } from 'antd';
+import { Modal, Steps, Image, Anchor, Divider, Tour, FloatButton } from 'antd';
 import { Box, Button, Chip, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -20,6 +20,7 @@ import { LoadingButton } from '@mui/lab';
 import { aboutMe } from '../../layouts/appSlice';
 import { STUDENT_CARD, CARD_LIST } from '../../utils/constant';
 import HUST from '../../assets/images/hust.png'
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const AccountVerify = () => {
     const dispatch = useDispatch()
@@ -31,6 +32,40 @@ const AccountVerify = () => {
     const [loading, isLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCardOpen, setIsCardOpen] = useState(false);
+    const [isTourOpen, setIsTourOpen] = useState(false);
+    const ref1 = useRef(null);
+    const ref2 = useRef(null);
+    const ref3 = useRef(null);
+    const ref4 = useRef(null);
+    const ref5 = useRef(null);
+
+    const tourSteps = [
+        {
+            title: 'Select your school or university',
+            description: 'Press this button to choose student card sample',
+            target: () => ref1.current,
+        },
+        {
+            title: 'Upload student card',
+            description: 'Press here to take a shoot or upload from this device',
+            target: () => ref2.current,
+        },
+        {
+            title: 'Process your student card',
+            description: 'Submit your card image, it will be verified by system automatically',
+            target: () => ref3.current,
+        },
+        {
+            title: 'Check new message in your student email',
+            description: 'System will send a link to verify your student mail, open this link to finish',
+            target: () => ref4.current,
+        },
+        {
+            title: 'Result of this process be display here',
+            description: 'If system show Verified, congrats!',
+            target: () => ref5.current,
+        },
+    ];
 
     useEffect(() => {
         if (account?.verify?.status) {
@@ -131,7 +166,7 @@ const AccountVerify = () => {
                             <Image className='max-w-full' src={card} />
                             <Typography>{school}</Typography>
                         </div>
-                        <Button className='w-fit' variant="outlined" onClick={() => { setIsCardOpen(true) }}>
+                        <Button ref={ref1} className='w-fit' variant="outlined" onClick={() => { setIsCardOpen(true) }}>
                             Change Shool
                         </Button>
                     </Box>
@@ -145,7 +180,7 @@ const AccountVerify = () => {
                             className='max-w-full max-h-[50vh] shadow-md'
                         />
                         <Typography>Your Card Student Image</Typography>
-                        <Button className='w-fit' variant="outlined" onClick={handleUploadImage}>
+                        <Button ref={ref2} className='w-fit' variant="outlined" onClick={handleUploadImage}>
                             Change Image
                         </Button>
                     </Box>
@@ -170,17 +205,11 @@ const AccountVerify = () => {
                         <ListItem>
                             <ListItemText primary="Student Number" secondary={account?.verify?.detail?.number} />
                         </ListItem>
-                        <ListItem>
+                        <ListItem ref={ref4}>
                             <ListItemText primary="Student Email" secondary={account?.verify?.detail?.email} />
                         </ListItem>
                         <ListItem>
-                            {
-                                account?.verify?.status
-                                    ?
-                                    <Chip label="Verified" color="success" variant="outlined" />
-                                    :
-                                    <Chip label="No verify" color="error" variant="outlined" />
-                            }
+                            <Chip ref={ref5} label={account?.verify?.status ? "Verified" : "No verify"} color={account?.verify?.status ? "success" : "error"} variant="outlined" />
                         </ListItem>
                     </List>
                 </Grid>
@@ -192,11 +221,12 @@ const AccountVerify = () => {
                     loading={loading}
                     onClick={handleVerifyCard}
                     variant="contained"
+                    ref={ref3}
                 >
                     Verify Card
                 </LoadingButton>
 
-                <Modal centered title="Upload Student Card" width={1000} open={isModalOpen} onOk={handleOk} onCancel={handleOk} okType='default' destroyOnClose={true}>
+                <Modal centered title="Upload Student Card" width={1000} open={isModalOpen} onOk={handleOk} onCancel={handleOk} destroyOnClose={true}>
                     <Typography variant="body2">
                         Take a shoot
                     </Typography>
@@ -206,7 +236,7 @@ const AccountVerify = () => {
                     </Typography>
                     <ImagesReview />
                 </Modal>
-                <Modal centered width={1250} open={isCardOpen} onOk={handleOkCard} onCancel={handleOkCard} okType='default' destroyOnClose={true}>
+                <Modal centered width={1250} open={isCardOpen} onOk={handleOkCard} onCancel={handleOkCard} destroyOnClose={true}>
                     <FormControl className='w-full flex flex-col justify-center items-center space-y-5'>
                         <FormLabel id="card-controlled-radio-buttons-group">Card Type</FormLabel>
                         <RadioGroup
@@ -214,10 +244,10 @@ const AccountVerify = () => {
                             name="controlled-radio-buttons-group"
                             value={school}
                             row
-                            onChange={(e) => { 
+                            onChange={(e) => {
                                 const card = CARD_LIST.find(s => s.key == e.target.value).card
                                 setCard(card)
-                                setSchool(e.target.value) 
+                                setSchool(e.target.value)
                             }}
                             className='w-full flex justify-start'
                         >
@@ -253,6 +283,7 @@ const AccountVerify = () => {
                                                         ))
                                                     }
                                                 </div>
+                                                <Divider />
                                             </div>
                                         ))
                                     }
@@ -261,6 +292,14 @@ const AccountVerify = () => {
                         </RadioGroup>
                     </FormControl>
                 </Modal>
+                <Tour open={isTourOpen} onClose={() => setIsTourOpen(false)} steps={tourSteps} />
+                <FloatButton
+                    icon={<QuestionCircleOutlined />}
+                    type="primary"
+                    onClick={() => setIsTourOpen(true)}
+                    tooltip="Guide"
+                    className='left-0'
+                />
             </div>
         </>
     );

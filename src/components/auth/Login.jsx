@@ -76,7 +76,6 @@ export default function Login() {
                 </div>
             ),
             okText: "Cancel",
-            okType: "dashed"
         });
     };
 
