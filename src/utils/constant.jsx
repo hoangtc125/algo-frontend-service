@@ -43,3 +43,5 @@ export const STUDENT_CARD = [
         ]
     },
 ]
+
+export const CARD_LIST = STUDENT_CARD.map((item) => item.cards).flat();

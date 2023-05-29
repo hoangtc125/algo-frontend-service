@@ -8,11 +8,11 @@ import GoogleIcon from '@mui/icons-material/Google';
 import WindowSharpIcon from '@mui/icons-material/WindowSharp';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useFormik } from 'formik';
+import { Modal } from 'antd';
 
 import appSlice, { loginFirebase, aboutMe, login } from '../../layouts/appSlice';
 import { accountSelector, tokenSelector } from '../../redux/selectors';
 import { infoNotification, errorNotification } from '../../utils/notification';
-import { Modal } from 'antd';
 import ForgotPassword from './ForgotPassword';
 
 
@@ -75,8 +75,8 @@ export default function Login() {
                     <ForgotPassword />
                 </div>
             ),
-            okText:"Cancel",
-            okType:"dashed"
+            okText: "Cancel",
+            okType: "dashed"
         });
     };
 

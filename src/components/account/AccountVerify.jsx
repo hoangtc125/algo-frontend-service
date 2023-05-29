@@ -18,7 +18,7 @@ import { get, post } from '../../utils/request';
 import { errorNotification, successNotification } from '../../utils/notification';
 import { LoadingButton } from '@mui/lab';
 import { aboutMe } from '../../layouts/appSlice';
-import { STUDENT_CARD } from '../../utils/constant';
+import { STUDENT_CARD, CARD_LIST } from '../../utils/constant';
 import HUST from '../../assets/images/hust.png'
 
 const AccountVerify = () => {
@@ -43,7 +43,7 @@ const AccountVerify = () => {
             }
         }
         if (account?.verify?.type) {
-            const card = STUDENT_CARD.find(s => s.cards.find(c => c.key == account?.verify?.type)).cards.find(s => s.key == account?.verify?.type).card
+            const card = CARD_LIST.find(s => s.key == account?.verify?.type).card
             setCard(card)
             setSchool(account?.verify?.type)
         }
@@ -121,11 +121,11 @@ const AccountVerify = () => {
 
     return (
         <>
-            <Steps current={current} items={items} />
+            <Steps current={current} items={items} className='mb-4' />
             <Grid container spacing={2}>
                 <Grid item xs={12} md={3}>
                     <Box
-                        className="flex min-h-[60vh] flex-col justify-center items-center p-0 sm:p-4 space-y-2"
+                        className="flex sm:min-h-[60vh] flex-col justify-center items-center p-0 sm:p-4 space-y-2"
                     >
                         <div className="flex flex-col justify-center items-center">
                             <Image className='max-w-full' src={card} />
@@ -138,7 +138,7 @@ const AccountVerify = () => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Box
-                        className="flex min-h-[60vh] flex-col justify-center items-center p-0 sm:p-4 space-y-2"
+                        className="flex sm:min-h-[60vh] flex-col justify-center items-center p-0 sm:p-4 space-y-2"
                     >
                         <Image
                             src={images[0]?.url || IMAGE}
@@ -215,7 +215,7 @@ const AccountVerify = () => {
                             value={school}
                             row
                             onChange={(e) => { 
-                                const card = STUDENT_CARD.find(s => s.cards.find(c => c.key == e.target.value)).cards.find(s => s.key == e.target.value).card
+                                const card = CARD_LIST.find(s => s.key == e.target.value).card
                                 setCard(card)
                                 setSchool(e.target.value) 
                             }}

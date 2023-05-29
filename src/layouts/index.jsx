@@ -5,7 +5,10 @@ import { useSelector } from 'react-redux';
 import { accountSelector } from '../redux/selectors';
 import { Button } from '@mui/material';
 import { useEffect } from 'react';
+import { FloatButton } from 'antd';
 const { Header, Footer } = Layout;
+import { Modal, Result } from 'antd';
+const { success } = Modal;
 
 import UserMenu from '../components/UserMenu';
 import PushNotification from '../components/PushNotification'
@@ -45,6 +48,39 @@ const MainLayout = () => {
         fetchEnv()
     }, [])
 
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash == "#active") {
+            success({
+                title: 'Welcome to Algo',
+                centered: true,
+                content: (
+                    <Result
+                        status="success"
+                        title="Successfully Active Account"
+                        subTitle="Now you can login with your email and password."
+                        className='pr-16'
+                    />
+                ),
+                okType: 'default'
+            });
+        } else if (hash == "#verify") {
+            success({
+                title: 'Account has been verified',
+                centered: true,
+                content: (
+                    <Result
+                        status="success"
+                        title="Successfully Verify Account"
+                        subTitle="Now you can login with your email and password."
+                        className='pr-16'
+                    />
+                ),
+                okType: 'default'
+            });
+        }
+    }, [])
+
     return (
         <Layout className='min-h-screen'>
             <Header
@@ -72,6 +108,7 @@ const MainLayout = () => {
             >
                 DATN HUST ©2023 Created by Cong Hoang Tran
             </Footer>
+            <FloatButton.BackTop />
         </Layout>
     );
 }

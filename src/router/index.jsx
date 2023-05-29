@@ -9,12 +9,17 @@ import MainLayout from '../layouts';
 import AccountProfile from '../components/account/AccountProfile';
 import AccountSetting from '../components/account/AccountSetting';
 import AccountVerify from '../components/account/AccountVerify';
+import LandingPage from '../pages/Landing';
 
 export default createBrowserRouter([
   {
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        element: <LandingPage />,
+        path: '/',
+      },
       {
         element: <LoginPage />,
         path: '/login',
