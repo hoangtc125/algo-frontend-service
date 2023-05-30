@@ -67,4 +67,8 @@ export const formEl = [
         label: "Select",
         value: "select",
     },
+    {
+        label: "Section",
+        value: "section",
+    },
 ];

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { accountSelector } from '../redux/selectors';
 import appSlice from '../layouts/appSlice';
 import cameraSlice from './camera/cameraSlice';
+import formSlice from './form/formSlice';
 
 export default function UserMenu() {
   const account = useSelector(accountSelector)
@@ -21,6 +22,7 @@ export default function UserMenu() {
     localStorage.clear()
     dispatch(appSlice.actions.clear())
     dispatch(cameraSlice.actions.clear())
+    dispatch(formSlice.actions.clear())
     navigate("/login")
   };
 

@@ -25,6 +25,7 @@ const SelectForm = ({
     const data = {
       id: v4(),
       value: "",
+      to: "",
     };
     addOption(id, data);
   };

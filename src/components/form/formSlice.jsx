@@ -4,35 +4,34 @@ const formSlice = createSlice({
   name: 'form',
   initialState: { id: null, sections: [] },
   reducers: {
+    clear: (state, action) => {
+      state.id = null;
+      state.sections = [];
+    },
     createForm: (state, action) => {
-      state.id = action.payload.id;
+      state.id = action.payload;
       state.sections.push({
-        id: action.payload.id,
+        id: action.payload,
+        title: "",
+        description: "",
         data: [],
       })
     },
     addSection: (state, action) => {
       state.sections.push({
-        id: action.payload.id,
-        title: action.payload.title,
-        description: action.payload.description,
+        id: action.payload,
+        title: "",
+        description: "",
         data: [],
       })
     },
-    updateTitleSection: (state, action) => {
-      const sectionId = action.payload.sectionId
-      let section = state.sections.find(e => e.id == sectionId)
-      section.title = action.payload.title
+    removeSection: (state, action) => {
+      state.sections = state.sections.filter(e => e != action.payload) 
     },
-    updateDescriptionSection: (state, action) => {
+    updateSection: (state, action) => {
       const sectionId = action.payload.sectionId
-      let section = state.sections.find(e => e.id == sectionId)
-      section.description = action.payload.description
-    },
-    updateTitleSection: (state, action) => {
-      const sectionId = action.payload.sectionId
-      let section = state.sections.find(e => e.id == sectionId)
-      section.title = action.payload.title
+      const sectionIndex = state.sections.findIndex(e => e.id == sectionId)
+      state.sections[sectionIndex] = {...state.sections[sectionIndex], ...action.payload.section}
     },
     addElement: (state, action) => {
       const sectionId = action.payload.sectionId
@@ -48,13 +47,13 @@ const formSlice = createSlice({
     updateElement: (state, action) => {
       const sectionId = action.payload.sectionId
       let section = state.sections.find(e => e.id == sectionId)
-      let element = section.data.find(e => e.id == action.payload.element.id)
-      element = action.payload.element
+      const elementIndex = section.data.findIndex(e => e.id == action.payload.elementId)
+      section.data[elementIndex] = {...section.data[elementIndex], ...action.payload.element}
     },
     removeElement: (state, action) => {
       const sectionId = action.payload.sectionId
       let section = state.sections.find(e => e.id == sectionId)
-      section.data = section.data.filter(e => e != action.payload.elementId)
+      section.data = section.data.filter(e => e.id != action.payload.elementId)
     },
   },
 });

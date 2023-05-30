@@ -1,159 +1,139 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import Nestable from "react-nestable";
 import { v4 } from "uuid";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import DehazeOutlinedIcon from '@mui/icons-material/DehazeOutlined';
+import { Space } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 
 import HeaderForm from "./HeaderForm";
 import NumberForm from "./elements/NumberForm";
 import RadioForm from "./elements/RadioForm";
 import TextAreaForm from "./elements/TextAreaForm";
 import TextFieldForm from "./elements/TextFieldForm";
-
-import { formEl } from "../../utils/constant";
 import SelectForm from "./elements/SelectForm";
-import { Space } from "antd";
+import { formSectionsDataSelector } from "../../redux/selectors";
+import formSlice from "./formSlice";
+import SectionForm from "./elements/SectionForm";
 
-const FormBuilder = () => {
-  const initVal = formEl[0]?.value;
+const FormBuilder = ({ formId }) => {
 
-  //State
-  const [title, setTitle] = useState("Untitled Form");
-  const [description, setDescription] = useState("");
-  const [data, setData] = useState([]);
-  const [formData, setFormData] = useState("text");
+  const dispatch = useDispatch()
+  const sectionData = useSelector(formSectionsDataSelector(formId))
 
-  const items = data;
+  const items = sectionData;
 
   //Function to add new element
   const addElement = () => {
     const data = {
       id: v4(),
       value: "",
-      type: formData,
+      type: "text",
       required: false,
       options: [
         {
           id: v4(),
           value: "",
+          to: "",
         }
       ]
     };
-    setData((prevState) => [...prevState, data]);
-    setFormData(initVal);
+    dispatch(formSlice.actions.addElement({sectionId: formId, element: data}))
   };
 
   //Function to delete element
   const deleteEl = (id) => {
-    setData((prevState) => prevState.filter((val) => val.id !== id));
-  };
-
-  //Function to add element at specific pos and return arr
-  const addAfter = (elArray, index, newEl) => {
-    return [...elArray.slice(0, index + 1), newEl, ...elArray.slice(index + 1)];
+    dispatch(formSlice.actions.removeElement({sectionId: formId, elementId: id}))
   };
 
   //Function to duplicate element
   const duplicateElement = (sourceEl) => {
-    let elIdx = data.findIndex((el) => el.id == sourceEl.id);
+    let elIdx = sectionData.findIndex((el) => el.id == sourceEl.id);
     let newEl = {
       ...sourceEl,
       id: v4()
     }
-    let newArr = addAfter(data, elIdx, newEl)
-    setData(newArr)
+    dispatch(formSlice.actions.addElementAfter({sectionId: formId, element: newEl, index: elIdx}))
   };
 
   //Function to handle sorting of elements
   const handleOnChangeSort = ({ items }) => {
-    setData(items);
+    dispatch(formSlice.actions.updateSection({sectionId: formId, section: {data: items}}))
   };
 
   //Function to Handle Input Values
   const handleValue = (id, e) => {
-    let newArr = data.map((el) => {
-      if (el.id == id) {
-        return { ...el, value: e.target.value };
-      } else {
-        return el;
-      }
-    });
-    setData(newArr);
+    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: id, element: {value: e.target.value}}))
   };
 
   //Function to Handle Required
   const handleRequired = (id) => {
-    let newArr = data.map((el) => {
-      if (el.id == id) {
-        return { ...el, required: !el.required };
-      } else {
-        return el;
-      }
-    });
-    setData(newArr);
+    const el = sectionData.find(e => e.id == id)
+    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: id, element: {required: !el.required}}))
   };
 
   //Function to Handle Element Type
   const handleElType = (id, type) => {
-    let newArr = data.map((el) => {
-      if (el.id == id) {
-        return { ...el, type: type };
-      } else {
-        return el;
-      }
-    });
-    setData(newArr);
+    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: id, element: {type: type}}))
   };
 
   //Function to Handle Options
   const addOption = (id, newOption) => {
-    let newArr = data.map((el) => {
-      if (el.id == id) {
-        const objVal = el?.options || [];
-        return { ...el, options: [...objVal, newOption] };
-      } else {
-        return el;
-      }
-    });
-    setData(newArr);
+    const el = sectionData.find(e => e.id == id)
+    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: id, element: {options: [...(el?.options || []), newOption]}}))
   };
 
   //Function to Change Option Values
   const handleOptionValues = (elId, optionId, optionVal) => {
-    let newArr = data.map((el) => {
-      if (el.id == elId) {
-        el?.options &&
-          el?.options.map((opt) => {
-            if (opt.id == optionId) {
-              opt.value = optionVal;
-            }
-          });
-        return el;
+    const el = sectionData.find(e => e.id == elId)
+    const newOptions = el?.options.map((opt) => {
+      if (opt.id == optionId) {
+        return {...opt, value: optionVal}
       } else {
-        return el;
+        return opt
       }
     });
-    setData(newArr);
+    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: elId, element: {options: newOptions}}))
+  };
+
+  //Function to Change Option to Section
+  const handleOptionSection = (elId, optionId, optionVal) => {
+    const el = sectionData.find(e => e.id == elId)
+    const newOptions = el?.options.map((opt) => {
+      if (opt.id == optionId) {
+        return {...opt, to: optionVal}
+      } else {
+        return opt
+      }
+    });
+    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: elId, element: {options: newOptions}}))
   };
 
   //Function to Delete Option
   const deleteOption = (elId, optionId) => {
-    let newArr = data.map((el) => {
-      if (el.id == elId) {
-        let newOptions =
-          el?.options && el?.options.filter((opt) => opt.id != optionId);
-        return { ...el, options: newOptions };
-      } else {
-        return el;
-      }
-    });
-    setData(newArr);
+    const el = sectionData.find(e => e.id == elId)
+    const newOptions = el?.options.filter((opt) => opt.id != optionId);
+    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: elId, element: {options: newOptions}}))
   };
 
   //Render items
   const renderElements = ({ item }) => {
     switch (item.type) {
+      case "section":
+        return (
+          <SectionForm
+            item={item}
+            handleValue={handleValue}
+            deleteEl={deleteEl}
+            handleRequired={handleRequired}
+            handleElType={handleElType}
+            addOption={addOption}
+            handleOptionValues={handleOptionValues}
+            handleOptionSection={handleOptionSection}
+            deleteOption={deleteOption}
+            duplicateElement={duplicateElement}
+          />
+        );
       case "text":
         return (
           <TextFieldForm
@@ -224,12 +204,7 @@ const FormBuilder = () => {
     <Fragment>
       <Grid container spacing={2} direction="row" justifyContent="center" className="p-4">
         <Grid item md={6}>
-          <HeaderForm
-            title={title}
-            setTitle={setTitle}
-            description={description}
-            setDescription={setDescription}
-          />
+          <HeaderForm sectionId={formId}/>
           <Nestable
             items={items}
             renderItem={renderElements}
@@ -245,14 +220,6 @@ const FormBuilder = () => {
                 onClick={addElement}
               >
                 <AddCircleOutlineOutlinedIcon color="primary" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip placement="right" title="Add Section" aria-label="add-section">
-              <IconButton
-                aria-label="add-section"
-                onClick={addElement}
-              >
-                <DehazeOutlinedIcon color="primary" />
               </IconButton>
             </Tooltip>
           </Space>

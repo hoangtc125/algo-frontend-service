@@ -1,14 +1,23 @@
 import { Fragment } from "react";
 import { Box, TextField, Paper } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 
-const HeaderForm = ({ title, description, setTitle, setDescription }) => {
+import { descriptionSectionSelector, titleSectionSelector } from "../../redux/selectors";
+import formSlice from "./formSlice";
+
+const HeaderForm = ({ sectionId }) => {
+
+  const dispatch = useDispatch()
+  const title = useSelector(titleSectionSelector(sectionId))
+  const description = useSelector(descriptionSectionSelector(sectionId))
+
   return (
     <Fragment>
       <Box sx={{ mb: 3 }}>
         <Paper elevation={2} sx={{ p: 3, borderTop: "8px solid #272bb0" }}>
           <TextField
             defaultValue={title}
-            onBlur={(e) => setTitle(e.target.value)}
+            onBlur={(e) => dispatch(formSlice.actions.updateSection({sectionId: sectionId, section: {title: e.target.value}}))}
             variant="standard"
             label="Form Title"
             name="title"
@@ -18,7 +27,7 @@ const HeaderForm = ({ title, description, setTitle, setDescription }) => {
           <TextField
             name="description"
             defaultValue={description}
-            onBlur={(e) => setDescription(e.target.value)}
+            onBlur={(e) => dispatch(formSlice.actions.updateSection({sectionId: sectionId, section: {description: e.target.value}}))}
             variant="standard"
             label="Form Description"
             fullWidth

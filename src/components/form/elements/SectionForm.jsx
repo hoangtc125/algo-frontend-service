@@ -7,8 +7,10 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 import { formEl } from "../../../utils/constant";
+import { useSelector } from "react-redux";
+import { idSectionsSelector } from "../../../redux/selectors";
 
-const RadioForm = ({
+const SectionForm = ({
   item,
   handleValue,
   deleteEl,
@@ -16,9 +18,12 @@ const RadioForm = ({
   handleElType,
   addOption,
   handleOptionValues,
+  handleOptionSection,
   deleteOption,
   duplicateElement
 }) => {
+
+  const sectionsId = useSelector(idSectionsSelector)
 
   //Create new option
   const createNewOption = (id) => {
@@ -47,22 +52,42 @@ const RadioForm = ({
                 onBlur={(e) => handleValue(item.id, e)}
                 fullWidth
                 required={item.required}
-                label="Radio Label"
+                label="Section Label"
                 sx={{ mb: 2 }}
               />
               {(item?.options || []).map((opt, key) => (
-                <Box className="flex items-center mb-2" key={opt?.id}>
+                <Box className="flex items-center mb-2 space-x-1" key={opt?.id}>
                   <RadioButtonCheckedIcon className="mr-2" color="action"/>
                   <TextField
                     variant="outlined"
                     fullWidth
-                    label={`Radio Option ${key + 1}`}
+                    label={`Section Option ${key + 1}`}
                     defaultValue={opt?.value}
                     key={opt?.id}
                     onBlur={(e) =>
                       handleOptionValues(item?.id, opt?.id, e.target.value)
                     }
                   />
+                  <FormControl className="w-full">
+                    <InputLabel id="el-to-section-label">To Section</InputLabel>
+                    <Select
+                      labelId="el-to-section-label"
+                      id="el-to-section"
+                      label="To Section"
+                      value={opt?.to}
+                      onChange={(e) => handleOptionSection(item?.id, opt?.id, e.target.value)}
+                    >
+                      <MenuItem key={""} value={""}>
+                        No Section
+                      </MenuItem>
+                      {sectionsId &&
+                        sectionsId.map((el) => (
+                          <MenuItem key={el} value={el}>
+                            {`Section ${el.substr(0, 8)}`}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
                   <Tooltip title="Delete Option" aria-label="delete-option">
                     <IconButton
                       aria-label="delete-option"
@@ -138,4 +163,4 @@ const RadioForm = ({
   );
 };
 
-export default RadioForm;
+export default SectionForm;

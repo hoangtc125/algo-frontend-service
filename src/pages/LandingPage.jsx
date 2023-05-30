@@ -1,41 +1,42 @@
 import { Tabs } from 'antd';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { v4 } from 'uuid';
 
 import FormBuilder from '../components/form/FormBuilder';
+import formSlice from '../components/form/formSlice';
 
-const initialItems = [
-    {
-        label: 'Tab 1',
-        children: <FormBuilder />,
-        key: 1,
-        closable: false,
-    },
-    {
-        label: 'Tab 2',
-        children: <FormBuilder />,
-        key: 2,
-    },
-    {
-        label: 'Tab 3',
-        children: <FormBuilder />,
-        key: 3,
-    },
-];
 const LandingPage = () => {
-    const [activeKey, setActiveKey] = useState(initialItems[0].key);
-    const [items, setItems] = useState(initialItems);
-    const newTabIndex = useRef(0);
+    const dispatch = useDispatch()
+    const [activeKey, setActiveKey] = useState();
+    const [items, setItems] = useState();
+
+    useEffect(() => {
+        const formId = v4()
+        dispatch(formSlice.actions.createForm(formId))
+        setActiveKey(formId)
+        setItems([
+            {
+                label: 'Main section',
+                children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId}/></div>,
+                key: formId,
+                closable: false,
+            },
+        ])
+    }, [])
 
     const onChange = (newActiveKey) => {
         setActiveKey(newActiveKey);
     };
 
     const add = () => {
-        const newActiveKey = `newTab${newTabIndex.current++}`;
+        const newActiveKey = v4();
+        dispatch(formSlice.actions.addSection(newActiveKey))
         const newPanes = [...items];
         newPanes.push({
-            label: 'New Tab',
-            children: 'Content of new Tab',
+            label: `Section ${newActiveKey.substr(0, 8)}`,
+            children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={newActiveKey}/></div>,
             key: newActiveKey,
         });
         setItems(newPanes);
@@ -43,6 +44,7 @@ const LandingPage = () => {
     };
 
     const remove = (targetKey) => {
+        dispatch(formSlice.actions.removeSection(targetKey))
         let newActiveKey = activeKey;
         let lastIndex = -1;
         items.forEach((item, i) => {
@@ -77,7 +79,7 @@ const LandingPage = () => {
             activeKey={activeKey}
             onEdit={onEdit}
             items={items}
-            className='w-full bg-white min-h-screen m-4'
+            className='w-full p-4'
         />
     );
 
