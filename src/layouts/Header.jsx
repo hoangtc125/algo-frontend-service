@@ -52,12 +52,12 @@ const HeaderPage = () => {
                             variant="outlined"
                             onClick={() => {
                                 dispatch(appSlice.actions.setTry())
-                                navigate("/home")
+                                navigate("/algo-frontend-service/home")
                             }}
                         >
                             Try without Sign in
                         </Button>
-                            <Button variant="contained"><Link to="/login">Login</Link></Button>
+                            <Button variant="contained"><Link to="/algo-frontend-service/login">Login</Link></Button>
                         </Space>
                     )
             }

@@ -26,7 +26,7 @@ const formSlice = createSlice({
       })
     },
     removeSection: (state, action) => {
-      state.sections = state.sections.filter(e => e != action.payload) 
+      state.sections = state.sections.filter(e => e.id != action.payload) 
     },
     updateSection: (state, action) => {
       const sectionId = action.payload.sectionId

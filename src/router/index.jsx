@@ -18,41 +18,41 @@ export default createBrowserRouter([
     children: [
       {
         element: <LandingPage />,
-        path: '/',
+        path: '/algo-frontend-service/',
       },
       {
         element: <LoginPage />,
-        path: '/login',
+        path: '/algo-frontend-service/login',
       },
       {
         element: <RegisterPage />,
-        path: '/register',
+        path: '/algo-frontend-service/register',
       },
       {
         element: <ResetPasswordPage />,
-        path: '/reset-password',
+        path: '/algo-frontend-service/reset-password',
       },
       {
         element: <ProtectedRoute />,
         children: [
           {
             element: <HomePage />,
-            path: '/home',
+            path: '/algo-frontend-service/home',
             children: [
 
             ]
           },
           {
             element: <AccountProfile />,
-            path: '/account',
+            path: '/algo-frontend-service/account',
           },
           {
             element: <AccountVerify />,
-            path: '/account/verify',
+            path: '/algo-frontend-service/account/verify',
           },
           {
             element: <AccountSetting />,
-            path: '/account/setting',
+            path: '/algo-frontend-service/account/setting',
           },
         ],
       },

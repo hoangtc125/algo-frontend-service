@@ -1,5 +1,5 @@
 import { Button, Typography, Box, Grid, TextField } from '@mui/material';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { post } from '../../utils/request';
 import { errorNotification, infoNotification, successNotification } from '../../utils/notification';
@@ -35,7 +35,6 @@ const validate = values => {
 };
 
 export default function Register() {
-    const navigate = useNavigate()
     const formik = useFormik({
         initialValues: {
             password: '',
@@ -140,7 +139,7 @@ export default function Register() {
                 </Button>
                 <Grid container>
                     <Grid item>
-                        <Link to="/login" variant="body2" className='underline'>
+                        <Link to="/algo-frontend-service/login" variant="body2" className='underline'>
                             Have an account? Sign In
                         </Link>
                     </Grid>

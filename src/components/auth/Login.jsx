@@ -60,7 +60,7 @@ export default function Login() {
             if (!account) {
                 dispatch(aboutMe())
             } else {
-                navigate("/home")
+                navigate("/algo-frontend-service/home")
             }
         }
     }, [token, account])
@@ -196,7 +196,7 @@ export default function Login() {
                         </Link>
                     </Grid>
                     <Grid item>
-                        <Link to="/register" variant="body2" className='underline'>
+                        <Link to="/algo-frontend-service/register" variant="body2" className='underline'>
                             Don't have an account? Sign Up
                         </Link>
                     </Grid>

@@ -23,11 +23,11 @@ function getItem(label, key, icon, children) {
 }
 
 const siderItems = [
-    getItem(<Link to={"/"}>Club</Link>, 'club', <PieChartOutlined />),
+    getItem(<Link to={"/algo-frontend-service/"}>Club</Link>, 'club', <PieChartOutlined />),
     getItem('Account', 'account', <UserOutlined />, [
-        getItem(<Link to={"/account"}>Profile</Link>, '/account', <ProfileFilled />),
-        getItem(<Link to={"/account/verify"}>Verify</Link>, '/account/verify', <VerifiedIcon />),
-        getItem(<Link to={"/account/setting"}>Setting</Link>, '/account/setting', <SettingsSuggestIcon />),
+        getItem(<Link to={"/algo-frontend-service/account"}>Profile</Link>, '/algo-frontend-service/account', <ProfileFilled />),
+        getItem(<Link to={"/algo-frontend-service/account/verify"}>Verify</Link>, '/algo-frontend-service/account/verify', <VerifiedIcon />),
+        getItem(<Link to={"/algo-frontend-service/account/setting"}>Setting</Link>, '/algo-frontend-service/account/setting', <SettingsSuggestIcon />),
     ]),
 ];
 
@@ -88,7 +88,7 @@ const MainLayout = () => {
                 {
                     account &&
                     <Sider collapsed={true} theme='light' className='w-[50px] sm:w-[200px]'>
-                        <Link to="/">
+                        <Link to="/algo">
                             <Image
                                 preview={false}
                                 src={logoImage}

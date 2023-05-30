@@ -21,7 +21,7 @@ export default function ProtectedRoute() {
   });
 
   if (!localStorage.getItem('accessToken')) {
-    return <Navigate to="/login" />
+    return <Navigate to="/algo-frontend-service/login" />
   }
   if (!token) {
     dispatch(appSlice.actions.addToken(localStorage.getItem('accessToken')))

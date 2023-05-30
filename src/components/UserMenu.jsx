@@ -23,7 +23,7 @@ export default function UserMenu() {
     dispatch(appSlice.actions.clear())
     dispatch(cameraSlice.actions.clear())
     dispatch(formSlice.actions.clear())
-    navigate("/login")
+    navigate("/algo-frontend-service/login")
   };
 
   const handleClose = () => {

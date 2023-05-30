@@ -19,7 +19,7 @@ export default function ErrorPage() {
           </p>
         </>
       }
-      extra={<Button type="secondary"><Link to="/">Back Home</Link></Button>}
+      extra={<Button type="secondary"><Link to="/algo-frontend-service/">Back Home</Link></Button>}
     />
   );
 }

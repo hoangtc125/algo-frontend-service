@@ -105,7 +105,7 @@ const ResetPassword = () => {
                 </Button>
                 <Grid container>
                     <Grid item>
-                        <Link to="/login" variant="body2" className='underline'>
+                        <Link to="/algo-frontend-service/login" variant="body2" className='underline'>
                             Have an account? Sign In
                         </Link>
                     </Grid>

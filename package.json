@@ -1,5 +1,6 @@
 {
   "name": "algo-frontend-service",
+  "homepage": "https://hoangtc125.github.io/algo-frontend-service/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,7 +9,8 @@
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "emulator": "cd emulator && firebase emulators:start"
+    "emulator": "cd emulator && firebase emulators:start",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.2",
@@ -22,6 +24,7 @@
     "antd": "^5.5.1",
     "firebase": "^9.21.0",
     "formik": "^2.2.9",
+    "gh-pages": "^5.0.0",
     "moment": "^2.29.4",
     "package.json": "^2.0.1",
     "react": "^18.2.0",
