@@ -88,7 +88,7 @@ const MainLayout = () => {
                 {
                     account &&
                     <Sider collapsed={true} theme='light' className='w-[50px] sm:w-[200px]'>
-                        <Link to="/algo">
+                        <Link to="/algo-frontend-service/">
                             <Image
                                 preview={false}
                                 src={logoImage}

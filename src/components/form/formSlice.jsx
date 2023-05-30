@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { FORM_BUILDER } from '../../utils/constant';
+
 const formSlice = createSlice({
   name: 'form',
   initialState: { id: null, sections: [] },
@@ -7,6 +9,10 @@ const formSlice = createSlice({
     clear: (state, action) => {
       state.id = null;
       state.sections = [];
+    },
+    fakeForm: (state, action) => {
+      state.id = FORM_BUILDER.id;
+      state.sections = FORM_BUILDER.sections
     },
     createForm: (state, action) => {
       state.id = action.payload;

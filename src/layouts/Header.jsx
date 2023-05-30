@@ -50,6 +50,7 @@ const HeaderPage = () => {
                         <Button
                             fullWidth
                             variant="outlined"
+                            className='whitespace-nowrap'
                             onClick={() => {
                                 dispatch(appSlice.actions.setTry())
                                 navigate("/algo-frontend-service/home")

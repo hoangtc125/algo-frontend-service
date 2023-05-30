@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 
 import FormBuilder from '../components/form/FormBuilder';
 import formSlice from '../components/form/formSlice';
+import { FORM_BUILDER } from '../utils/constant';
 
 const LandingPage = () => {
     const dispatch = useDispatch()
@@ -13,17 +14,20 @@ const LandingPage = () => {
     const [items, setItems] = useState();
 
     useEffect(() => {
-        const formId = v4()
-        dispatch(formSlice.actions.createForm(formId))
+        // const formId = v4()
+        const formId = FORM_BUILDER.id
+        dispatch(formSlice.actions.clear())
+        dispatch(formSlice.actions.fakeForm())
         setActiveKey(formId)
-        setItems([
-            {
-                label: 'Main section',
-                children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId}/></div>,
-                key: formId,
-                closable: false,
-            },
-        ])
+        const fakeItems = FORM_BUILDER.sections.map((e, k) => {
+            return {
+                label: e.title,
+                children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
+                key: e.id,
+                closable: k != 0,
+            }
+        })
+        setItems(fakeItems)
     }, [])
 
     const onChange = (newActiveKey) => {
@@ -36,7 +40,7 @@ const LandingPage = () => {
         const newPanes = [...items];
         newPanes.push({
             label: `Section ${newActiveKey.substr(0, 8)}`,
-            children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={newActiveKey}/></div>,
+            children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={newActiveKey} /></div>,
             key: newActiveKey,
         });
         setItems(newPanes);

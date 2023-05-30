@@ -101,3 +101,635 @@ export const GUEST = {
     active: true,
     id: '5e1d45bc-1d80-49d6-8d0e-b1ac20643e1b'
 }
+
+export const FORM_BUILDER = {
+    id: 'b62cd80f-7e84-4373-8f30-42ab09a34f5d',
+    sections: [
+        {
+            id: 'b62cd80f-7e84-4373-8f30-42ab09a34f5d',
+            title: 'Mẫu đơn tuyển thành viên',
+            description: 'Mẫu đơn tuyển thành viên cho các Câu lạc bộ học thuật về Công nghệ thông tin',
+            data: [
+                {
+                    id: '04ed6a64-26f6-45ad-abd5-bf1c9d425608',
+                    value: 'Họ và tên',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '2a92e6d4-2ac8-4379-94d6-36cc75ae4c75',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: '162b384f-b495-4c8a-b2d4-f3462c12147d',
+                    value: 'Email cá nhân',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '85000685-e1c5-4447-bb8f-3a541f45be7b',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: 'e75c816f-47ef-4bc2-a980-3771c5d8f306',
+                    value: 'Số điện thoại',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'cd57cca4-5f69-4b41-9944-55a73ceebf07',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: 'c4b2ad58-f70a-441e-9f01-8d3aff725d5e',
+                    value: 'Bạn đến từ trường nào',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: 'aeba1564-0c0a-471e-b0c2-cce94fbf531d',
+                    value: 'Trường/Viện',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'b8306d1d-a143-45b4-9e5b-af51a32967f5',
+                    value: 'Khoá',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '79bf0d3e-b29e-4263-b645-bb29de00175c',
+                    value: 'MSSV',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'e8e902cc-7cce-4f7b-8295-686cafdef659',
+                    value: 'Link Facebook',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '5ddd74a0-03d5-451a-8d18-9fb273a8992c',
+                    value: 'Link Linkedln',
+                    type: 'text',
+                    required: false,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '4bc1c825-d1a5-467d-9923-1cda84961076',
+                    value: 'Trình độ tiếng anh',
+                    type: 'text',
+                    required: false,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '569aa8e3-4764-492c-862d-2016960631a9',
+                    value: 'Trình độ tin học văn phòng',
+                    type: 'text',
+                    required: false,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '120fa25d-c2f4-45d7-a675-c77e12e17fd4',
+                    value: 'Thành tích cá nhân',
+                    type: 'text',
+                    required: false,
+                    options: [
+                        {
+                            id: 'd0b69e93-b65d-4c24-9000-79ff4e3e621e',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '268bea27-2e37-4b63-a79a-b88a6d3131b0',
+                    value: 'Bạn mong muốn tham gia vào ban nào?',
+                    type: 'section',
+                    required: true,
+                    options: [
+                        {
+                            id: '623ff26e-2e10-4560-a870-a186a84f78b7',
+                            value: 'Chuyên môn',
+                            to: '2c850c24-ddda-4dce-85fe-e11995d26bac'
+                        },
+                        {
+                            id: 'df7b01f2-a2ef-4095-a390-4df4b73a90d3',
+                            value: 'Đối ngoại',
+                            to: '96f5dfc4-d0cc-422b-a905-c455d9d201d3'
+                        },
+                        {
+                            id: '19497dc2-328d-4411-92ca-c3a49312258b',
+                            value: 'Hậu cần',
+                            to: '4560937c-ae58-429a-bcd4-48c6dead322a'
+                        },
+                        {
+                            id: 'c8de7486-7fbc-4034-bb8c-cb722a9fba33',
+                            value: 'Nhân sự',
+                            to: 'cc9dc796-6028-4205-a8fb-f6dfbe8df61f'
+                        },
+                        {
+                            id: '7a15014d-5434-4ec9-aafa-cf81b7ccd0c3',
+                            value: 'Truyền thông',
+                            to: '58aefe68-2611-4e7a-9868-bd1012a21481'
+                        }
+                    ]
+                },
+                {
+                    id: '18755611-0a6b-4e0b-b61f-d39bcb905404',
+                    value: 'Bạn hiểu gì về CLB',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '7a15014d-5434-4ec9-aafa-cf81b7ccd0c3',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'b440f258-70d5-4ec3-9620-dbc2c0bdb7d3',
+                    value: 'Bạn có đóng góp gì cho CLB trong tương lai',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '7a15014d-5434-4ec9-aafa-cf81b7ccd0c3',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '1387642d-4a57-44cf-b298-2a74855d67b7',
+                    value: 'Bạn có câu hỏi nào khác không',
+                    type: 'text',
+                    required: false,
+                    options: [
+                        {
+                            id: '7a15014d-5434-4ec9-aafa-cf81b7ccd0c3',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                }
+            ]
+        },
+        {
+            id: '2c850c24-ddda-4dce-85fe-e11995d26bac',
+            title: 'Câu hỏi ban Chuyên môn',
+            description: '',
+            data: [
+                {
+                    id: 'e2eeed3d-96d5-4b4b-b00d-4aec74944f3b',
+                    value: 'Bạn đang quan tâm về lĩnh vực nào? Bạn đã biết gì về lĩnh vực này?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'b5d53347-e768-4e5e-b5a5-13385787556d',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: '20f61227-5aaa-4f03-a12d-db3f72cedb2b',
+                    value: 'Bạn có dự án nào không? Nếu có, hãy chia sẻ thêm về nó?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'b5d53347-e768-4e5e-b5a5-13385787556d',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'abf3b8ca-3cee-40a2-8d16-fccf48d7c783',
+                    value: 'Bạn nghĩ mình có thể đóng góp gì cho CLB với tư cách là thành viên ban Chuyên Môn?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'b5d53347-e768-4e5e-b5a5-13385787556d',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '70fe461b-040c-47b5-96d8-1f7a04634d71',
+                    value: 'Hãy nêu chi tiết một ý tưởng về công nghệ mà bạn đang muốn thực hiện.',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'b5d53347-e768-4e5e-b5a5-13385787556d',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '66459375-03ce-4655-ae4f-b6dc43aa5407',
+                    value: 'Ngoài các sự kiện về CNTT, bạn còn tham gia các sự kiện nào khác không? Nếu có, hãy liệt kê nhiều nhất có thể.',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'b5d53347-e768-4e5e-b5a5-13385787556d',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                }
+            ]
+        },
+        {
+            id: '96f5dfc4-d0cc-422b-a905-c455d9d201d3',
+            title: 'Câu hỏi ban Đối ngoại',
+            description: '',
+            data: [
+                {
+                    id: '4595b822-9782-436c-832d-b5ab81d2fc52',
+                    value: 'Bạn hiểu thế nào là đối ngoại? Bạn nghĩ vai trò của ban trong CLB là gì?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'fab0d660-a9b7-4354-adad-6b6044c8f8e4',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: '50e21cff-166f-494a-b535-210f6cda744f',
+                    value: 'Bạn đã có kinh nghiệm gì về đối ngoại chưa?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'fab0d660-a9b7-4354-adad-6b6044c8f8e4',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'edd46d7e-d06c-485a-8223-959f1d5c7dfa',
+                    value: 'Bạn mong muốn học hỏi được gì khi tham gia ban Đối ngoại?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'fab0d660-a9b7-4354-adad-6b6044c8f8e4',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '6a6fac7e-8a3f-4c15-98cf-70dd0b89c7d0',
+                    value: 'Bạn nghĩ những tố chất nào của mình phù hợp với ban Đối ngoại?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'fab0d660-a9b7-4354-adad-6b6044c8f8e4',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'c4be26d0-6621-4d9b-a461-2f413986bca9',
+                    value: 'Bạn đã từng có dự án (liên quan đến công nghệ, kinh doanh...) gì cho bản thân trước đây chưa?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'fab0d660-a9b7-4354-adad-6b6044c8f8e4',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                }
+            ]
+        },
+        {
+            id: '4560937c-ae58-429a-bcd4-48c6dead322a',
+            title: 'Câu hỏi ban Hậu cần',
+            description: '',
+            data: [
+                {
+                    id: '25a2d3a9-ad2a-4158-953d-ffd13eb7ceff',
+                    value: 'Bạn đã tìm hiểu gì về ban Hậu cần chưa?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd505bfeb-4998-45d0-98bb-2d04c35733bb',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: 'd7c8ed23-5cc2-48d8-a9bc-af330690b0c1',
+                    value: 'Tại sao bạn chọn tham gia ban Hậu cần?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd505bfeb-4998-45d0-98bb-2d04c35733bb',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '0d486c8f-039b-401f-9c9f-0b5da855a7af',
+                    value: 'Bạn có kinh nghiệm gì trong việc tổ chức sự kiện chưa?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd505bfeb-4998-45d0-98bb-2d04c35733bb',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '24057426-4b2a-4a47-9409-33467fd8ea28',
+                    value: 'Bạn có kinh nghiệm trong việc quản lí ngân sách cho tập thể chưa?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd505bfeb-4998-45d0-98bb-2d04c35733bb',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'a58960a6-9b10-4827-a4f9-cc70a675ec76',
+                    value: 'Bạn mong muốn học hỏi được gì khi tham gia ban Hậu Cần',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'd505bfeb-4998-45d0-98bb-2d04c35733bb',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                }
+            ]
+        },
+        {
+            id: 'cc9dc796-6028-4205-a8fb-f6dfbe8df61f',
+            title: 'Câu hỏi ban Nhân sự',
+            description: '',
+            data: [
+                {
+                    id: 'dfc6e014-9d65-4cb6-8d04-d75b8fae7b90',
+                    value: 'Hiện tại bạn có tham gia tổ chức nào không (đoàn hội, ban cán sự, đội tình nguyện, ...)? Nếu có, vai trò của bạn là gì?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'cd70788f-a7d0-4a67-a5c1-8094a552c19a',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: '3a9d685c-87ee-424b-8a47-821cc6ed1f24',
+                    value: 'Bạn có thể chia sẻ một vài bản kế hoạch mà bạn đã thực hiện được không? (có thể là kế hoạch học tập, chi tiêu, hoạt động,..)',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'cd70788f-a7d0-4a67-a5c1-8094a552c19a',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '1566d644-bedc-4929-8479-076d4fa19e52',
+                    value: 'Bạn đánh giá như nào về kỹ năng sử dụng tin học văn phòng của bản thân? Bạn có thể nêu một số công mà bạn nghĩ là bạn thành thạo?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'cd70788f-a7d0-4a67-a5c1-8094a552c19a',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '9790d1a9-3d11-4a22-9565-c3daa397538a',
+                    value: 'Sau khi tham gia ban Nhân sự, bạn mong muốn học hỏi hay nhận được điều gì?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'cd70788f-a7d0-4a67-a5c1-8094a552c19a',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'ef363381-57d2-4753-bbd1-d74a2927ceb3',
+                    value: 'Giả sử CLB đang cần một bộ quy tắc hoạt động mới, bạn là người được giao nhiệm vụ làm bộ quy tắc này. Nhưng sau khi làm xong, các thành viên lại không hưởng ứng các quy tắc mà bạn đặt ra, bạn sẽ làm gì trong trường hợp này?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: 'cd70788f-a7d0-4a67-a5c1-8094a552c19a',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                }
+            ]
+        },
+        {
+            id: '58aefe68-2611-4e7a-9868-bd1012a21481',
+            title: 'Câu hỏi ban Truyền thông',
+            description: '',
+            data: [
+                {
+                    id: '55426ea7-6879-4768-a078-39e617ac0a58',
+                    value: 'Hãy nêu những kinh nghiệm và thế mạnh của bạn trong lĩnh vực này',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '12d408da-c127-4025-aa8c-633206fa8150',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: '5c6f2612-ecf7-44f4-8285-e8a8dac11690',
+                    value: 'Bạn mong muốn gì khi được làm việc ở Ban Truyền Thông?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '12d408da-c127-4025-aa8c-633206fa8150',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '69f442c3-a81b-4c23-adca-fc3f87c1429f',
+                    value: 'Bạn có ý tưởng truyền thông gì cho CLB không?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '12d408da-c127-4025-aa8c-633206fa8150',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: 'dbf75d9d-7af4-4d49-a96e-0210168c6f9d',
+                    value: 'Khi xảy ra sự cố truyền thông thí dụ như sai tên doanh nghiệp bạn sẽ xử lí như thế nào?',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '12d408da-c127-4025-aa8c-633206fa8150',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                },
+                {
+                    id: '0a924f83-9c51-4aa3-a959-56ed717bbf10',
+                    value: 'Hãy chia sẻ link đến một kế hoạch bạn đã làm cho một sự kiện và nhớ cấp quyền cho chúng mình nhé',
+                    type: 'text',
+                    required: true,
+                    options: [
+                        {
+                            id: '12d408da-c127-4025-aa8c-633206fa8150',
+                            value: '',
+                            to: ''
+                        }
+                    ],
+                    children: []
+                }
+            ]
+        }
+    ]
+}

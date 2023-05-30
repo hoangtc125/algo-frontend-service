@@ -203,7 +203,7 @@ const FormBuilder = ({ formId }) => {
   return (
     <Fragment>
       <Grid container spacing={2} direction="row" justifyContent="center" className="p-4">
-        <Grid item md={6}>
+        <Grid item xs={11} md={8}>
           <HeaderForm sectionId={formId}/>
           <Nestable
             items={items}
@@ -212,7 +212,7 @@ const FormBuilder = ({ formId }) => {
             onChange={handleOnChangeSort}
           />
         </Grid>
-        <Grid item md={1}>
+        <Grid item xs={1} md={1}>
           <Space size={20} className="sticky top-8 flex sm:flex-col items-center w-fit bg-white p-2 rounded-xl shadow-md">
             <Tooltip placement="right" title="Add Element" aria-label="add-element">
               <IconButton
