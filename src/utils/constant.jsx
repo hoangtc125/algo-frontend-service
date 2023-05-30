@@ -45,3 +45,26 @@ export const STUDENT_CARD = [
 ]
 
 export const CARD_LIST = STUDENT_CARD.map((item) => item.cards).flat();
+
+export const formEl = [
+    {
+        label: "Text",
+        value: "text",
+    },
+    {
+        label: "TextArea",
+        value: "textarea",
+    },
+    {
+        label: "Number",
+        value: "number",
+    },
+    {
+        label: "Radio",
+        value: "radio",
+    },
+    {
+        label: "Select",
+        value: "select",
+    },
+];

@@ -1,15 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom';
 import ErrorPage from '../pages/ErrorPage';
-import Home from '../pages/Home';
-import LoginPage from '../pages/auth/Login';
+import LoginPage from '../pages/auth/LoginPage';
 import ProtectedRoute from './ProtectedRoute';
-import RegisterPage from '../pages/auth/Register';
-import ResetPasswordPage from '../pages/auth/ResetPassword';
+import RegisterPage from '../pages/auth/RegisterPage';
+import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import MainLayout from '../layouts';
 import AccountProfile from '../components/account/AccountProfile';
 import AccountSetting from '../components/account/AccountSetting';
 import AccountVerify from '../components/account/AccountVerify';
-import LandingPage from '../pages/Landing';
+import LandingPage from '../pages/LandingPage';
+import HomePage from '../pages/HomePage';
 
 export default createBrowserRouter([
   {
@@ -36,7 +36,7 @@ export default createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
-            element: <Home />,
+            element: <HomePage />,
             path: '/home',
             children: [
 

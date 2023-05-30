@@ -66,11 +66,13 @@ export default function PushNotification() {
         );
         const noti = await post(`/account/notification?page_size=5&page_number=${page + 1}&orderby=created_at&sort=1`, { "to": account.id })
         const newData = data.concat(noti?.data || []);
-        setData(newData);
-        setNotification(newData);
-        setLoading(false);
-        setPage(prev => prev + 1)
-        window.dispatchEvent(new Event('resize'));
+        setTimeout(() => {
+            setData(newData);
+            setNotification(newData);
+            setLoading(false);
+            setPage(prev => prev + 1)
+            window.dispatchEvent(new Event('resize'));
+        }, 1000);
     };
 
     const loadMore =

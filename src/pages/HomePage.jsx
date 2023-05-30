@@ -1,7 +1,7 @@
 import Camera from "../components/camera";
 import ImagesReview from "../components/camera/imagesReview";
 
-export default function Home() {
+export default function HomePage() {
 
   return (
     <>
