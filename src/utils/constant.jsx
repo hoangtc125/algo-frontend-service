@@ -72,3 +72,32 @@ export const formEl = [
         value: "section",
     },
 ];
+
+export const GUEST = {
+    created_by: 'SYSTEM',
+    created_at: 1685347370,
+    last_modified_by: '',
+    last_modified_at: 1685347677,
+    name: 'Trần Công Hoàng',
+    email: 'trconghoangg@gmail.com',
+    photo_url: null,
+    verify: {
+        status: true,
+        image: '032cf4d0-3e1d-445f-bfa1-071e784fdf12',
+        detail: {
+            school: 'HANOI UNIVERSITY OF SCIENCE AND TECHNOLOGY',
+            major: 'Khoa học máy tính 01-K64 (IT1)',
+            fullname: 'TRẦN CÔNG HOÀNG',
+            birth: '12/05/2001',
+            expired_card: '30/7/2023',
+            number: '20194060',
+            email: 'hoang.tc194060@sis.hust.edu.vn'
+        },
+        type: 'HUST'
+    },
+    role: 'USER',
+    provider: 'SYSTEM',
+    hashed_password: '$2b$12$FPeu680rPYZ9qLP5ylJxL.zeNGwCydf/GRTqD7r.R91LuzN5aEIDq',
+    active: true,
+    id: '5e1d45bc-1d80-49d6-8d0e-b1ac20643e1b'
+}

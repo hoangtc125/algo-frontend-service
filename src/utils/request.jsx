@@ -2,6 +2,13 @@ import { BACKEND_URL } from "./constant";
 import { env } from "./env";
 
 export const post = async (path, payload, options = {}) => {
+    if (localStorage.getItem("guest")) {
+        return {
+            status_code: 200,
+            msg: "success",
+            data: null,
+        }
+    }
     const res = await fetch(`${env().backend_url || BACKEND_URL}${path}`, {
         method: 'POST',
         headers: {
@@ -18,6 +25,13 @@ export const post = async (path, payload, options = {}) => {
 
 
 export const get = async (path, options = {}) => {
+    if (localStorage.getItem("guest")) {
+        return {
+            status_code: 200,
+            msg: "success",
+            data: null,
+        }
+    }
     const res = await fetch(`${env().backend_url || BACKEND_URL}${path}`, {
         method: 'GET',
         headers: {

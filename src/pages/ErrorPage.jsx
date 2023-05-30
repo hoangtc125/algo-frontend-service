@@ -1,4 +1,4 @@
-import { useRouteError } from 'react-router-dom';
+import { Link, useRouteError } from 'react-router-dom';
 import { Button, Result } from 'antd';
 
 
@@ -19,7 +19,7 @@ export default function ErrorPage() {
           </p>
         </>
       }
-      extra={<Button type="secondary">Back Home</Button>}
+      extra={<Button type="secondary"><Link to="/">Back Home</Link></Button>}
     />
   );
 }

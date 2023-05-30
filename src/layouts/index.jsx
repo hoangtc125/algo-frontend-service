@@ -1,20 +1,17 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Layout, Menu, FloatButton, Image, Modal, Result } from 'antd';
-import { FileOutlined, PieChartOutlined, DesktopOutlined, UserOutlined, ProfileFilled } from '@ant-design/icons';
+import { UserOutlined, ProfileFilled, PieChartOutlined } from '@ant-design/icons';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { useSelector } from 'react-redux';
-import { Button } from '@mui/material';
 import { useEffect } from 'react';
-const { Header, Footer, Sider } = Layout;
+const { Footer, Sider } = Layout;
 const { success } = Modal;
 
-import UserMenu from '../components/UserMenu';
-import PushNotification from '../components/PushNotification'
-import { getProviderIcon } from '../utils/kind';
 import { BACKEND_URL } from '../utils/constant';
 import { accountSelector } from '../redux/selectors';
 import logoImage from '../assets/images/algo.png'
+import HeaderPage from './Header';
 
 function getItem(label, key, icon, children) {
     return {
@@ -25,15 +22,8 @@ function getItem(label, key, icon, children) {
     };
 }
 
-const headerItems = [
-    getItem('Club', '1', <PieChartOutlined />),
-    getItem('Event', '2', <DesktopOutlined />),
-    getItem('User', '9', <FileOutlined />),
-];
-
-
 const siderItems = [
-    getItem(<Link to={"/club"}>Club</Link>, 'club', <PieChartOutlined />),
+    getItem(<Link to={"/"}>Club</Link>, 'club', <PieChartOutlined />),
     getItem('Account', 'account', <UserOutlined />, [
         getItem(<Link to={"/account"}>Profile</Link>, '/account', <ProfileFilled />),
         getItem(<Link to={"/account/verify"}>Verify</Link>, '/account/verify', <VerifiedIcon />),
@@ -93,23 +83,7 @@ const MainLayout = () => {
 
     return (
         <Layout className='min-h-screen'>
-            <Header
-                className='flex items-center justify-end sm:justify-between bg-white drop-shadow-md mb-1 px-1 sm:px-10'
-            >
-                <Menu className='grow max-w-full sm:block' theme="light" mode="horizontal" items={headerItems} />
-                {
-                    account ?
-                        (
-                            <div className='flex flex-row items-center space-x-1 sm:space-x-4 lg:space-x-6'>
-                                {getProviderIcon(account?.provider)}
-                                <PushNotification />
-                                <UserMenu />
-                            </div>
-                        ) : (
-                            <Button variant="contained"><Link to="/login">Login</Link></Button>
-                        )
-                }
-            </Header>
+            <HeaderPage />
             <Layout>
                 {
                     account &&

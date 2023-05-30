@@ -112,6 +112,9 @@ const AccountVerify = () => {
     }
 
     useEffect(() => {
+        if (localStorage.getItem("guest")) {
+            return
+        }
         const socket = io(`ws://localhost:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
         socket.on("verify", (message) => {
             dispatch(aboutMe())
