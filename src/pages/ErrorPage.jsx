@@ -1,8 +1,9 @@
-import { Link, useRouteError } from 'react-router-dom';
+import { useNavigate, useRouteError } from 'react-router-dom';
 import { Button, Result } from 'antd';
 
 
 export default function ErrorPage() {
+  const navigate = useNavigate()
   const error = useRouteError();
   console.error(error);
 
@@ -19,7 +20,7 @@ export default function ErrorPage() {
           </p>
         </>
       }
-      extra={<Button type="secondary"><Link to="/algo-frontend-service/">Back Home</Link></Button>}
+      extra={<Button type="primary" onClick={() => { navigate(-1) }}>Go Back</Button>}
     />
   );
 }

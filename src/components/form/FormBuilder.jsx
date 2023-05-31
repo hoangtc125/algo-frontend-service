@@ -1,7 +1,6 @@
-import { Fragment } from "react";
 import Nestable from "react-nestable";
 import { v4 } from "uuid";
-import { Grid, IconButton, Tooltip } from "@mui/material";
+import { Box, Grid, IconButton, Tooltip } from "@mui/material";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { Space } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,16 +11,18 @@ import RadioForm from "./elements/RadioForm";
 import TextAreaForm from "./elements/TextAreaForm";
 import TextFieldForm from "./elements/TextFieldForm";
 import SelectForm from "./elements/SelectForm";
-import { formSectionsDataSelector } from "../../redux/selectors";
+import { formIdSelector, formSectionsDataSelector } from "../../redux/selectors";
 import formSlice from "./formSlice";
 import SectionForm from "./elements/SectionForm";
+import { errorNotification } from "../../utils/notification"
 
 const FormBuilder = ({ formId }) => {
 
   const dispatch = useDispatch()
   const sectionData = useSelector(formSectionsDataSelector(formId))
+  const formInfoId = useSelector(formIdSelector)
 
-  const items = sectionData;
+  console.log("re-render");
 
   //Function to add new element
   const addElement = () => {
@@ -29,6 +30,7 @@ const FormBuilder = ({ formId }) => {
       id: v4(),
       value: "",
       type: "text",
+      answer: "",
       required: false,
       options: [
         {
@@ -38,12 +40,12 @@ const FormBuilder = ({ formId }) => {
         }
       ]
     };
-    dispatch(formSlice.actions.addElement({sectionId: formId, element: data}))
+    dispatch(formSlice.actions.addElement({ sectionId: formId, element: data }))
   };
 
   //Function to delete element
   const deleteEl = (id) => {
-    dispatch(formSlice.actions.removeElement({sectionId: formId, elementId: id}))
+    dispatch(formSlice.actions.removeElement({ sectionId: formId, elementId: id }))
   };
 
   //Function to duplicate element
@@ -53,34 +55,42 @@ const FormBuilder = ({ formId }) => {
       ...sourceEl,
       id: v4()
     }
-    dispatch(formSlice.actions.addElementAfter({sectionId: formId, element: newEl, index: elIdx}))
+    dispatch(formSlice.actions.addElementAfter({ sectionId: formId, element: newEl, index: elIdx }))
   };
 
   //Function to handle sorting of elements
   const handleOnChangeSort = ({ items }) => {
-    dispatch(formSlice.actions.updateSection({sectionId: formId, section: {data: items}}))
+    dispatch(formSlice.actions.updateSection({ sectionId: formId, section: { data: items } }))
   };
 
   //Function to Handle Input Values
   const handleValue = (id, e) => {
-    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: id, element: {value: e.target.value}}))
+    dispatch(formSlice.actions.updateElement({ sectionId: formId, elementId: id, element: { value: e.target.value } }))
   };
 
   //Function to Handle Required
   const handleRequired = (id) => {
     const el = sectionData.find(e => e.id == id)
-    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: id, element: {required: !el.required}}))
+    dispatch(formSlice.actions.updateElement({ sectionId: formId, elementId: id, element: { required: !el.required } }))
   };
 
   //Function to Handle Element Type
   const handleElType = (id, type) => {
-    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: id, element: {type: type}}))
+    if (formInfoId == formId) {
+      dispatch(formSlice.actions.updateElement({ sectionId: formId, elementId: id, element: { type: type } }))
+    } else {
+      if (type == "section") {
+        errorNotification("Bad action", "You can add a redirect question in sub form", "bottomRight")
+      } else {
+        dispatch(formSlice.actions.updateElement({ sectionId: formId, elementId: id, element: { type: type } }))
+      }
+    }
   };
 
   //Function to Handle Options
   const addOption = (id, newOption) => {
     const el = sectionData.find(e => e.id == id)
-    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: id, element: {options: [...(el?.options || []), newOption]}}))
+    dispatch(formSlice.actions.updateElement({ sectionId: formId, elementId: id, element: { options: [...(el?.options || []), newOption] } }))
   };
 
   //Function to Change Option Values
@@ -88,12 +98,12 @@ const FormBuilder = ({ formId }) => {
     const el = sectionData.find(e => e.id == elId)
     const newOptions = el?.options.map((opt) => {
       if (opt.id == optionId) {
-        return {...opt, value: optionVal}
+        return { ...opt, value: optionVal }
       } else {
         return opt
       }
     });
-    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: elId, element: {options: newOptions}}))
+    dispatch(formSlice.actions.updateElement({ sectionId: formId, elementId: elId, element: { options: newOptions } }))
   };
 
   //Function to Change Option to Section
@@ -101,27 +111,28 @@ const FormBuilder = ({ formId }) => {
     const el = sectionData.find(e => e.id == elId)
     const newOptions = el?.options.map((opt) => {
       if (opt.id == optionId) {
-        return {...opt, to: optionVal}
+        return { ...opt, to: optionVal }
       } else {
         return opt
       }
     });
-    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: elId, element: {options: newOptions}}))
+    dispatch(formSlice.actions.updateElement({ sectionId: formId, elementId: elId, element: { options: newOptions } }))
   };
 
   //Function to Delete Option
   const deleteOption = (elId, optionId) => {
     const el = sectionData.find(e => e.id == elId)
     const newOptions = el?.options.filter((opt) => opt.id != optionId);
-    dispatch(formSlice.actions.updateElement({sectionId: formId, elementId: elId, element: {options: newOptions}}))
+    dispatch(formSlice.actions.updateElement({ sectionId: formId, elementId: elId, element: { options: newOptions } }))
   };
 
   //Render items
-  const renderElements = ({ item }) => {
+  const renderElements = (item) => {
     switch (item.type) {
       case "section":
         return (
           <SectionForm
+            key={item.id}
             item={item}
             handleValue={handleValue}
             deleteEl={deleteEl}
@@ -137,6 +148,7 @@ const FormBuilder = ({ formId }) => {
       case "text":
         return (
           <TextFieldForm
+            key={item.id}
             item={item}
             handleValue={handleValue}
             deleteEl={deleteEl}
@@ -148,6 +160,7 @@ const FormBuilder = ({ formId }) => {
       case "textarea":
         return (
           <TextAreaForm
+            key={item.id}
             item={item}
             handleValue={handleValue}
             deleteEl={deleteEl}
@@ -159,6 +172,7 @@ const FormBuilder = ({ formId }) => {
       case "number":
         return (
           <NumberForm
+            key={item.id}
             item={item}
             handleValue={handleValue}
             deleteEl={deleteEl}
@@ -170,6 +184,7 @@ const FormBuilder = ({ formId }) => {
       case "radio":
         return (
           <RadioForm
+            key={item.id}
             item={item}
             handleValue={handleValue}
             deleteEl={deleteEl}
@@ -184,6 +199,7 @@ const FormBuilder = ({ formId }) => {
       case "select":
         return (
           <SelectForm
+            key={item.id}
             item={item}
             handleValue={handleValue}
             deleteEl={deleteEl}
@@ -196,21 +212,17 @@ const FormBuilder = ({ formId }) => {
           />
         );
       default:
-        return <Fragment></Fragment>;
+        return <Box></Box>;
     }
   };
 
   return (
-    <Fragment>
       <Grid container spacing={2} direction="row" justifyContent="center" className="p-4">
         <Grid item xs={11} md={8}>
-          <HeaderForm sectionId={formId}/>
-          <Nestable
-            items={items}
-            renderItem={renderElements}
-            maxDepth={1}
-            onChange={handleOnChangeSort}
-          />
+          <HeaderForm sectionId={formId} />
+          <div className="w-full flex flex-col items-center">
+            {sectionData.map(e => {return renderElements(e)})}
+          </div>
         </Grid>
         <Grid item xs={1} md={1}>
           <Space size={20} className="sticky top-8 flex sm:flex-col items-center w-fit bg-white p-2 rounded-xl shadow-md">
@@ -225,7 +237,6 @@ const FormBuilder = ({ formId }) => {
           </Space>
         </Grid>
       </Grid>
-    </Fragment>
   );
 };
 export default FormBuilder;

@@ -1,42 +1,54 @@
 import { Tabs } from 'antd';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useEffect } from 'react';
 import { v4 } from 'uuid';
 
 import FormBuilder from '../../components/form/FormBuilder';
 import formSlice from '../../components/form/formSlice';
 import { FORM_BUILDER } from '../../utils/constant';
-import { infoFormSelector } from '../../redux/selectors';
-import { Link } from 'react-router-dom';
+import { formIdSelector, infoFormSelector } from '../../redux/selectors';
+import { Link, useParams } from 'react-router-dom';
 
 const FormBuilderPage = () => {
     const dispatch = useDispatch()
+    const { formId } = useParams()
     const formsInfo = useSelector(infoFormSelector)
+    const formsInfoId = useSelector(formIdSelector)
     const [activeKey, setActiveKey] = useState();
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        // const formId = v4()
-        const formId = FORM_BUILDER.id
-        dispatch(formSlice.actions.clear())
-        dispatch(formSlice.actions.fakeForm())
-        setActiveKey(formId)
-        const fakeItems = FORM_BUILDER.sections.map((e, k) => {
-            return {
-                label: e.title,
-                children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
-                key: e.id,
-                closable: k != 0,
+        if (formId == FORM_BUILDER.id) {
+            dispatch(formSlice.actions.clear())
+            dispatch(formSlice.actions.fakeForm())
+            const fakeItems = FORM_BUILDER.sections.map((e, k) => {
+                return {
+                    label: e.title,
+                    children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
+                    key: e.id,
+                    closable: k != 0,
+                }
+            })
+            setItems(fakeItems)
+        } else {
+            if (formId != formsInfoId) {
+                dispatch(formSlice.actions.clear())
+                dispatch(formSlice.actions.createForm(formId))
             }
-        })
-        setItems(fakeItems)
+            setItems([{
+                label: "",
+                children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId} /></div>,
+                key: formId,
+                closable: false,
+            }])
+        }
+        setActiveKey(formId)
     }, [])
 
     if (items.length > 0 && formsInfo.length > 0) {
         if (JSON.stringify(formsInfo) != JSON.stringify(items.map(e => e.label))) {
-            console.log("update");
             const newItems = items.map((e, idx) => {
                 return { ...e, label: formsInfo[idx] }
             })
@@ -93,8 +105,8 @@ const FormBuilderPage = () => {
     return (
         <Box className="m-4 flex flex-col space-y-4">
             <Box className="flex w-full justify-end space-x-4 items-center">
-                <Button variant='outlined'><Link to="/algo-frontend-service/form-store">DISCARD</Link></Button>
-                <Button variant='contained'>SAVE</Button>
+                <Button variant='outlined'><Link to={`/algo-frontend-service/form-store/${formId}/preview`}>PREVIEW</Link></Button>
+                <Button variant='contained'><Link to="/algo-frontend-service/form-store">SAVE</Link></Button>
             </Box>
             <Tabs
                 type="editable-card"

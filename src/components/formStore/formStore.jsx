@@ -24,45 +24,43 @@ const FormStore = () => {
             <div className='w-full flex justify-end'>
                 <Button variant='contained'>New Form</Button>
             </div>
-            <List
-                grid={{
-                    gutter: 16,
-                    column: 4,
-                }}
-                dataSource={formStore}
-                renderItem={(item) => (
-                    <List.Item key={item.id}>
-                        <Card
-                            className='sm:w-72 w-96 shadow-lg'
-                            hoverable={true}
-                            cover={
+            <div className='w-full min-h-[70vh] flex justify-start space-x-10 items-start flex-wrap'>
+                {
+                    formStore.map(item => {
+                        return (
+                            <Card
+                                key={item.id}
+                                className='sm:w-72 w-96 shadow-lg'
+                                hoverable={true}
+                                cover={
+                                    <Link to={`${item.id}/builder`}>
+                                        <img
+                                            alt="example"
+                                            src={FORM}
+                                        />
+                                    </Link>
+                                }
+                                actions={[
+                                    <Tooltip title="Like">
+                                        <StarOutlined key="view" style={{ fontSize: "20px" }} />
+                                    </Tooltip>,
+                                    <Tooltip title="Clone">
+                                        <CloudDownloadOutlined key="clone" style={{ fontSize: "20px" }} />
+                                    </Tooltip>,
+                                ]}
+                            >
                                 <Link to={item.id}>
-                                    <img
-                                        alt="example"
-                                        src={FORM}
+                                    <Meta
+                                        className='h-24'
+                                        title={item.title}
+                                        description={item.description}
                                     />
                                 </Link>
-                            }
-                            actions={[
-                                <Tooltip title="Like">
-                                    <StarOutlined key="view" style={{ fontSize: "20px" }} />
-                                </Tooltip>,
-                                <Tooltip title="Clone">
-                                    <CloudDownloadOutlined key="clone" style={{ fontSize: "20px" }} />
-                                </Tooltip>,
-                            ]}
-                        >
-                            <Link to={item.id}>
-                                <Meta
-                                    avatar={<Avatar alt='a' />}
-                                    title={item.title}
-                                    description={item.description}
-                                />
-                            </Link>
-                        </Card>
-                    </List.Item>
-                )}
-            />
+                            </Card>
+                        )
+                    })
+                }
+            </div>
         </Box>
 
     );

@@ -12,6 +12,7 @@ import LandingPage from '../pages/LandingPage';
 import HomePage from '../pages/HomePage';
 import FormStorePage from '../pages/form/FormStorePage';
 import FormBuilderPage from '../pages/form/FormBuilderPage';
+import FormViewerPage from '../pages/form/formViewerPage';
 
 export default createBrowserRouter([
   {
@@ -40,7 +41,11 @@ export default createBrowserRouter([
       },
       {
         element: <FormBuilderPage />,
-        path: '/algo-frontend-service/form-store/:formId',
+        path: '/algo-frontend-service/form-store/:formId/builder',
+      },
+      {
+        element: <FormViewerPage />,
+        path: '/algo-frontend-service/form-store/:formId/preview',
       },
       {
         element: <ProtectedRoute />,
