@@ -37,7 +37,7 @@ const ImagesReview = () => {
     };
 
     const handleChange = async ({ file }) => {
-        if (!["image/jpeg", "image/png"].some(item => item == file.type)) {
+        if (!["image/jpeg", "image/png"].includes(file.type)) {
             errorNotification("Wrong type file", `You couldn't upload ${file.type} file`, "bottomRight")
             return
         }

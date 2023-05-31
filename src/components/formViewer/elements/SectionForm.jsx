@@ -1,13 +1,17 @@
 import { Box, Paper, Typography, FormControl, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+
 import FormViewer from "../FormViewer";
 import { areFormElementEqual } from "../../../utils/memo";
+import { idSectionsSelector } from "../../../redux/selectors";
 
 const SectionForm = ({
   item,
   handleAnswerValue,
 }) => {
   const [section, setSection] = useState(false)
+  const sectionsId = useSelector(idSectionsSelector)
   console.log("re-render");
 
   return (
@@ -35,7 +39,7 @@ const SectionForm = ({
         </FormControl>
       </Box>
       {
-        section &&
+        (sectionsId.includes(section)) &&
         <FormViewer formId={section}/>
       }
     </Paper>

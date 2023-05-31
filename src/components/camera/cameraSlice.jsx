@@ -8,7 +8,7 @@ const cameraSlice = createSlice({
       state.ip = action.payload;
     },
     addImage: (state, action) => {
-      if (!state.images.some(item => item.uid == action.payload.uid)) {
+      if (!state.images.includes(action.payload.uid)) {
         state.images.push(action.payload)
       }
     },

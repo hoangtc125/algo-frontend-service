@@ -75,7 +75,7 @@ const SectionForm = ({
                     labelId="el-to-section-label"
                     id="el-to-section"
                     label="To Section"
-                    value={opt?.to}
+                    value={sectionsId.includes(opt?.to) ? opt?.to : ""}
                     onChange={(e) => handleOptionSection(item?.id, opt?.id, e.target.value)}
                   >
                     <MenuItem key={""} value={""}>
