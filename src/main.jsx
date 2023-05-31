@@ -11,7 +11,6 @@ import './firebase/config';
 // import './firebase/emulator';
 import store from './redux/store';
 import { Provider } from 'react-redux';
-import "react-nestable/dist/styles/index.css";
 import 'antd/dist/reset.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(

@@ -6,6 +6,7 @@ import { Box, Button } from '@mui/material';
 const FormViewerPage = () => {
     const { formId } = useParams()
     const navigate = useNavigate()
+    console.log("re-render");
 
     return (
         <Box className="m-4">

@@ -26,13 +26,13 @@ const FormStore = () => {
             <div className='w-full flex justify-end'>
                 <Button variant='contained'>New Form</Button>
             </div>
-            <div className='w-full min-h-[70vh] flex justify-start space-x-10 items-start flex-wrap'>
+            <div className='w-full min-h-[70vh] flex justify-start items-start flex-wrap'>
                 {
                     formStore.map(item => {
                         return (
                             <Card
                                 key={item.id}
-                                className='sm:w-72 w-96 shadow-lg'
+                                className='sm:w-72 w-96 shadow-lg m-4 lg:m-8'
                                 hoverable={true}
                                 cover={
                                     <Link to={`${item.id}/builder`}>

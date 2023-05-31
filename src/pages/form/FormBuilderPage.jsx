@@ -8,16 +8,16 @@ import { v4 } from 'uuid';
 import FormBuilder from '../../components/formBuilder/FormBuilder';
 import formSlice from '../../components/formBuilder/formSlice';
 import { FORM_BUILDER } from '../../utils/constant';
-import { formIdSelector, infoFormSelector } from '../../redux/selectors';
+import { infoFormSelector } from '../../redux/selectors';
 import { Link, useParams } from 'react-router-dom';
 
 const FormBuilderPage = () => {
     const dispatch = useDispatch()
     const { formId } = useParams()
     const formsInfo = useSelector(infoFormSelector)
-    const formsInfoId = useSelector(formIdSelector)
     const [activeKey, setActiveKey] = useState();
     const [items, setItems] = useState([]);
+    console.log("re-render");
 
     useEffect(() => {
         if (formId == FORM_BUILDER.id) {
@@ -33,10 +33,8 @@ const FormBuilderPage = () => {
             })
             setItems(fakeItems)
         } else {
-            if (formId != formsInfoId) {
-                dispatch(formSlice.actions.clear())
-                dispatch(formSlice.actions.createForm(formId))
-            }
+            dispatch(formSlice.actions.clear())
+            dispatch(formSlice.actions.createForm(formId))
             setItems([{
                 label: "",
                 children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId} /></div>,
@@ -47,7 +45,7 @@ const FormBuilderPage = () => {
         setActiveKey(formId)
     }, [])
 
-    if (items.length > 0 && formsInfo.length > 0) {
+    if (items.length > 0 && formsInfo.length > 0 && items.length == formsInfo.length) {
         if (JSON.stringify(formsInfo) != JSON.stringify(items.map(e => e.label))) {
             const newItems = items.map((e, idx) => {
                 return { ...e, label: formsInfo[idx] }
