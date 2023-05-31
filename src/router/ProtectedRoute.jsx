@@ -41,7 +41,7 @@ export default function ProtectedRoute() {
           style={{
             margin: '16px 0',
           }}
-          items={breadcrumbItems}
+          items={breadcrumbItems.slice(1)}
         />
         <div
           style={{

@@ -19,9 +19,9 @@ const TextFieldForm = ({ item, handleValue, deleteEl, handleRequired, handleElTy
           <Grid container spacing={1}>
             <Grid item xs={9}>
               <TextField
-                value={item.value}
+                defaultValue={item.value}
                 variant="outlined"
-                onChange={(e) => handleValue(item.id, e)}
+                onBlur={(e) => handleValue(item.id, e)}
                 fullWidth
                 required={item.required}
                 label="Textfield Label"

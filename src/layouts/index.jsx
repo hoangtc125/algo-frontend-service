@@ -23,7 +23,7 @@ function getItem(label, key, icon, children) {
 }
 
 const siderItems = [
-    getItem(<Link to={"/algo-frontend-service/"}>Club</Link>, 'club', <PieChartOutlined />),
+    getItem(<Link to={"/algo-frontend-service/form-store"}>Club</Link>, 'club', <PieChartOutlined />),
     getItem('Account', 'account', <UserOutlined />, [
         getItem(<Link to={"/algo-frontend-service/account"}>Profile</Link>, '/algo-frontend-service/account', <ProfileFilled />),
         getItem(<Link to={"/algo-frontend-service/account/verify"}>Verify</Link>, '/algo-frontend-service/account/verify', <VerifiedIcon />),
@@ -82,13 +82,13 @@ const MainLayout = () => {
     }, [])
 
     return (
-        <Layout className='min-h-screen'>
+        <Layout>
             <HeaderPage />
             <Layout>
                 {
                     account &&
                     <Sider collapsed={true} theme='light' className='w-[50px] sm:w-[200px]'>
-                        <Link to="/algo-frontend-service/">
+                        <Link to="/algo-frontend-service/home">
                             <Image
                                 preview={false}
                                 src={logoImage}
@@ -99,11 +99,13 @@ const MainLayout = () => {
                         <Menu theme="light" selectedKeys={location.pathname} mode="inline" items={siderItems} />
                     </Sider>
                 }
-                <Outlet />
+                <Layout className='min-h-screen flex flex-col justify-between'>
+                    <Outlet />
+                    <Footer className='text-center' >
+                        Thesis at Hanoi University of Science and Technology ©2023 Created by Cong Hoang Tran
+                    </Footer>
+                </Layout>
             </Layout>
-            <Footer className='text-center' >
-                Thesis at Hanoi University of Science and Technology ©2023 Created by Cong Hoang Tran
-            </Footer>
             <FloatButton.BackTop />
         </Layout>
     );

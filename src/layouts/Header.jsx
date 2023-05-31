@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { FileOutlined, PieChartOutlined, DesktopOutlined } from '@ant-design/icons';
+import { FileOutlined, CloudServerOutlined, DesktopOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Layout, Menu, Space } from 'antd';
 const { Header } = Layout;
@@ -10,7 +10,7 @@ import UserMenu from '../components/UserMenu';
 import { getProviderIcon } from '../utils/kind';
 import { accountSelector } from '../redux/selectors';
 import appSlice from './appSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function getItem(label, key, icon, children) {
     return {
@@ -22,7 +22,7 @@ function getItem(label, key, icon, children) {
 }
 
 const headerItems = [
-    getItem('Club', '1', <PieChartOutlined />),
+    getItem(<Link to={"/algo-frontend-service/form-store"}>Forms Store</Link>, '/algo-frontend-service/form-store', <CloudServerOutlined />),
     getItem('Event', '2', <DesktopOutlined />),
     getItem('User', '9', <FileOutlined />),
 ];
@@ -31,12 +31,13 @@ const HeaderPage = () => {
     const dispatch = useDispatch()
     const account = useSelector(accountSelector)
     const navigate = useNavigate()
+    const location = useLocation();
 
     return (
         <Header
             className='flex items-center justify-end sm:justify-between bg-white drop-shadow-md mb-1 px-1 sm:px-10'
         >
-            <Menu className='grow max-w-full sm:block' theme="light" mode="horizontal" items={headerItems} />
+            <Menu className='grow max-w-full sm:block' theme="light" mode="horizontal" selectedKeys={location.pathname} items={headerItems} />
             {
                 account ?
                     (

@@ -25,3 +25,4 @@ dist-ssr
 
 emulator
 src/firebase/config.jsx
+.VSCodeCounter

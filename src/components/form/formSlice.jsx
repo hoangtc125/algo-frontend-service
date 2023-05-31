@@ -18,7 +18,7 @@ const formSlice = createSlice({
       state.id = action.payload;
       state.sections.push({
         id: action.payload,
-        title: "",
+        title: "Đơn tuyển thành viên",
         description: "",
         data: [],
       })
@@ -26,7 +26,7 @@ const formSlice = createSlice({
     addSection: (state, action) => {
       state.sections.push({
         id: action.payload,
-        title: "",
+        title: `Section ${action.payload.substr(0, 8)}`,
         description: "",
         data: [],
       })

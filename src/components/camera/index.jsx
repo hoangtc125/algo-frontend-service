@@ -1,10 +1,10 @@
-import { Box, Grid, Typography, List, ListItem, Button, TextField, Slider, Switch } from '@mui/material';
+import { Box, Grid, Typography, List, ListItem, Button, TextField, Slider, Switch, IconButton } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Image, Space } from 'antd';
-import React, { useState } from 'react';
+import { Image, Space, Tour } from 'antd';
+import React, { useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import { v4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import cameraSlice from './cameraSlice';
 import { IMAGE } from '../../utils/constant';
 import { get_webcam } from '../../utils/request'
 import { errorNotification } from '../../utils/notification'
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const validate = values => {
     const errors = {};
@@ -32,6 +33,31 @@ const Camera = () => {
     const loading = useSelector(cameraLoadingSelector)
     const single = useSelector(singleSelector)
     const [image, setImage] = useState()
+    const [isTourOpen, setIsTourOpen] = useState(false);
+    const ref1 = useRef(null);
+    const ref2 = useRef(null);
+    const ref3 = useRef(null);
+
+    const tourSteps = [
+        {
+            title: 'Connect IP Webcam to take a shoot directly',
+            description: 'Start IP Webcam server and type the IPv4 address on phone screen in here',
+            target: () => ref1.current,
+            mask: false,
+        },
+        {
+            title: 'Control your camera',
+            description: 'You can zoom in, zoom out or open front camera ...',
+            target: () => ref2.current,
+            mask: false,
+        },
+        {
+            title: 'Take a shoot',
+            description: 'Camera video will be displayed here, press Shoot button to take picture',
+            target: () => ref3.current,
+            mask: false,
+        },
+    ];
 
     const setUpCamera = async () => {
         dispatch(cameraSlice.actions.setLoading(true))
@@ -113,7 +139,7 @@ const Camera = () => {
         >
             <Grid container>
                 <Grid item xs={12} md={8}>
-                    <List className='w-full h-full flex flex-col items-center space-y-5 justify-end'>
+                    <List ref={ref3} className='w-full h-full flex flex-col items-center space-y-5 justify-end'>
                         <Image
                             id='ip-webcam'
                             preview={false}
@@ -159,6 +185,7 @@ const Camera = () => {
                                 noValidate
                                 onSubmit={formik.handleSubmit}
                                 className='w-full space-y-4'
+                                ref={ref1}
                             >
                                 <div>
                                     <TextField
@@ -189,7 +216,7 @@ const Camera = () => {
                             </Box>
                         </ListItem>
                     </List>
-                    <List className='w-full flex flex-col items-center'>
+                    <List ref={ref2} className='w-full flex flex-col items-center'>
                         <ListItem className='w-full space-x-5 mt-4'>
                             <Typography>Zoom</Typography>
                             <Slider
@@ -225,6 +252,12 @@ const Camera = () => {
                     </List>
                 </Grid>
             </Grid>
+            <div className='w-full flex justify-end'>
+                <IconButton aria-label="delete" size="large" color='primary' onClick={() => setIsTourOpen(true)}>
+                    <QuestionCircleOutlined fontSize="inherit" />
+                </IconButton>
+                <Tour open={isTourOpen} onClose={() => setIsTourOpen(false)} steps={tourSteps} type="primary"/>
+            </div>
         </Box>
     );
 }

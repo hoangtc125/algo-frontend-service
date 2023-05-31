@@ -10,6 +10,8 @@ import AccountSetting from '../components/account/AccountSetting';
 import AccountVerify from '../components/account/AccountVerify';
 import LandingPage from '../pages/LandingPage';
 import HomePage from '../pages/HomePage';
+import FormStorePage from '../pages/form/FormStorePage';
+import FormBuilderPage from '../pages/form/FormBuilderPage';
 
 export default createBrowserRouter([
   {
@@ -31,6 +33,14 @@ export default createBrowserRouter([
       {
         element: <ResetPasswordPage />,
         path: '/algo-frontend-service/reset-password',
+      },
+      {
+        element: <FormStorePage />,
+        path: '/algo-frontend-service/form-store',
+      },
+      {
+        element: <FormBuilderPage />,
+        path: '/algo-frontend-service/form-store/:formId',
       },
       {
         element: <ProtectedRoute />,
