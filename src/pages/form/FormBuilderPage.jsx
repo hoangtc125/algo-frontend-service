@@ -5,8 +5,8 @@ import { Box, Button } from '@mui/material';
 import { useEffect } from 'react';
 import { v4 } from 'uuid';
 
-import FormBuilder from '../../components/form/FormBuilder';
-import formSlice from '../../components/form/formSlice';
+import FormBuilder from '../../components/formBuilder/FormBuilder';
+import formSlice from '../../components/formBuilder/formSlice';
 import { FORM_BUILDER } from '../../utils/constant';
 import { formIdSelector, infoFormSelector } from '../../redux/selectors';
 import { Link, useParams } from 'react-router-dom';

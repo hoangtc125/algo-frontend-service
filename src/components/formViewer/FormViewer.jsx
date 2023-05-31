@@ -10,7 +10,7 @@ import TextFieldForm from "./elements/TextFieldForm";
 import SelectForm from "./elements/SelectForm";
 import { formIdSelector, formSectionsDataSelector } from "../../redux/selectors";
 import SectionForm from "./elements/SectionForm";
-import formSlice from "../form/formSlice";
+import formSlice from "../formBuilder/formSlice";
 
 const FormViewer = ({ formId }) => {
 

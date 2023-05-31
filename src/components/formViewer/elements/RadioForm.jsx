@@ -1,9 +1,12 @@
 import { Box, Paper, Typography, FormControl, RadioGroup, FormControlLabel, Radio } from "@mui/material";
+import React from "react";
+import { areFormElementEqual } from "../../../utils/memo";
 
 const RadioForm = ({
   item,
   handleAnswerValue,
 }) => {
+  console.log("re-render");
 
   return (
     <Paper elevation={1} className="my-3 border-l-4 hover:border-l-4 hover:border-blue-500 w-full">
@@ -27,4 +30,4 @@ const RadioForm = ({
   );
 };
 
-export default RadioForm;
+export default React.memo(RadioForm, areFormElementEqual);

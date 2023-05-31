@@ -11,6 +11,8 @@ const HeaderForm = ({ sectionId }) => {
   const title = useSelector(titleSectionSelector(sectionId))
   const description = useSelector(descriptionSectionSelector(sectionId))
 
+  console.log("re-render");
+
   return (
     <Fragment>
       <Box sx={{ mb: 3 }}>

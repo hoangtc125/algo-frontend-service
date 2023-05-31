@@ -1,10 +1,14 @@
 import { Box, TextField, Paper, Typography } from "@mui/material";
+import React from "react";
+import { areFormElementEqual } from "../../../utils/memo";
 
 
 const NumberForm = ({
   item,
   handleAnswerValue,
 }) => {
+  console.log("re-render");
+
   return (
     <Paper elevation={1} className="my-3 border-l-4 hover:border-l-4 hover:border-blue-500 w-full">
     <Box className="p-6 space-y-8">
@@ -23,4 +27,4 @@ const NumberForm = ({
   );
 };
 
-export default NumberForm;
+export default React.memo(NumberForm, areFormElementEqual);

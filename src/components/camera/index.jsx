@@ -37,6 +37,7 @@ const Camera = () => {
     const ref1 = useRef(null);
     const ref2 = useRef(null);
     const ref3 = useRef(null);
+    console.log("re-render");
 
     const tourSteps = [
         {

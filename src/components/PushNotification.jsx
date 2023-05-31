@@ -21,6 +21,8 @@ export default function PushNotification() {
     const account = useSelector(accountSelector)
     const open = Boolean(anchorEl);
 
+    console.log("re-render");
+
     const handleClose = () => {
         setAnchorEl(null);
     };

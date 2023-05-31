@@ -1,11 +1,13 @@
 import { Box, Paper, Typography, FormControl, FormControlLabel, Checkbox } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
+import { areFormElementEqual } from "../../../utils/memo";
 
 const SelectForm = ({
   item,
   handleAnswerValue,
 }) => {
   const [selectedValues, setSelectedValues] = useState([]);
+  console.log("re-render");
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -45,4 +47,4 @@ const SelectForm = ({
   );
 };
 
-export default SelectForm;
+export default React.memo(SelectForm, areFormElementEqual);

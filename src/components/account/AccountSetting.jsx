@@ -48,6 +48,7 @@ const AccountSetting = () => {
             }
         },
     });
+    console.log("re-render");
 
     return (
         <Box

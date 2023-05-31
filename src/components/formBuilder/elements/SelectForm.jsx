@@ -1,13 +1,15 @@
 import { v4 } from "uuid";
+import React from "react";
 import { Box, TextField, Paper, FormGroup, FormControlLabel, Switch, Divider, IconButton, Tooltip, Grid, MenuItem, Select, InputLabel, FormControl, Button } from "@mui/material";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 import { formEl } from "../../../utils/constant";
+import { areFormElementEqual } from "../../../utils/memo";
 
-const RadioForm = ({
+const SelectForm = ({
   item,
   handleValue,
   deleteEl,
@@ -18,6 +20,8 @@ const RadioForm = ({
   deleteOption,
   duplicateElement
 }) => {
+  
+  console.log("re-render");
 
   //Create new option
   const createNewOption = (id) => {
@@ -45,16 +49,16 @@ const RadioForm = ({
               onBlur={(e) => handleValue(item.id, e)}
               fullWidth
               required={item.required}
-              label="Radio Label"
+              label="Select Label"
               sx={{ mb: 2 }}
             />
             {(item?.options || []).map((opt, key) => (
               <Box className="flex items-center mb-2" key={opt?.id}>
-                <RadioButtonCheckedIcon className="mr-2" color="action" />
+                <CheckBoxOutlineBlankIcon className="mr-2" color="action" />
                 <TextField
                   variant="outlined"
                   fullWidth
-                  label={`Radio Option ${key + 1}`}
+                  label={`Select Option ${key + 1}`}
                   defaultValue={opt?.value}
                   key={opt?.id}
                   onBlur={(e) =>
@@ -135,4 +139,4 @@ const RadioForm = ({
   );
 };
 
-export default RadioForm;
+export default React.memo(SelectForm, areFormElementEqual);

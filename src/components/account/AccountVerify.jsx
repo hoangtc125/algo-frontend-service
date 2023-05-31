@@ -38,6 +38,7 @@ const AccountVerify = () => {
     const ref3 = useRef(null);
     const ref4 = useRef(null);
     const ref5 = useRef(null);
+    console.log("re-render");
 
     const tourSteps = [
         {

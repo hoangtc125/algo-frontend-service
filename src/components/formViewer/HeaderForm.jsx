@@ -1,14 +1,14 @@
 import { Fragment } from "react";
 import { Box, Paper, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { descriptionSectionSelector, titleSectionSelector } from "../../redux/selectors";
 
 const HeaderForm = ({ sectionId }) => {
 
-  const dispatch = useDispatch()
   const title = useSelector(titleSectionSelector(sectionId))
   const description = useSelector(descriptionSectionSelector(sectionId))
+  console.log("re-render");
 
   return (
     <Fragment>

@@ -1,13 +1,14 @@
 import { Box, Paper, Typography, FormControl, RadioGroup, FormControlLabel, Radio } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 import FormViewer from "../FormViewer";
+import { areFormElementEqual } from "../../../utils/memo";
 
 const SectionForm = ({
   item,
   handleAnswerValue,
 }) => {
   const [section, setSection] = useState(false)
-  console.log(section);
+  console.log("re-render");
 
   return (
     <Paper elevation={1} className="my-3 border-l-4 hover:border-l-4 hover:border-blue-500 w-full">
@@ -41,4 +42,4 @@ const SectionForm = ({
   );
 };
 
-export default SectionForm;
+export default React.memo(SectionForm, areFormElementEqual);

@@ -7,6 +7,7 @@ import { getProviderIcon } from '../../utils/kind';
 
 const AccountProfile = () => {
     const account = useSelector(accountSelector)
+    console.log("re-render");
 
     return (
         <Box

@@ -23,6 +23,7 @@ const ImagesReview = () => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
+    console.log("re-render");
 
     const handleCancel = () => setPreviewOpen(false);
 

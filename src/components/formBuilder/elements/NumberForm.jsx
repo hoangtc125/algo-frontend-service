@@ -1,9 +1,11 @@
+import React from "react";
 import { Box, TextField, Paper, FormGroup, FormControlLabel, Switch, Divider, IconButton, Tooltip, Grid, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 import { formEl } from "../../../utils/constant";
+import { areFormElementEqual } from "../../../utils/memo";
 
 const NumberForm = ({
   item,
@@ -13,6 +15,8 @@ const NumberForm = ({
   handleElType,
   duplicateElement,
 }) => {
+  console.log("re-render");
+
   return (
     <Paper elevation={1} className="my-3 border-l-4 hover:border-l-4 hover:border-blue-500 w-full">
       <Box sx={{ textAlign: "center" }} className="py-2 cursor-all-scroll hover:bg-blue-100">
@@ -99,4 +103,4 @@ const NumberForm = ({
   );
 };
 
-export default NumberForm;
+export default React.memo(NumberForm, areFormElementEqual);

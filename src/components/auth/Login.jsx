@@ -51,6 +51,7 @@ export default function Login() {
             dispatch(login(`grant_type=&username=${values.username}&password=${values.password}&scope=&client_id=&client_secret=`))
         },
     });
+    console.log("re-render");
 
     useEffect(() => {
         if (localStorage.getItem("accessToken")) {

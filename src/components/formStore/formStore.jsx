@@ -14,6 +14,8 @@ const FormStore = () => {
     const dispatch = useDispatch()
     const formStore = useSelector(formStoreSelector)
 
+    console.log("re-render");
+
     useEffect(() => {
         dispatch(formStoreSlice.actions.fakeStore())
     }, [])
