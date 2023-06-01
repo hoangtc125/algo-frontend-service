@@ -23,8 +23,7 @@ function getItem(label, key, icon, children) {
 
 const headerItems = [
     getItem(<Link to={"/algo-frontend-service/form-store"}>Forms Store</Link>, '/algo-frontend-service/form-store', <CloudServerOutlined />),
-    getItem('Event', '2', <DesktopOutlined />),
-    getItem('User', '9', <FileOutlined />),
+    getItem(<Link to={"/algo-frontend-service/cluster"}>Cluster</Link>, '/algo-frontend-service/cluster', <DesktopOutlined />),
 ];
 
 const HeaderPage = () => {
