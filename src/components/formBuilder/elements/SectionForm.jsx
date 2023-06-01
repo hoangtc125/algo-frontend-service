@@ -52,6 +52,7 @@ const SectionForm = ({
               defaultValue={item.value}
               variant="outlined"
               onBlur={(e) => handleValue(item.id, e)}
+              multiline
               fullWidth
               required={item.required}
               label="Section Label"

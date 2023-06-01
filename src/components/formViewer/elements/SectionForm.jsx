@@ -10,15 +10,16 @@ const SectionForm = ({
   item,
   handleAnswerValue,
 }) => {
-  const [section, setSection] = useState(false)
+  const [value, setValue] = useState(item.answer)
   const sectionsId = useSelector(idSectionsSelector)
   const isSubmit = useSelector(isSubmitFormSelector)
+  const sectionId = item.options.find(s => s.id == value)?.to
   console.log("re-render");
 
   return (
     <Paper elevation={1} className="my-3 border-l-4 hover:border-l-4 hover:border-blue-500 w-full">
-      <Box className="p-6 space-y-8">
-        <Typography variant="h5">
+      <Box className="p-6 space-y-8" id={item.id}>
+        <Typography variant="h5" className="whitespace-pre-line">
           {item.required ? (
             <span>
               <span style={{ color: 'black' }}>{item.value}</span>
@@ -32,12 +33,10 @@ const SectionForm = ({
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             name="radio-buttons-group"
+            value={value}
             onChange={(e) => {
               handleAnswerValue(item.id, e.target.value)
-              const sectionId = item.options.find(s => s.id == e.target.value).to
-              if (sectionId) (
-                setSection(sectionId)
-              )
+              setValue(e.target.value)
             }}
           >
             {(item?.options || []).map(opt => (
@@ -50,8 +49,8 @@ const SectionForm = ({
         ) : null}
       </Box>
       {
-        (sectionsId.includes(section)) &&
-        <FormViewer formId={section} />
+        (sectionsId.includes(sectionId)) &&
+        <FormViewer formId={sectionId} />
       }
     </Paper>
   );

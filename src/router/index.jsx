@@ -14,6 +14,7 @@ import FormStorePage from '../pages/form/FormStorePage';
 import FormBuilderPage from '../pages/form/FormBuilderPage';
 import FormViewerPage from '../pages/form/formViewerPage';
 import ClusterPage from '../pages/cluster/ClusterPage';
+import FormResponsePage from '../pages/form/formResponsePage';
 
 export default createBrowserRouter([
   {
@@ -47,6 +48,10 @@ export default createBrowserRouter([
       {
         element: <FormViewerPage />,
         path: '/algo-frontend-service/form-store/:formId/preview',
+      },
+      {
+        element: <FormResponsePage />,
+        path: '/algo-frontend-service/form-store/:formId/response',
       },
       {
         element: <ClusterPage />,

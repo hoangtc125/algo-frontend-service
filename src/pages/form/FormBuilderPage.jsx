@@ -1,20 +1,21 @@
 import { Tabs } from 'antd';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { v4 } from 'uuid';
 
 import FormBuilder from '../../components/formBuilder/FormBuilder';
 import formSlice from '../../components/formBuilder/formSlice';
 import { FORM_BUILDER } from '../../utils/constant';
-import { infoFormSelector } from '../../redux/selectors';
+import { formSelector, infoFormSelector } from '../../redux/selectors';
 import { Link, useParams } from 'react-router-dom';
 
 const FormBuilderPage = () => {
     const dispatch = useDispatch()
     const { formId } = useParams()
     const formsInfo = useSelector(infoFormSelector)
+    const formData = useSelector(formSelector)
     const [activeKey, setActiveKey] = useState();
     const [items, setItems] = useState([]);
     console.log("re-render");
@@ -33,14 +34,26 @@ const FormBuilderPage = () => {
             })
             setItems(fakeItems)
         } else {
-            dispatch(formSlice.actions.clear())
-            dispatch(formSlice.actions.createForm(formId))
-            setItems([{
-                label: "",
-                children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId} /></div>,
-                key: formId,
-                closable: false,
-            }])
+            if (formData.id != formId) {
+                dispatch(formSlice.actions.clear())
+                dispatch(formSlice.actions.createForm(formId))
+                setItems([{
+                    label: "",
+                    children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId} /></div>,
+                    key: formId,
+                    closable: false,
+                }])
+            } else {
+                const recoveryItems = formData.sections.map((e, k) => {
+                    return {
+                        label: e.title,
+                        children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
+                        key: e.id,
+                        closable: k != 0,
+                    }
+                })
+                setItems(recoveryItems)
+            }
         }
         setActiveKey(formId)
     }, [])
@@ -103,6 +116,7 @@ const FormBuilderPage = () => {
     return (
         <Box className="m-4 flex flex-col space-y-4">
             <Box className="flex w-full justify-end space-x-4 items-center">
+                <Typography>Bản nháp được lưu 3 giây / lần</Typography>
                 <Link to={`/algo-frontend-service/form-store/${formId}/preview`}><Button variant='outlined'>PREVIEW</Button></Link>
                 <Link to="/algo-frontend-service/form-store"><Button variant='contained'>SAVE</Button></Link>
             </Box>

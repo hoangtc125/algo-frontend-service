@@ -31,6 +31,7 @@ const TextAreaForm = ({
               defaultValue={item.value}
               variant="outlined"
               onBlur={(e) => handleValue(item.id, e)}
+              multiline
               fullWidth
               required={item.required}
               label="Textarea Label"

@@ -1,13 +1,14 @@
 import { Box, Button } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import NumberForm from "./elements/NumberForm";
 import RadioForm from "./elements/RadioForm";
 import TextAreaForm from "./elements/TextAreaForm";
 import TextFieldForm from "./elements/TextFieldForm";
 import SelectForm from "./elements/SelectForm";
-import { formIdSelector, formSectionsDataSelector, formSectionsSelector } from "../../redux/selectors";
+import { formSelector } from "../../redux/selectors";
 import SectionForm from "./elements/SectionForm";
 import formSlice from "../formBuilder/formSlice";
 import { errorNotification, successNotification } from "../../utils/notification";
@@ -15,9 +16,9 @@ import { errorNotification, successNotification } from "../../utils/notification
 const BodyForm = ({ formId }) => {
 
     const dispatch = useDispatch()
-    const sectionData = useSelector(formSectionsDataSelector(formId))
-    const formData = useSelector(formSectionsSelector)
-    const formInfoId = useSelector(formIdSelector)
+    const navigate = useNavigate()
+    const formData = useSelector(formSelector)
+    const sectionData = formData.sections.find(e => e.id == formId).data || []
 
     console.log("re-render");
 
@@ -25,15 +26,29 @@ const BodyForm = ({ formId }) => {
         dispatch(formSlice.actions.setIsSubmit(false))
     }, [])
 
+    useEffect(() => {
+        let saveInterval = null
+        if (formData.id == formId) {
+            saveInterval = setInterval(() => {
+                sessionStorage.setItem("formViewer", JSON.stringify(formData))
+                console.log("auto-save form response");
+            }, 3000);
+        }
+        return () => {
+            clearInterval(saveInterval)
+        }
+    }, [formData])
+
     const handlePreSubmit = (data) => {
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
             if (element.required && !element.answer) {
+                document.getElementById(element.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return false
             }
             if (element.type == "section") {
-                const _sectionId = element.options.find(e => e.id == element.answer).to
-                const _res = handlePreSubmit(formData.find(e => e.id == _sectionId)?.data || [])
+                const _sectionId = element.options.find(e => e.id == element.answer)?.to
+                const _res = handlePreSubmit(formData.sections.find(e => e.id == _sectionId)?.data || [])
                 if (!_res) {
                     return false
                 }
@@ -47,6 +62,7 @@ const BodyForm = ({ formId }) => {
         if (!handlePreSubmit(sectionData)) {
             errorNotification("Submit failed", "Check required question", "bottomRight")
         } else {
+            navigate(`/algo-frontend-service/form-store/${formId}/response`)
             successNotification("Form has been sent", "Your request will be processed soon", "bottomRight")
         }
     }
@@ -115,7 +131,7 @@ const BodyForm = ({ formId }) => {
     return (
         <div className="w-full flex flex-col items-center">
             {sectionData.map(e => { return renderElements(e) })}
-            {formInfoId == formId &&
+            {formData.id == formId &&
                 <div className="w-full flex justify-start items-center">
                     <Button variant="contained" onClick={handleSubmit}>SUBMIT</Button>
                 </div>

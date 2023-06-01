@@ -4,9 +4,12 @@ import { get, post } from '../utils/request';
 import { errorNotification } from '../utils/notification';
 import { GUEST } from '../utils/constant';
 
+const account = JSON.parse(localStorage.getItem("account"))
+const token = JSON.parse(localStorage.getItem("token"))
+
 const appSlice = createSlice({
   name: 'app',
-  initialState: { token: null, account: null, api_permissions: null, loading: false },
+  initialState: { token: token, account: account?.account, api_permissions: account?.api_permissions, loading: false },
   reducers: {
     setTry: (state, action) => {
       state.account = GUEST

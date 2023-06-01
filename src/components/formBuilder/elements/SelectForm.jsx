@@ -20,7 +20,7 @@ const SelectForm = ({
   deleteOption,
   duplicateElement
 }) => {
-  
+
   console.log("re-render");
 
   //Create new option
@@ -47,6 +47,7 @@ const SelectForm = ({
               defaultValue={item.value}
               variant="outlined"
               onBlur={(e) => handleValue(item.id, e)}
+              multiline
               fullWidth
               required={item.required}
               label="Select Label"

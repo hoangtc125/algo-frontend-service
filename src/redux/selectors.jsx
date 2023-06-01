@@ -8,7 +8,7 @@ export const imagesSelector = (state) => state.camera.images
 export const cameraLoadingSelector = (state) => state.camera.loading
 export const singleSelector = (state) => state.camera.single
 
-export const formSectionsSelector = (state) => state.form.sections || []
+export const formSelector = (state) => state.form
 export const formSectionsDataSelector = id => (state) => state.form.sections.find(e => e.id == id).data || []
 export const idSectionsSelector = (state) => state.form.sections.slice(1).map(e => e.id) || []
 export const infoSectionsSelector = (state) => state.form.sections.slice(1).map(e => { return {id: e.id, title: e.title}}) || []

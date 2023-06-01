@@ -1,16 +1,10 @@
 import { v4 } from "uuid";
-import { Box, Grid, IconButton, Tooltip } from "@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { Space } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import HeaderForm from "./HeaderForm";
-import NumberForm from "./elements/NumberForm";
-import RadioForm from "./elements/RadioForm";
-import TextAreaForm from "./elements/TextAreaForm";
-import TextFieldForm from "./elements/TextFieldForm";
-import SelectForm from "./elements/SelectForm";
-import { formIdSelector, formSectionsDataSelector } from "../../redux/selectors";
 import formSlice from "./formSlice";
 import BodyForm from "./BodyForm";
 

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { v4 } from "uuid";
 import { Box} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,16 +8,30 @@ import RadioForm from "./elements/RadioForm";
 import TextAreaForm from "./elements/TextAreaForm";
 import TextFieldForm from "./elements/TextFieldForm";
 import SelectForm from "./elements/SelectForm";
-import { formSectionsDataSelector } from "../../redux/selectors";
+import { formSelector } from "../../redux/selectors";
 import formSlice from "./formSlice";
 import SectionForm from "./elements/SectionForm";
 
 const BodyForm = ({ formId }) => {
 
     const dispatch = useDispatch()
-    const sectionData = useSelector(formSectionsDataSelector(formId))
+    const formData = useSelector(formSelector)
+    const sectionData = formData.sections.find(e => e.id == formId).data || []
 
     console.log("re-render");
+
+    useEffect(() => {
+        let saveInterval = null
+        if (formData.id == formId) {
+            saveInterval = setInterval(() => {
+                sessionStorage.setItem("formViewer", JSON.stringify(formData))
+                console.log("auto-save form builder");
+            }, 3000);
+        }
+        return () => {
+            clearInterval(saveInterval)
+        }
+    }, [formData])
 
     //Function to delete element
     const deleteEl = (id) => {

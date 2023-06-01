@@ -33,7 +33,6 @@ const HeaderForm = ({ sectionId }) => {
           fullWidth
           sx={{ mb: 2 }}
           multiline
-          rows={2}
         />
       </Paper>
     </Box>

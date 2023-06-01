@@ -16,8 +16,8 @@ const NumberForm = ({
 
   return (
     <Paper elevation={1} className="my-3 border-l-4 hover:border-l-4 hover:border-blue-500 w-full">
-      <Box className="p-6 space-y-8">
-        <Typography variant="h5">
+      <Box className="p-6 space-y-8" id={item.id}>
+        <Typography variant="h5" className="whitespace-pre-line">
           {item.required ? (
             <span>
               <span style={{ color: 'black' }}>{item.value}</span>

@@ -2,9 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { FORM_BUILDER } from '../../utils/constant';
 
+const formStoreage = JSON.parse(sessionStorage.getItem("formViewer"))
+
 const formSlice = createSlice({
   name: 'form',
-  initialState: { id: null, sections: [], isSubmit: false },
+  initialState: { id: formStoreage?.id, sections: formStoreage?.sections || [], isSubmit: false },
   reducers: {
     clear: (state, action) => {
       state.id = null;

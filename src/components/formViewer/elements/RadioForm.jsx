@@ -10,12 +10,13 @@ const RadioForm = ({
   handleAnswerValue,
 }) => {
   const isSubmit = useSelector(isSubmitFormSelector)
+  const [value, setValue] = useState(item.answer)
   console.log("re-render");
 
   return (
     <Paper elevation={1} className="my-3 border-l-4 hover:border-l-4 hover:border-blue-500 w-full">
-      <Box className="p-6 space-y-8">
-        <Typography variant="h5">
+      <Box className="p-6 space-y-8" id={item.id}>
+        <Typography variant="h5" className="whitespace-pre-line">
           {item.required ? (
             <span>
               <span style={{ color: 'black' }}>{item.value}</span>
@@ -29,8 +30,10 @@ const RadioForm = ({
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
             name="radio-buttons-group"
+            value={value}
             onChange={(e) => {
               handleAnswerValue(item.id, e.target.value)
+              setValue(e.target.value)
             }}
           >
             {(item?.options || []).map(opt => (
