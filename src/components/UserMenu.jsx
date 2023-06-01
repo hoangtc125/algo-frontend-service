@@ -1,7 +1,7 @@
 import { Avatar, Badge, Menu, MenuItem, Typography } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { Box } from '@mui/system';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ import appSlice from '../layouts/appSlice';
 import cameraSlice from './camera/cameraSlice';
 import formSlice from './formBuilder/formSlice';
 
-export default function UserMenu() {
+const  UserMenu = () => {
   const account = useSelector(accountSelector)
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate()
@@ -66,3 +66,5 @@ export default function UserMenu() {
     </>
   );
 }
+
+export default React.memo(UserMenu)

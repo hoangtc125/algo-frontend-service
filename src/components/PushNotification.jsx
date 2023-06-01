@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Badge, Menu } from '@mui/material';
 import { Button, List, Skeleton } from 'antd';
@@ -11,7 +11,7 @@ import { post } from '../utils/request';
 import { openNotification } from '../utils/notification';
 import { getIconInfo } from '../utils/kind';
 
-export default function PushNotification() {
+const PushNotification = () =>  {
     const [initLoading, setInitLoading] = useState(true);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
@@ -130,3 +130,5 @@ export default function PushNotification() {
         </>
     );
 }
+
+export default React.memo(PushNotification)

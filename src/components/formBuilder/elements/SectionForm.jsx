@@ -8,7 +8,7 @@ import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 import { formEl } from "../../../utils/constant";
 import { useSelector } from "react-redux";
-import { idSectionsSelector } from "../../../redux/selectors";
+import { infoSectionsSelector } from "../../../redux/selectors";
 import { areFormElementEqual } from "../../../utils/memo";
 
 const SectionForm = ({
@@ -23,7 +23,8 @@ const SectionForm = ({
   deleteOption,
   duplicateElement
 }) => {
-  const sectionsId = useSelector(idSectionsSelector)
+  const sectionsInfo = useSelector(infoSectionsSelector)
+  const sectionsId = sectionsInfo.map(e => e.id)
 
   console.log("re-render");
 
@@ -81,10 +82,10 @@ const SectionForm = ({
                     <MenuItem key={""} value={""}>
                       No Section
                     </MenuItem>
-                    {sectionsId &&
-                      sectionsId.map((el) => (
-                        <MenuItem key={el} value={el}>
-                          {`Section ${el.substr(0, 8)}`}
+                    {sectionsInfo &&
+                      sectionsInfo.map((el) => (
+                        <MenuItem key={el.id} value={el.id}>
+                          {el.title}
                         </MenuItem>
                       ))}
                   </Select>
