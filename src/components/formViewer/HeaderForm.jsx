@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import { descriptionSectionSelector, titleSectionSelector } from "../../redux/selectors";
@@ -15,7 +15,8 @@ const HeaderForm = ({ sectionId }) => {
         <Typography variant="h2" gutterBottom className="w-full">
           {title}
         </Typography>
-        <Typography variant="h4" gutterBottom className="w-full">
+        <Divider />
+        <Typography variant="h5" gutterBottom className="w-full pt-4">
           {description}
         </Typography>
       </Paper>

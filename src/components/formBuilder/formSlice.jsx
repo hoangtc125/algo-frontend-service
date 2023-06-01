@@ -4,11 +4,15 @@ import { FORM_BUILDER } from '../../utils/constant';
 
 const formSlice = createSlice({
   name: 'form',
-  initialState: { id: null, sections: [] },
+  initialState: { id: null, sections: [], isSubmit: false },
   reducers: {
     clear: (state, action) => {
       state.id = null;
       state.sections = [];
+      state.isSubmit = false
+    },
+    setIsSubmit: (state, action) => {
+      state.isSubmit = action.payload
     },
     fakeForm: (state, action) => {
       state.id = FORM_BUILDER.id;

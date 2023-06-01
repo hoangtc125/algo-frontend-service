@@ -51,7 +51,7 @@ const FormStore = () => {
                                     </Tooltip>,
                                 ]}
                             >
-                                <Link to={item.id}>
+                                <Link to={`${item.id}/builder`}>
                                     <Meta
                                         className='h-24'
                                         title={item.title}

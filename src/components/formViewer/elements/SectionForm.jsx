@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import FormViewer from "../FormViewer";
 import { areFormElementEqual } from "../../../utils/memo";
-import { idSectionsSelector } from "../../../redux/selectors";
+import { idSectionsSelector, isSubmitFormSelector } from "../../../redux/selectors";
 
 const SectionForm = ({
   item,
@@ -12,13 +12,21 @@ const SectionForm = ({
 }) => {
   const [section, setSection] = useState(false)
   const sectionsId = useSelector(idSectionsSelector)
+  const isSubmit = useSelector(isSubmitFormSelector)
   console.log("re-render");
 
   return (
     <Paper elevation={1} className="my-3 border-l-4 hover:border-l-4 hover:border-blue-500 w-full">
       <Box className="p-6 space-y-8">
         <Typography variant="h5">
-          {item.required ? `${item.value} (bắt buộc)` : item.value}
+          {item.required ? (
+            <span>
+              <span style={{ color: 'black' }}>{item.value}</span>
+              <span style={{ color: 'red' }}> *</span>
+            </span>
+          ) : (
+            item.value
+          )}
         </Typography>
         <FormControl>
           <RadioGroup
@@ -37,10 +45,13 @@ const SectionForm = ({
             ))}
           </RadioGroup>
         </FormControl>
+        {(item.required && !item.answer) && (isSubmit) ? (
+          <div className='text-red-600'>Không được để trống</div>
+        ) : null}
       </Box>
       {
         (sectionsId.includes(section)) &&
-        <FormViewer formId={section}/>
+        <FormViewer formId={section} />
       }
     </Paper>
   );

@@ -103,8 +103,8 @@ const FormBuilderPage = () => {
     return (
         <Box className="m-4 flex flex-col space-y-4">
             <Box className="flex w-full justify-end space-x-4 items-center">
-                <Button variant='outlined'><Link to={`/algo-frontend-service/form-store/${formId}/preview`}>PREVIEW</Link></Button>
-                <Button variant='contained'><Link to="/algo-frontend-service/form-store">SAVE</Link></Button>
+                <Link to={`/algo-frontend-service/form-store/${formId}/preview`}><Button variant='outlined'>PREVIEW</Button></Link>
+                <Link to="/algo-frontend-service/form-store"><Button variant='contained'>SAVE</Button></Link>
             </Box>
             <Tabs
                 type="editable-card"
