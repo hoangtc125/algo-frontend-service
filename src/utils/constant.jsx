@@ -111,24 +111,11 @@ export const FORM_BUILDER = {
             description: 'Mẫu đơn tuyển thành viên cho các Câu lạc bộ học thuật về Công nghệ thông tin',
             data: [
                 {
-                    id: '04ed6a64-26f6-45ad-abd5-bf1c9d425608',
-                    value: 'Họ và tên',
-                    type: 'text',
-                    answer: '',
-                    required: true,
-                    options: [
-                        {
-                            id: '2a92e6d4-2ac8-4379-94d6-36cc75ae4c75',
-                            value: '',
-                            to: ''
-                        }
-                    ]
-                },
-                {
                     id: '162b384f-b495-4c8a-b2d4-f3462c12147d',
                     value: 'Email cá nhân',
                     type: 'text',
                     answer: '',
+                    disabled: true,
                     required: true,
                     options: [
                         {
@@ -139,10 +126,26 @@ export const FORM_BUILDER = {
                     ]
                 },
                 {
+                    id: '04ed6a64-26f6-45ad-abd5-bf1c9d425608',
+                    value: 'Họ và tên',
+                    type: 'text',
+                    answer: '',
+                    disabled: true,
+                    required: true,
+                    options: [
+                        {
+                            id: '2a92e6d4-2ac8-4379-94d6-36cc75ae4c75',
+                            value: '',
+                            to: ''
+                        }
+                    ]
+                },
+                {
                     id: 'e75c816f-47ef-4bc2-a980-3771c5d8f306',
                     value: 'Số điện thoại',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -157,6 +160,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn đến từ trường nào',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -171,6 +175,7 @@ export const FORM_BUILDER = {
                     value: 'Trường/Viện',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -186,6 +191,7 @@ export const FORM_BUILDER = {
                     value: 'Khoá',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -201,6 +207,7 @@ export const FORM_BUILDER = {
                     value: 'MSSV',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -216,6 +223,7 @@ export const FORM_BUILDER = {
                     value: 'Link Facebook',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -231,6 +239,7 @@ export const FORM_BUILDER = {
                     value: 'Link Linkedln',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: false,
                     options: [
                         {
@@ -246,6 +255,7 @@ export const FORM_BUILDER = {
                     value: 'Trình độ tiếng anh',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: false,
                     options: [
                         {
@@ -261,6 +271,7 @@ export const FORM_BUILDER = {
                     value: 'Trình độ tin học văn phòng',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: false,
                     options: [
                         {
@@ -276,6 +287,7 @@ export const FORM_BUILDER = {
                     value: 'Thành tích cá nhân',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: false,
                     options: [
                         {
@@ -291,6 +303,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn mong muốn tham gia vào ban nào?',
                     type: 'section',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -325,6 +338,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn hiểu gì về CLB',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -340,6 +354,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn có đóng góp gì cho CLB trong tương lai',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -355,6 +370,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn có câu hỏi nào khác không',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: false,
                     options: [
                         {
@@ -377,6 +393,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn đang quan tâm về lĩnh vực nào? Bạn đã biết gì về lĩnh vực này?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -391,6 +408,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn có dự án nào không? Nếu có, hãy chia sẻ thêm về nó?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -406,6 +424,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn nghĩ mình có thể đóng góp gì cho CLB với tư cách là thành viên ban Chuyên Môn?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -421,6 +440,7 @@ export const FORM_BUILDER = {
                     value: 'Hãy nêu chi tiết một ý tưởng về công nghệ mà bạn đang muốn thực hiện.',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -436,6 +456,7 @@ export const FORM_BUILDER = {
                     value: 'Ngoài các sự kiện về CNTT, bạn còn tham gia các sự kiện nào khác không? Nếu có, hãy liệt kê nhiều nhất có thể.',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -458,6 +479,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn hiểu thế nào là đối ngoại? Bạn nghĩ vai trò của ban trong CLB là gì?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -472,6 +494,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn đã có kinh nghiệm gì về đối ngoại chưa?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -487,6 +510,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn mong muốn học hỏi được gì khi tham gia ban Đối ngoại?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -502,6 +526,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn nghĩ những tố chất nào của mình phù hợp với ban Đối ngoại?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -517,6 +542,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn đã từng có dự án (liên quan đến công nghệ, kinh doanh...) gì cho bản thân trước đây chưa?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -539,6 +565,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn đã tìm hiểu gì về ban Hậu cần chưa?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -553,6 +580,7 @@ export const FORM_BUILDER = {
                     value: 'Tại sao bạn chọn tham gia ban Hậu cần?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -568,6 +596,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn có kinh nghiệm gì trong việc tổ chức sự kiện chưa?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -583,6 +612,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn có kinh nghiệm trong việc quản lí ngân sách cho tập thể chưa?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -598,6 +628,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn mong muốn học hỏi được gì khi tham gia ban Hậu Cần',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -620,6 +651,7 @@ export const FORM_BUILDER = {
                     value: 'Hiện tại bạn có tham gia tổ chức nào không (đoàn hội, ban cán sự, đội tình nguyện, ...)? Nếu có, vai trò của bạn là gì?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -634,6 +666,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn có thể chia sẻ một vài bản kế hoạch mà bạn đã thực hiện được không? (có thể là kế hoạch học tập, chi tiêu, hoạt động,..)',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -649,6 +682,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn đánh giá như nào về kỹ năng sử dụng tin học văn phòng của bản thân? Bạn có thể nêu một số công mà bạn nghĩ là bạn thành thạo?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -664,6 +698,7 @@ export const FORM_BUILDER = {
                     value: 'Sau khi tham gia ban Nhân sự, bạn mong muốn học hỏi hay nhận được điều gì?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -679,6 +714,7 @@ export const FORM_BUILDER = {
                     value: 'Giả sử CLB đang cần một bộ quy tắc hoạt động mới, bạn là người được giao nhiệm vụ làm bộ quy tắc này. Nhưng sau khi làm xong, các thành viên lại không hưởng ứng các quy tắc mà bạn đặt ra, bạn sẽ làm gì trong trường hợp này?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -701,6 +737,7 @@ export const FORM_BUILDER = {
                     value: 'Hãy nêu những kinh nghiệm và thế mạnh của bạn trong lĩnh vực này',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -715,6 +752,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn mong muốn gì khi được làm việc ở Ban Truyền Thông?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -730,6 +768,7 @@ export const FORM_BUILDER = {
                     value: 'Bạn có ý tưởng truyền thông gì cho CLB không?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -745,6 +784,7 @@ export const FORM_BUILDER = {
                     value: 'Khi xảy ra sự cố truyền thông thí dụ như sai tên doanh nghiệp bạn sẽ xử lí như thế nào?',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {
@@ -760,6 +800,7 @@ export const FORM_BUILDER = {
                     value: 'Hãy chia sẻ link đến một kế hoạch bạn đã làm cho một sự kiện và nhớ cấp quyền cho chúng mình nhé',
                     type: 'text',
                     answer: '',
+                    disabled: false,
                     required: true,
                     options: [
                         {

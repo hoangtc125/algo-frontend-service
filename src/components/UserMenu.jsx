@@ -9,6 +9,8 @@ import { accountSelector } from '../redux/selectors';
 import appSlice from '../layouts/appSlice';
 import cameraSlice from './camera/cameraSlice';
 import formSlice from './formBuilder/formSlice';
+import formStoreSlice from './formStore/formStoreSlice';
+import clusterSlice from './cluster/clusterSlice';
 
 const  UserMenu = () => {
   const account = useSelector(accountSelector)
@@ -24,6 +26,8 @@ const  UserMenu = () => {
     dispatch(appSlice.actions.clear())
     dispatch(cameraSlice.actions.clear())
     dispatch(formSlice.actions.clear())
+    dispatch(formStoreSlice.actions.clear())
+    dispatch(clusterSlice.actions.clear())
     navigate("/algo-frontend-service/login")
   };
 

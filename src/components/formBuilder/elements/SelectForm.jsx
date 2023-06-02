@@ -50,6 +50,7 @@ const SelectForm = ({
               multiline
               fullWidth
               required={item.required}
+              disabled={item.disabled}
               label="Select Label"
               sx={{ mb: 2 }}
             />
@@ -89,6 +90,7 @@ const SelectForm = ({
                 id="el-type"
                 label="Type"
                 value={item.type}
+                disabled={item.disabled}
                 onChange={(e) => handleElType(item.id, e.target.value)}
               >
                 {formEl &&
@@ -103,39 +105,45 @@ const SelectForm = ({
         </Grid>
       </Box>
       <Divider light />
-      <FormGroup row sx={{ alignItems: "center" }}>
-        <Tooltip title="Delete Element" aria-label="delete-element">
-          <IconButton
-            aria-label="delete-element"
-            onClick={() => deleteEl(item.id)}
-            sx={{ ml: 2 }}
-          >
-            <DeleteOutlineOutlinedIcon color="primary" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Duplicate Element" aria-label="duplicate-element">
-          <IconButton
-            aria-label="duplicate-element"
-            onClick={() => duplicateElement(item)}
-            sx={{ ml: 2 }}
-          >
-            <FileCopyIcon color="primary" />
-          </IconButton>
-        </Tooltip>
+      {
+        item.disabled
+          ?
+          <p className="text-base text-start ml-6 my-2 text-red-500">Câu hỏi bắt buộc của hệ thống</p>
+          :
+          <FormGroup row sx={{ alignItems: "center" }}>
+            <Tooltip title="Delete Element" aria-label="delete-element">
+              <IconButton
+                aria-label="delete-element"
+                onClick={() => deleteEl(item.id)}
+                sx={{ ml: 2 }}
+              >
+                <DeleteOutlineOutlinedIcon color="primary" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Duplicate Element" aria-label="duplicate-element">
+              <IconButton
+                aria-label="duplicate-element"
+                onClick={() => duplicateElement(item)}
+                sx={{ ml: 2 }}
+              >
+                <FileCopyIcon color="primary" />
+              </IconButton>
+            </Tooltip>
 
-        <FormControlLabel
-          control={
-            <Switch
-              checked={item.required}
-              onChange={() => handleRequired(item.id)}
-              name="required-field"
-              color="primary"
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={item.required}
+                  onChange={() => handleRequired(item.id)}
+                  name="required-field"
+                  color="primary"
+                />
+              }
+              label="Required"
+              sx={{ ml: 2 }}
             />
-          }
-          label="Required"
-          sx={{ ml: 2 }}
-        />
-      </FormGroup>
+          </FormGroup>
+      }
     </Paper>
   );
 };

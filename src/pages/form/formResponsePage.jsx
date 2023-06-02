@@ -17,8 +17,8 @@ const FormResponsePage = () => {
             <Grid container spacing={2} direction="row" justifyContent="center" className="p-4">
                 <Grid item xs={11} md={10}>
                     <Box sx={{ mb: 3 }}>
-                        <Paper elevation={2} sx={{ p: 3, borderTop: "8px solid #272bb0" }} className="space-y-4">
-                            <Typography variant="h3" gutterBottom className="w-full">
+                        <Paper elevation={2} sx={{ p: 3, borderTop: "8px solid #272bb0" }} className="space-y-8">
+                            <Typography variant="h2" gutterBottom className="w-full">
                                 {title}
                             </Typography>
                             <Typography variant="h5" gutterBottom className="w-full">
