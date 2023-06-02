@@ -1,14 +1,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Table, Modal, Descriptions } from 'antd';
+import { Table, Modal, Descriptions, Pagination } from 'antd';
 
-import {clusterSelector} from '../../redux/selectors'
+import { clusterSelector } from '../../redux/selectors'
 import { Box } from '@mui/material';
 
 const ExcelTable = () => {
     const clusterData = useSelector(clusterSelector)
-    const dataset =  clusterData.dataset
+    const dataset = clusterData.dataset
     const header = clusterData.header
+
+    console.log("re-render");
 
     const handleRowClick = (record) => {
         Modal.info({
@@ -29,23 +31,38 @@ const ExcelTable = () => {
         });
     };
 
-    const columns = header.map((column, index) => ({
-        title: column,
-        dataIndex: index.toString(),
-        key: index.toString(),
-        ellipsis: true, // Giới hạn độ dài cột
-        width: 200, // Độ rộng cột
-        fixed: 'left' ? index == 0 : "",
-        sorter: (a, b) => {
-            if (!a[index]) {
-                return false
-            }
-            if (!b[index]) {
-                return true
-            }
-            return JSON.stringify(a[index]).localeCompare(JSON.stringify(b[index]))
-        },
-    }));
+    const columns = header && header.map(({title, type}, index) => {
+        const colData = Array.from(new Set(dataset.map(e => e[index])))
+        return {
+            title: `${title} (${type})`,
+            dataIndex: index.toString(),
+            key: index.toString(),
+            ellipsis: true, // Giới hạn độ dài cột
+            width: 200, // Độ rộng cột
+            fixed: 'left' ? index == 0 : "",
+            filterSearch: true,
+            filters: colData.map(e => (
+                {
+                    text: e,
+                    value: e,
+                }
+            )),
+            onFilter: (value, record) => String(record[index]).startsWith(value),
+            sorter: (a, b) => {
+                if (!a[index]) {
+                    return false
+                }
+                if (!b[index]) {
+                    return true
+                }
+                if (type == "numerical") {
+                    return a[index] - b[index]
+                } else {
+                    return String(a[index]).localeCompare(String(b[index]))
+                }
+            },
+        }
+    });
 
     return (
         <Box className="p-4 w-full max-w-[90vw]">
@@ -59,6 +76,9 @@ const ExcelTable = () => {
                 })}
                 scroll={{
                     x: 200,
+                }}
+                pagination={{
+                    pageSize: 12,
                 }}
             />
         </Box>

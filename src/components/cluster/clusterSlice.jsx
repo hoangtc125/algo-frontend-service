@@ -21,6 +21,10 @@ const clusterSlice = createSlice({
         state.file[0] = {...state.file[0], status: "done"}
       }
     },
+    updateHeader: (state, action) => {
+      const index = action.payload.index
+      state.header[index] = [...state.header[index], ...action.payload.header]
+    },
   },
 });
 

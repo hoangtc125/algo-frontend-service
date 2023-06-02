@@ -14,10 +14,12 @@ const UploadExcel = () => {
     const clusterData = useSelector(clusterSelector)
     const clusterFiles = clusterData.file
 
+    console.log("re-render");
+
     const assignId = (data) => {
         const newData = data.map((e, id) => {
             if (id == 0) {
-                return ["STT", "ID", ...e]
+                return [{title: "STT", type: "numerical"}, "ID", ...e]
             } else {
                 return [id, v4(), ...e]
             }
@@ -35,7 +37,7 @@ const UploadExcel = () => {
             const filteredData = jsonData.filter(row => row.some(cell => cell != ''));
             const formData = assignId(filteredData)
             dispatch(clusterSlice.actions.setDataset(formData.slice(1)));
-            dispatch(clusterSlice.actions.setHeader(formData[0]));
+            dispatch(clusterSlice.actions.setHeader(formData[0].map(e => ({title: e?.title || e, type: e?.type || "text"}))));
         };
         reader.readAsBinaryString(file);
     }

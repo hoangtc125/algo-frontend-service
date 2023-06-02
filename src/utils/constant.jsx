@@ -46,6 +46,21 @@ export const STUDENT_CARD = [
 
 export const CARD_LIST = STUDENT_CARD.map((item) => item.cards).flat();
 
+export const CLUSTER_TYPE = [
+    {
+        label: "Numerical",
+        value: "numerical",
+    },
+    {
+        label: "Categorical",
+        value: "categorical",
+    },
+    {
+        label: "Text",
+        value: "text",
+    },
+]
+
 export const formEl = [
     {
         label: "Text",
