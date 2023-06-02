@@ -22,8 +22,8 @@ const clusterSlice = createSlice({
       }
     },
     updateHeader: (state, action) => {
-      const index = action.payload.index
-      state.header[index] = [...state.header[index], ...action.payload.header]
+      const index = state.header.findIndex(e => e.id == action.payload.id)
+      state.header[index] = { ...state.header[index], ...action.payload.header }
     },
   },
 });

@@ -21,7 +21,7 @@ const ExcelTable = () => {
                 <Descriptions bordered className="w-full max-h-[80vh] overflow-auto" column={1}>
                     {
                         record.map((e, id) => (
-                            <Descriptions.Item label={header[id]} key={id}>{e}</Descriptions.Item>
+                            <Descriptions.Item label={header[id].title} key={id}>{e}</Descriptions.Item>
                         ))
                     }
                 </Descriptions>
