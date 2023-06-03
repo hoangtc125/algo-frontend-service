@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Steps } from 'antd';
@@ -10,11 +10,22 @@ import { clusterSelector } from '../../redux/selectors';
 import { errorNotification } from '../../utils/notification';
 
 const ClusterFile = () => {
+    const hash = String(window.location.hash)
     const clusterData = useSelector(clusterSelector)
-    const [current, setCurrent] = useState(0);
+    const [current, setCurrent] = useState(hash ? hash.split("#")[1] : 0);
+
+    useEffect(() => {
+        const saveInterval = setInterval(() => {
+            sessionStorage.setItem("clusterFile", JSON.stringify(clusterData))
+            console.log("auto-save cluster file");
+        }, 3000);
+        return () => {
+            clearInterval(saveInterval)
+        }
+    }, [clusterData])
 
     const onChange = (value) => {
-        console.log('onChange:', value);
+        window.location.hash = value
         if (value == 1) {
             if (!clusterData.file[0]) {
                 errorNotification("Empty Data", "You have upload excel file first", "bottomRight")
@@ -48,19 +59,15 @@ const ClusterFile = () => {
                     },
                 ]}
             />
-            {current == 0 &&
-                <Box className="w-full h-full flex flex-col items-center justify-center">
-                    <UploadExcel />
-                    {clusterData.file[0] &&
-                        <SetUpFile />
-                    }
-                </Box>
-            }
-            {current == 1 &&
-                <Box className="w-full h-full flex flex-col items-center justify-center">
-                    <ExcelTable />
-                </Box>
-            }
+            <Box className={`w-full h-full flex flex-col items-center justify-center ${current == 0 ? "block" : "hidden"}`}>
+                <UploadExcel />
+                {clusterData.file[0] &&
+                    <SetUpFile />
+                }
+            </Box>
+            <Box className={`w-full h-full flex flex-col items-center justify-center ${current == 1 ? "block" : "hidden"}`}>
+                <ExcelTable />
+            </Box>
         </Box>
     );
 };

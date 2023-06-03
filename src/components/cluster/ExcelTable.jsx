@@ -1,9 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Table, Modal, Descriptions, Pagination } from 'antd';
+import { Table, Modal, Descriptions } from 'antd';
+import { Box, Button } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
+import * as XLSX from 'xlsx';
 
 import { clusterSelector } from '../../redux/selectors'
-import { Box } from '@mui/material';
 
 const ExcelTable = () => {
     const clusterData = useSelector(clusterSelector)
@@ -31,7 +33,7 @@ const ExcelTable = () => {
         });
     };
 
-    const columns = header && header.map(({title, type}, index) => {
+    const columns = header && header.map(({ title, type }, index) => {
         const colData = Array.from(new Set(dataset.map(e => e[index])))
         return {
             title: `${title} (${type})`,
@@ -63,13 +65,42 @@ const ExcelTable = () => {
         }
     });
 
+    function s2ab(s) {
+        const buf = new ArrayBuffer(s.length);
+        const view = new Uint8Array(buf);
+        for (let i = 0; i < s.length; i++) {
+          view[i] = s.charCodeAt(i) & 0xFF;
+        }
+        return buf;
+      }
+
+    const handleDownload = () => {
+        const newWorkbook = XLSX.utils.book_new();
+        const newWorksheet = XLSX.utils.aoa_to_sheet([header.map(e => e.title), ...dataset]);
+        XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, 'Sheet 1');
+        const excelData = XLSX.write(newWorkbook, { type: 'binary', bookType: 'xlsx' });
+        const blobData = new Blob([s2ab(excelData)], { type: 'application/octet-stream' });
+        const downloadUrl = URL.createObjectURL(blobData);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = downloadUrl;
+        downloadLink.download = 'dataset.xlsx';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
     return (
-        <Box className="w-full max-w-[90vw] shadow-md">
+        <Box className="m-2 w-full max-w-[90vw] space-y-4">
+            <Box className="w-full flex items-center justify-end">
+                <Button variant='contained' startIcon={<DownloadIcon />} onClick={handleDownload}>
+                    Download
+                </Button>
+            </Box>
             <Table
                 dataSource={dataset}
                 columns={columns}
                 bordered
-                className='m-4 cursor-pointer rounded-md'
+                className='cursor-pointer rounded-md shadow-lg'
                 rowKey={(record) => record[0]}
                 onRow={(record) => ({
                     onClick: () => handleRowClick(record),
@@ -78,7 +109,7 @@ const ExcelTable = () => {
                     x: 200,
                 }}
                 pagination={{
-                    pageSize: 12,
+                    pageSize: 10,
                 }}
             />
         </Box>

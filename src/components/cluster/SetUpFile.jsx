@@ -15,6 +15,8 @@ const SetUpFile = () => {
     const header = clusterData.header
     const file = clusterData.file[0]
     const dataset = clusterData.dataset
+    const nameCol = clusterData.nameCol
+    const emailCol = clusterData.emailCol
 
     const collDiffDatas = useMemo(() => {
         console.log("re-compute");
@@ -29,7 +31,7 @@ const SetUpFile = () => {
                 <Typography variant='h6'>
                     Thông tin file excel
                 </Typography>
-                <Descriptions bordered className='shadow-md rounded-md'>
+                <Descriptions bordered className='shadow-md rounded-lg'>
                     <Descriptions.Item className='hover:bg-slate-100' label="Tên file">{file.name}</Descriptions.Item>
                     <Descriptions.Item className='hover:bg-slate-100' label="Số hàng">{dataset.length}</Descriptions.Item>
                     <Descriptions.Item className='hover:bg-slate-100' label="Số cột">{header.length}</Descriptions.Item>
@@ -46,8 +48,8 @@ const SetUpFile = () => {
                                     <Select
                                         labelId="el-name-label"
                                         label="Cột"
-                                        onChange={(e) => { dispatch(clusterSlice.actions.updateFile({ nameCol: e.target.value })) }}
-                                        value={file.nameCol || ``}
+                                        onChange={(e) => { dispatch(clusterSlice.actions.setNameCol(e.target.value)) }}
+                                        value={nameCol || ``}
                                     >
                                         {header.map((el, key) => (
                                             <MenuItem key={key} value={el.id}>
@@ -74,12 +76,12 @@ const SetUpFile = () => {
                                         label="Cột"
                                         onChange={(e) => {
                                             if (isEmailListValid(collDiffDatas[header.findIndex(c => c.id == e.target.value)])) {
-                                                dispatch(clusterSlice.actions.updateFile({ emailCol: e.target.value }))
+                                                dispatch(clusterSlice.actions.setEmailCol(e.target.value))
                                             } else {
                                                 errorNotification("Cột không hợp lệ", "Cột chứa dữ liệu có định dạng khác email, hãy kiểm tra lại dữ liệu", "bottomRight")
                                             }
                                         }}
-                                        value={file.emailCol || ``}
+                                        value={emailCol || ``}
                                     >
                                         {header.map((el, key) => (
                                             <MenuItem key={key} value={el.id}>
