@@ -1,9 +1,9 @@
 import React from 'react';
-import Cluster from '../../components/cluster/Cluster';
+import ClusterFile from '../../components/cluster/ClusterFile';
 
 const ClusterPage = () => {
     return (
-        <Cluster />
+        <ClusterFile />
     );
 }
 

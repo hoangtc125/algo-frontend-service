@@ -1,6 +1,6 @@
 import React from 'react';
-import { List, Modal } from 'antd';
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Modal } from 'antd';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
 import { CLUSTER_TYPE } from '../../utils/constant';
@@ -18,43 +18,40 @@ const HeaderSetting = ({ item, colDiffData }) => {
             className: "min-w-[80vw] max-w-[90vw]",
             centered: true,
             content: (
-                <List
-                    itemLayout="horizontal"
-                    className='w-full max-h-[80vh] overflow-auto'
-                    dataSource={data}
-                    header={
-                        <div className='w-full flex flex-col justify-center items-center'>
-                            <Grid container>
-                                <Grid item className='items-center flex justify-center p-2' xs={2}>
-                                    <Typography variant='h6'>
-                                        STT
-                                    </Typography>
-                                </Grid>
-                                <Grid item className='items-center flex justify-center p-2' xs={10}>
-                                    <Typography variant='h6'>
-                                        Data
-                                    </Typography>
-                                </Grid>
+                <div className='w-full rounded-lg'>
+                    <div className='w-full flex flex-col justify-center items-center bg-slate-200'>
+                        <Grid container>
+                            <Grid item className='items-center flex justify-center p-2' xs={2}>
+                                <Typography variant='h6'>
+                                    STT
+                                </Typography>
                             </Grid>
-                        </div>
-                    }
-                    renderItem={(e, idx) => (
-                        <List.Item key={idx}>
-                            <Grid container>
-                                <Grid item className='items-center flex justify-center p-2' xs={2}>
-                                    <Typography variant='body1'>
-                                        {idx + 1}
-                                    </Typography>
-                                </Grid>
-                                <Grid item className='items-center flex justify-center p-2' xs={10}>
-                                    <Typography variant='body1'>
-                                        {e}
-                                    </Typography>
-                                </Grid>
+                            <Grid item className='items-center flex justify-center p-2' xs={10}>
+                                <Typography variant='h6'>
+                                    Data
+                                </Typography>
                             </Grid>
-                        </List.Item>
-                    )}
-                />
+                        </Grid>
+                    </div>
+                    <Box className="w-full max-h-[60vh] overflow-auto">
+                        {data.map((e, idx) => {
+                            return (
+                                <Grid key={idx} container className='hover:bg-slate-100 border-b-2'>
+                                    <Grid item className='items-center flex justify-center p-2' xs={2}>
+                                        <Typography variant='body1'>
+                                            {idx + 1}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item className='items-center flex justify-center p-2' xs={10}>
+                                        <Typography variant='body1'>
+                                            {e}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            )
+                        })}
+                    </Box>
+                </div>
             ),
             onOk() { },
             onCancel() { },
@@ -69,12 +66,13 @@ const HeaderSetting = ({ item, colDiffData }) => {
                 </Typography>
             </Grid>
             <Grid item className='items-center flex justify-center p-2' xs={3}>
-                <FormControl className='w-[50%]'>
+                <FormControl className='w-full lg:w-[70%] xl:w-[50%]'>
                     <InputLabel id="el-cluster-label">Type</InputLabel>
                     <Select
                         labelId="el-cluster-label"
                         label="Type"
                         value={item.type}
+                        disabled={item.disabled}
                         onChange={(e) => { dispatch(clusterSlice.actions.updateHeader({ id: item.id, header: { type: e.target.value } })) }}
                     >
                         {CLUSTER_TYPE &&

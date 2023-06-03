@@ -21,7 +21,7 @@ const ExcelTable = () => {
                 <Descriptions bordered className="w-full max-h-[80vh] overflow-auto" column={1}>
                     {
                         record.map((e, id) => (
-                            <Descriptions.Item label={header[id].title} key={id}>{e}</Descriptions.Item>
+                            <Descriptions.Item className='hover:bg-slate-100' label={header[id].title} key={id}>{e}</Descriptions.Item>
                         ))
                     }
                 </Descriptions>
@@ -39,7 +39,6 @@ const ExcelTable = () => {
             key: index.toString(),
             ellipsis: true, // Giới hạn độ dài cột
             width: 200, // Độ rộng cột
-            fixed: 'left' ? index == 0 : "",
             filterSearch: true,
             filters: colData.map(e => (
                 {
@@ -65,11 +64,12 @@ const ExcelTable = () => {
     });
 
     return (
-        <Box className="p-4 w-full max-w-[90vw]">
+        <Box className="w-full max-w-[90vw] shadow-md">
             <Table
                 dataSource={dataset}
                 columns={columns}
-                className='cursor-pointer'
+                bordered
+                className='m-4 cursor-pointer rounded-md'
                 rowKey={(record) => record[0]}
                 onRow={(record) => ({
                     onClick: () => handleRowClick(record),

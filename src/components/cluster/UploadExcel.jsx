@@ -19,9 +19,9 @@ const UploadExcel = () => {
     const assignId = (data) => {
         const newData = data.map((e, id) => {
             if (id == 0) {
-                return [{ title: "STT", type: "numerical" }, "ID", ...e]
+                return [{ title: "ID đánh tự động", disabled: true }, ...e]
             } else {
-                return [id, v4(), ...e]
+                return [v4(), ...e]
             }
         })
         return newData
@@ -34,13 +34,22 @@ const UploadExcel = () => {
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-            const filteredData = jsonData.filter(row => row.some(cell => cell != ''));
+            const filteredData = jsonData.filter((row) => {
+                // Loại bỏ các dòng không có dữ liệu
+                return row.some((cell) => cell !== '');
+            }).map((row) => {
+                // Loại bỏ hoàn toàn các cột không có tên
+                return row.filter((_, index) => {
+                    return worksheet[XLSX.utils.encode_cell({ r: 0, c: index })] !== undefined;
+                });
+            });
             const formData = assignId(filteredData)
             dispatch(clusterSlice.actions.setDataset(formData.slice(1)));
             dispatch(clusterSlice.actions.setHeader(formData[0].map(e => ({
                 id: v4(),
-                title: e?.title || e,
-                type: e?.type || "text"
+                title: e?.title || e || "",
+                type: "text",
+                disabled: e?.disabled || false,
             }))));
         };
         reader.readAsBinaryString(file);
@@ -61,6 +70,8 @@ const UploadExcel = () => {
             status: 'uploading',
             size: file.size,
             type: file.type,
+            nameCol: "",
+            emailCol: "",
         }))
         handleDataset(file.originFileObj)
     };

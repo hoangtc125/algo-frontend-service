@@ -21,6 +21,9 @@ const clusterSlice = createSlice({
         state.file[0] = {...state.file[0], status: "done"}
       }
     },
+    updateFile: (state, action) => {
+      state.file[0] = {...state.file[0], ...action.payload }
+    },
     updateHeader: (state, action) => {
       const index = state.header.findIndex(e => e.id == action.payload.id)
       state.header[index] = { ...state.header[index], ...action.payload.header }
