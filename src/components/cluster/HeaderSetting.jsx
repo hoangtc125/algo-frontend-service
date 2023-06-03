@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { InputNumber, Modal, Slider } from 'antd';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
@@ -60,13 +60,18 @@ const HeaderSetting = ({ item, colDiffData }) => {
 
     return (
         <Grid container>
-            <Grid item className='items-center p-2' xs={6}>
+            <Grid item className='border-r-2 items-center p-2' xs={6}>
                 <Typography variant='body1'>
                     {item.title}
                 </Typography>
             </Grid>
-            <Grid item className='items-center flex justify-center p-2' xs={3}>
-                <FormControl className='w-full lg:w-[70%] xl:w-[50%]'>
+            <Grid item className='border-r-2 items-center flex justify-center p-2' xs={1}>
+                <Button variant='outlined' onClick={() => handleDetailView(colDiffData)}>
+                    {colDiffData.length}
+                </Button>
+            </Grid>
+            <Grid item className='border-r-2 items-center flex justify-center p-2' xs={2}>
+                <FormControl className='w-full lg:w-[70%]'>
                     <InputLabel id="el-cluster-label">Type</InputLabel>
                     <Select
                         labelId="el-cluster-label"
@@ -84,12 +89,33 @@ const HeaderSetting = ({ item, colDiffData }) => {
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item className='items-center flex justify-center p-2' xs={3}>
-                <Button variant='outlined' onClick={() => handleDetailView(colDiffData)}>
-                    {colDiffData.length}
-                </Button>
-            </Grid>
-        </Grid>
+            <Grid item className='border-r-2 w-full items-center flex justify-center p-2' xs={3}>
+                <Grid container spacing={1}>
+                    <Grid item className='items-center flex justify-center p-2' xs={8}>
+                        <Slider
+                            className='w-[90%]'
+                            min={0}
+                            max={3}
+                            disabled={item.disabled}
+                            onChange={(value) => { dispatch(clusterSlice.actions.updateHeader({ id: item.id, header: { weight: value } })) }}
+                            value={item.weight}
+                            step={0.25}
+                        />
+                    </Grid>
+                    <Grid item className='items-center flex justify-end p-2' xs={4}>
+                        <InputNumber
+                            min={0}
+                            max={3}
+                            className='ml-2'
+                            disabled={item.disabled}
+                            value={item.weight}
+                            onChange={(value) => { dispatch(clusterSlice.actions.updateHeader({ id: item.id, header: { weight: value } })) }}
+                            step={0.25}
+                        />
+                    </Grid>
+                </Grid>
+            </Grid >
+        </Grid >
     )
 }
 

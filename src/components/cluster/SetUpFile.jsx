@@ -29,7 +29,7 @@ const SetUpFile = () => {
         <Box className="m-4 w-full space-y-8">
             <Box>
                 <Typography variant='h6'>
-                    Thông tin file excel
+                    1. Thông tin file excel
                 </Typography>
                 <Descriptions bordered className='shadow-md rounded-lg'>
                     <Descriptions.Item className='hover:bg-slate-100' label="Tên file">{file.name}</Descriptions.Item>
@@ -93,7 +93,7 @@ const SetUpFile = () => {
                             </Grid>
                             <Grid item className='items-center flex p-2' xs={12} md={6}>
                                 <Typography variant='body2'>
-                                    Cập nhật email để thực hiện chức năng gửi mail thông báo kết quả tự động
+                                    Cập nhật email để thực hiện chức năng gửi mail thông báo kết quả tự động (Không áp dụng trong khi dùng thử)
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -102,7 +102,7 @@ const SetUpFile = () => {
             </Box>
             <Box>
                 <Typography variant='h6'>
-                    Cập nhật loại dữ liệu
+                    2. Cập nhật loại dữ liệu
                 </Typography>
                 <Box className="w-full shadow-md rounded-xl">
                     <div className='w-full flex flex-col justify-center items-center bg-slate-200 rounded-t-xl'>
@@ -112,20 +112,20 @@ const SetUpFile = () => {
                                     Tên cột
                                 </Typography>
                             </Grid>
-                            <Grid item className='items-center flex justify-center p-2' xs={3}>
+                            <Grid item className='items-center flex justify-center p-2' xs={1}>
+                                <Typography variant='h6'>
+                                    Giá trị
+                                </Typography>
+                            </Grid>
+                            <Grid item className='items-center flex justify-center p-2' xs={2}>
                                 <Typography variant='h6'>
                                     Loại dữ liệu
                                 </Typography>
                             </Grid>
                             <Grid item className='items-center flex justify-center p-2' xs={3}>
-                                <div className='w-full flex flex-col justify-center items-center'>
-                                    <Typography variant='h6'>
-                                        Số giá trị khác nhau
-                                    </Typography>
-                                    <Typography variant='body2'>
-                                        (Nhấn để xem chi tiết)
-                                    </Typography>
-                                </div>
+                                <Typography variant='h6'>
+                                    Trọng số phân cụm
+                                </Typography>
                             </Grid>
                         </Grid>
                     </div>

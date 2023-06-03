@@ -55,6 +55,7 @@ const UploadExcel = () => {
                 title: e?.title || e,
                 type: "text",
                 disabled: e?.disabled || false,
+                weight: 0,
             }))));
         };
         reader.readAsBinaryString(file);
@@ -90,7 +91,7 @@ const UploadExcel = () => {
                 <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>
             <Typography variant='body1' component="i">
-                (Lưu ý: Dữ liệu sẽ được tự động bỏ qua các dòng không có dữ liệu và các cột không có tiêu đề)
+                (Lưu ý: Hệ thống tự động bỏ qua các dòng không có dữ liệu và các cột không có tiêu đề)
             </Typography>
         </Box>
     )

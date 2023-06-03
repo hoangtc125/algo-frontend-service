@@ -12,7 +12,7 @@ import { errorNotification } from '../../utils/notification';
 const ClusterFile = () => {
     const hash = String(window.location.hash)
     const clusterData = useSelector(clusterSelector)
-    const [current, setCurrent] = useState(hash ? hash.split("#")[1] : 0);
+    const [current, setCurrent] = useState(hash ? parseInt(hash.split("#")[1]) : 0);
 
     useEffect(() => {
         const saveInterval = setInterval(() => {
@@ -43,19 +43,19 @@ const ClusterFile = () => {
                 type="navigation"
                 current={current}
                 onChange={onChange}
-                className="site-navigation-steps bg-gray-100"
+                className="site-navigation-steps"
                 items={[
                     {
                         title: 'Upload Excel File',
                         description: 'Set up your dataset',
                     },
                     {
-                        title: 'View Dataset',
-                        description: 'Your file excel',
+                        title: 'Prepare clustering',
+                        description: 'Configure dataset',
                     },
                     {
-                        title: 'Step 3',
-                        description: 'This is a description.',
+                        title: 'Clustering',
+                        description: '',
                     },
                 ]}
             />

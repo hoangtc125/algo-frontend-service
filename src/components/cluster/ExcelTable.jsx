@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Table, Modal, Descriptions } from 'antd';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import * as XLSX from 'xlsx';
 
@@ -9,8 +9,21 @@ import { clusterSelector } from '../../redux/selectors'
 
 const ExcelTable = () => {
     const clusterData = useSelector(clusterSelector)
-    const dataset = clusterData.dataset
-    const header = clusterData.header
+    const header = clusterData.header.map((e, idx) => ({...e, index: idx})).filter((e, idx) => {
+        if (idx == 0) {
+            return true
+        }
+        return e.weight > 0
+    })
+    const dataset = clusterData.dataset.map(e => {
+        let row = []
+        for (let index = 0; index < header.length; index++) {
+            const element = header[index];
+            row.push(e[element.index])
+        }
+        return row
+    })
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
     console.log("re-render");
 
@@ -33,10 +46,10 @@ const ExcelTable = () => {
         });
     };
 
-    const columns = header && header.map(({ title, type }, index) => {
+    const columns = header && header.map((item, index) => {
         const colData = Array.from(new Set(dataset.map(e => e[index])))
         return {
-            title: `${title} (${type})`,
+            title: `${item.title} (${item.type} | ${item.weight})`,
             dataIndex: index.toString(),
             key: index.toString(),
             ellipsis: true, // Giới hạn độ dài cột
@@ -69,10 +82,10 @@ const ExcelTable = () => {
         const buf = new ArrayBuffer(s.length);
         const view = new Uint8Array(buf);
         for (let i = 0; i < s.length; i++) {
-          view[i] = s.charCodeAt(i) & 0xFF;
+            view[i] = s.charCodeAt(i) & 0xFF;
         }
         return buf;
-      }
+    }
 
     const handleDownload = () => {
         const newWorkbook = XLSX.utils.book_new();
@@ -89,29 +102,53 @@ const ExcelTable = () => {
         document.body.removeChild(downloadLink);
     }
 
+    const onSelectChange = (newSelectedRowKeys) => {
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+        columnWidth: 100,
+        selections: [
+            Table.SELECTION_ALL,
+            Table.SELECTION_NONE,
+        ],
+        fixed: true,
+    };
+
     return (
-        <Box className="m-2 w-full max-w-[90vw] space-y-4">
-            <Box className="w-full flex items-center justify-end">
-                <Button variant='contained' startIcon={<DownloadIcon />} onClick={handleDownload}>
-                    Download
-                </Button>
+        <Box className="m-4 w-full flex flex-col items-center justify-center max-w-[90vw] space-y-8">
+            <Box className="w-full">
+                <Typography variant='h6'>
+                    Chọn dữ liệu phân cụm
+                </Typography>
+                <Box className="w-full flex items-center justify-between">
+                    <Typography variant='body1'>
+                        {`Selected ${selectedRowKeys.length} items`}
+                    </Typography>
+                    <Button variant='contained' startIcon={<DownloadIcon />} onClick={handleDownload}>
+                        Download
+                    </Button>
+                </Box>
+                <Table
+                    dataSource={dataset}
+                    columns={columns}
+                    bordered
+                    className='cursor-pointer rounded-md shadow-lg'
+                    rowSelection={rowSelection}
+                    rowKey={(record) => record[0]}
+                    onRow={(record) => ({
+                        onClick: () => handleRowClick(record),
+                    })}
+                    scroll={{
+                        x: 200,
+                    }}
+                    pagination={{
+                        pageSize: 10,
+                    }}
+                />
             </Box>
-            <Table
-                dataSource={dataset}
-                columns={columns}
-                bordered
-                className='cursor-pointer rounded-md shadow-lg'
-                rowKey={(record) => record[0]}
-                onRow={(record) => ({
-                    onClick: () => handleRowClick(record),
-                })}
-                scroll={{
-                    x: 200,
-                }}
-                pagination={{
-                    pageSize: 10,
-                }}
-            />
         </Box>
     );
 };
