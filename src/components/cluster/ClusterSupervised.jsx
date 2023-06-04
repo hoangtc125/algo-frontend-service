@@ -5,28 +5,29 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { supervisedOptionsSelector } from '../../redux/selectors';
 import clusterSlice from './clusterSlice';
+import { COLOR } from '../../utils/constant';
 
 const ClusterSupervised = () => {
     const { token } = theme.useToken();
     const dispatch = useDispatch()
     const tags = useSelector(supervisedOptionsSelector)
+    const ref1 = useRef(null)
+    const ref2 = useRef(null)
 
     const [inputVisible, setInputVisible] = useState(false);
-    const [inputValue, setInputValue] = useState('');
     const [editInputIndex, setEditInputIndex] = useState(-1);
-    const [editInputValue, setEditInputValue] = useState('');
-    const inputRef = useRef(null);
-    const editInputRef = useRef(null);
+
+    useEffect(() => {
+        if (editInputIndex) {
+            ref1.current?.focus();
+        }
+    }, [editInputIndex]);
 
     useEffect(() => {
         if (inputVisible) {
-            inputRef.current?.focus();
+            ref2.current?.focus();
         }
     }, [inputVisible]);
-
-    useEffect(() => {
-        editInputRef.current?.focus();
-    }, [inputValue]);
 
     const handleClose = (removedTag) => {
         const newTags = tags.filter((tag) => tag !== removedTag);
@@ -35,30 +36,23 @@ const ClusterSupervised = () => {
 
     const showInput = () => {
         setInputVisible(true);
+        ref2.current?.focus();
     };
 
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleInputConfirm = () => {
-        if (inputValue && tags.indexOf(inputValue) === -1) {
-            dispatch(clusterSlice.actions.setSupervisedOptions([...tags, inputValue]))
+    const handleInputConfirm = (e) => {
+        if (e.target.value.trim() && tags.indexOf(e.target.value) === -1) {
+            dispatch(clusterSlice.actions.setSupervisedOptions([...tags, e.target.value]))
         }
         setInputVisible(false);
-        setInputValue('');
     };
 
-    const handleEditInputChange = (e) => {
-        setEditInputValue(e.target.value);
-    };
-
-    const handleEditInputConfirm = () => {
-        const newTags = [...tags];
-        newTags[editInputIndex] = editInputValue;
-        dispatch(clusterSlice.actions.setSupervisedOptions(newTags))
+    const handleEditInputConfirm = (e) => {
+        if (e.target.value.trim() && !tags.includes(e.target.value)) {
+            const newTags = [...tags];
+            newTags[editInputIndex] = e.target.value;
+            dispatch(clusterSlice.actions.setSupervisedOptions(newTags))
+        }
         setEditInputIndex(-1);
-        setInputValue('');
     };
 
     const tagInputStyle = {
@@ -74,18 +68,17 @@ const ClusterSupervised = () => {
     console.log("re-render");
 
     return (
-        <Space size={[0, 8]} wrap className='m-4 w-full'>
-            <Space size={[0, 8]} wrap>
+        <Space size={20} wrap className='m-4 w-full'>
+            <Space size={20} wrap>
                 {tags.map((tag, index) => {
                     if (editInputIndex === index) {
                         return (
                             <Input
-                                ref={editInputRef}
+                                ref={ref1}
                                 key={tag}
                                 size="large"
                                 style={tagInputStyle}
-                                value={editInputValue}
-                                onChange={handleEditInputChange}
+                                defaultValue={tags[index]}
                                 onBlur={handleEditInputConfirm}
                                 onPressEnter={handleEditInputConfirm}
                             />
@@ -96,7 +89,8 @@ const ClusterSupervised = () => {
                         <Tag
                             key={tag}
                             className='h-fit'
-                            closable={true}
+                            closable={index > 1}
+                            color={COLOR[index]}
                             style={{
                                 userSelect: 'none',
                             }}
@@ -106,7 +100,6 @@ const ClusterSupervised = () => {
                                 className='text-lg'
                                 onDoubleClick={(e) => {
                                     setEditInputIndex(index);
-                                    setEditInputValue(tag);
                                     e.preventDefault();
                                 }}
                             >
@@ -123,22 +116,22 @@ const ClusterSupervised = () => {
                     );
                 })}
             </Space>
-            {inputVisible ? (
+            {inputVisible &&
                 <Input
-                    ref={inputRef}
+                    ref={ref2}
                     type="text"
                     size="large"
+                    defaultValue={`Cụm ${tags.length + 1}`}
                     style={tagInputStyle}
-                    value={inputValue}
-                    onChange={handleInputChange}
                     onBlur={handleInputConfirm}
                     onPressEnter={handleInputConfirm}
                 />
-            ) : (
+            }
+            {!inputVisible && tags.length < 10 &&
                 <Tag style={tagPlusStyle} onClick={showInput} className='h-fit text-lg items-center'>
-                    <PlusOutlined /> Tạo tập quan sát mới
+                    <PlusOutlined /> Tạo cụm mới
                 </Tag>
-            )}
+            }
         </Space>
     );
 };

@@ -10,7 +10,7 @@ const clusterSlice = createSlice({
     dataset: clusterStorage?.dataset || [],
     selectedRecord: clusterStorage?.selectedRecord || [],
     supervisedSet: clusterStorage?.supervisedSet || [],
-    supervisedOptions: clusterStorage?.supervisedOptions || [],
+    supervisedOptions: clusterStorage?.supervisedOptions || ["Cụm 1", "Cụm 2"],
   },
   reducers: {
     clear: (state, action) => {
@@ -18,7 +18,7 @@ const clusterSlice = createSlice({
       state.dataset = []
       state.selectedRecord = []
       state.supervisedSet = []
-      state.supervisedOptions = []
+      state.supervisedOptions = ["Cụm 1", "Cụm 2"]
       state.collDiffData = []
     },
     setDataset: (state, action) => {
@@ -33,6 +33,10 @@ const clusterSlice = createSlice({
     },
     setSupervisedOptions: (state, action) => {
       state.supervisedOptions = action.payload
+      const newSupervisedSet = state.supervisedSet.map(e => {
+        return action.payload.includes(e) ? e : null
+      })
+      state.supervisedSet = newSupervisedSet
     },
     setSupervisedSet: (state, action) => {
       state.supervisedSet[action.payload.index] = action.payload.supervisedSet

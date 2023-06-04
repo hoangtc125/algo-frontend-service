@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
-import { Descriptions, Modal, Table } from 'antd';
+import { Descriptions, Modal, Table, Tag } from 'antd';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { clusterFileSelector, clusterSelector } from '../../redux/selectors';
+import { clusterSelector } from '../../redux/selectors';
 import HeaderSetting from './HeaderSetting';
 import ClusterSupervised from './ClusterSupervised';
 import clusterSlice from './clusterSlice'
 import { CLUSTER_TYPE } from '../../utils/constant';
 import { handleDownload } from '../../utils/excel';
+import { COLOR } from '../../utils/constant';
 
 const ClusterPrepare = () => {
     const dispatch = useDispatch()
@@ -90,30 +91,43 @@ const ClusterPrepare = () => {
         key: 'supervisedSet',
         fixed: 'right',
         width: 200,
-        render: (text, record, index) => (
-            <FormControl fullWidth>
-                <InputLabel id="el-supervised-set-label">Tập quan sát</InputLabel>
-                <Select
-                    labelId="el-supervised-set-label"
-                    id="el-supervised-set"
-                    label="Type"
-                    value={supervisedSet[index] || ``}
-                    onChange={(e) => {
-                        e.stopPropagation()
-                        dispatch(clusterSlice.actions.setSupervisedSet({ index: index, supervisedSet: e.target.value }))
-                    }}
-                >
-                    <MenuItem key={""} value={``}>
-                        Không
-                    </MenuItem>
-                    {supervisedOptions.map((el, key) => (
-                        <MenuItem key={key} value={el}>
-                            {el}
+        filterSearch: true,
+        filters: supervisedOptions.map(e => (
+            {
+                text: e,
+                value: e,
+            }
+        )),
+        onFilter: (value, record) => value == supervisedSet[record[0]],
+        sorter: (a, b) => {
+            return String(supervisedSet[a[0]]).localeCompare(supervisedSet[b[0]])
+        },
+        render: (text, record, index) => {
+            return (
+                <FormControl fullWidth>
+                    <InputLabel id="el-supervised-set-label">Tập quan sát</InputLabel>
+                    <Select
+                        labelId="el-supervised-set-label"
+                        id="el-supervised-set"
+                        label="Type"
+                        value={supervisedSet[record[0]] || ``}
+                        onChange={(e) => {
+                            e.stopPropagation()
+                            dispatch(clusterSlice.actions.setSupervisedSet({ index: record[0], supervisedSet: e.target.value }))
+                        }}
+                    >
+                        <MenuItem key={""} value={``}>
+                            Không
                         </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-        ),
+                        {supervisedOptions.map((el, key) => (
+                            <MenuItem key={key} value={el}>
+                                <Tag className='text-base' color={COLOR[key]}>{el}</Tag>
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            )
+        },
     }, {
         title: 'Thao tác',
         key: 'action',
@@ -188,7 +202,13 @@ const ClusterPrepare = () => {
                 <Typography variant='h6'>
                     2. Tạo tập quan sát
                 </Typography>
+                <Typography variant='body1'>
+                    (Tối thiểu 2, tối đa 10)
+                </Typography>
                 <ClusterSupervised />
+                <Typography variant='body1' component="i">
+                    Nhấn đúp để đổi tên
+                </Typography>
             </Box>
             <Box className="w-full">
                 <Typography variant='h6'>
