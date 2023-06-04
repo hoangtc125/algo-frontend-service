@@ -53,7 +53,7 @@ const SetUpFile = () => {
                                     >
                                         {header.map((el, key) => (
                                             <MenuItem key={key} value={el.id}>
-                                                {el.title}
+                                                {String(el.title).substring(0, 100)}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -70,9 +70,9 @@ const SetUpFile = () => {
                         <Grid container>
                             <Grid item className='items-center flex justify-center p-2' xs={12} md={6}>
                                 <FormControl className='w-full'>
-                                    <InputLabel id="el-name-label">Cột</InputLabel>
+                                    <InputLabel id="el-email-label">Cột</InputLabel>
                                     <Select
-                                        labelId="el-name-label"
+                                        labelId="el-email-label"
                                         label="Cột"
                                         onChange={(e) => {
                                             if (isEmailListValid(collDiffDatas[header.findIndex(c => c.id == e.target.value)])) {
@@ -85,7 +85,7 @@ const SetUpFile = () => {
                                     >
                                         {header.map((el, key) => (
                                             <MenuItem key={key} value={el.id}>
-                                                {el.title}
+                                                {String(el.title).substring(0, 100)}
                                             </MenuItem>
                                         ))}
                                     </Select>

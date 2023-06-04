@@ -6,6 +6,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import * as XLSX from 'xlsx';
 
 import { clusterSelector } from '../../redux/selectors'
+import { CLUSTER_TYPE } from '../../utils/constant';
 
 const ExcelTable = () => {
     const clusterData = useSelector(clusterSelector)
@@ -49,7 +50,10 @@ const ExcelTable = () => {
     const columns = header && header.map((item, index) => {
         const colData = Array.from(new Set(dataset.map(e => e[index])))
         return {
-            title: `${item.title} (${item.type} | ${item.weight})`,
+            title: <div className='w-full flex flex-col space-y-2'>
+                <p>{item.title}</p>
+                <p>{`(${CLUSTER_TYPE.find(e => e.value == item.type).label} / ${item.weight})`}</p>
+            </div>,
             dataIndex: index.toString(),
             key: index.toString(),
             ellipsis: true, // Giới hạn độ dài cột
@@ -69,7 +73,7 @@ const ExcelTable = () => {
                 if (!b[index]) {
                     return true
                 }
-                if (type == "numerical") {
+                if (item.type == "numerical") {
                     return a[index] - b[index]
                 } else {
                     return String(a[index]).localeCompare(String(b[index]))
