@@ -20,9 +20,9 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 const validate = values => {
     const errors = {};
     if (!values.ip) {
-        errors.ip = 'Required';
+        errors.ip = 'Không được để trống';
     } else if (!validateIP(values.ip)) {
-        errors.ip = 'IP Invalid';
+        errors.ip = 'IP không đúng định dạng';
     }
     return errors;
 };
@@ -41,26 +41,26 @@ const Camera = () => {
 
     const tourSteps = [
         {
-            title: 'Connect IP Webcam to take a shoot directly',
-            description: 'Start IP Webcam server and type the IPv4 address on phone screen in here',
+            title: 'Kết nối ứng dụng IP Webcam trên điện thoại của bạn',
+            description: 'Hãy Start Server trên IP Webcam và copy địa chỉ IPv4 trên màn hình vào đây',
             target: () => ref1.current,
             mask: false,
         },
         {
-            title: 'Control your camera',
-            description: 'You can zoom in, zoom out or open front camera ...',
+            title: 'Điều khiển Camera điện thoại',
+            description: 'Cấu hình phóng to, thu nhỏ, chế độ tập trung...',
             target: () => ref2.current,
             mask: false,
         },
         {
-            title: 'Take a shoot',
-            description: 'Camera video will be displayed here, press Shoot button to take picture',
+            title: 'Chụp ảnh từ điện thoại',
+            description: 'Màn hình camera sẽ hiện thị ở đây',
             target: () => ref3.current,
             mask: false,
         },
     ];
 
-    const setUpCamera = async () => {
+    const setUpCamera = async (ip) => {
         dispatch(cameraSlice.actions.setLoading(true))
         document.getElementById("ip-webcam").firstChild.src = IMAGE
         try {
@@ -77,7 +77,7 @@ const Camera = () => {
             }
             document.getElementById("ip-webcam").firstChild.src = `http://${ip}:8080/video`
         } catch {
-            errorNotification("Camera Error", "Make sure start server IP Webcam", "bottomRight")
+            errorNotification("Không thể kết nối", "Đảm bảo bạn đã Start Server của IP Webcam trên điện thoại", "bottomRight")
         } finally {
             dispatch(cameraSlice.actions.setLoading(false))
         }
@@ -93,7 +93,7 @@ const Camera = () => {
             if (image) {
                 setImage()
             }
-            await setUpCamera()
+            await setUpCamera(values.ip)
         },
     });
 
@@ -154,26 +154,26 @@ const Camera = () => {
                             image
                                 ?
                                 <Space size={20}>
-                                    <LoadingButton loading={loading} loadingPosition='start' variant="contained" startIcon={<DeleteIcon />} color="error" className='w-28' onClick={() => { handleContinue() }}>Remove</LoadingButton>
-                                    <LoadingButton loading={loading} loadingPosition='start' variant="contained" startIcon={<SendIcon />} color="success" className='w-28' onClick={() => {
+                                    <LoadingButton loading={loading} loadingPosition='start' variant="contained" startIcon={<DeleteIcon />} color="error" className='w-fit' onClick={() => { handleContinue() }}>Bỏ ảnh</LoadingButton>
+                                    <LoadingButton loading={loading} loadingPosition='start' variant="contained" startIcon={<SendIcon />} color="success" className='w-fit' onClick={() => {
                                         if (single) {
                                             dispatch(cameraSlice.actions.addSingleImage(image))
                                         } else {
                                             dispatch(cameraSlice.actions.addImage(image))
                                         }
                                         handleContinue()
-                                    }}>Take</LoadingButton>
+                                    }}>Lấy ảnh</LoadingButton>
                                 </Space>
                                 :
                                 <LoadingButton
                                     loading={loading}
                                     onClick={handleTakePhoto}
                                     loadingPosition="start"
-                                    className='w-28'
+                                    className='w-fit'
                                     startIcon={<CameraAltIcon />}
                                     variant="contained"
                                 >
-                                    Shoot
+                                    Chụp hình
                                 </LoadingButton>
                         }
                     </List>
@@ -210,45 +210,69 @@ const Camera = () => {
                                         variant="contained"
                                         className='text-lg sm:text-sm'
                                     >
-                                        Connect
+                                        Kết nối
                                     </Button>
-                                    <Typography variant='body2'>Press again if loss connection</Typography>
+                                    <Typography variant='body2'>Nhấn nếu mất kết nối</Typography>
                                 </div>
                             </Box>
                         </ListItem>
                     </List>
                     <List ref={ref2} className='w-full flex flex-col items-center'>
                         <ListItem className='w-full space-x-5 mt-4'>
-                            <Typography>Zoom</Typography>
-                            <Slider
-                                defaultValue={0}
-                                step={10}
-                                marks
-                                min={0}
-                                max={100}
-                                valueLabelDisplay="on"
-                                onChange={async (e, value) => {
-                                    await get_webcam(`http://${ip}:8080/ptz?zoom=${value}`)
-                                }}
-                            />
+                            <Grid container>
+                                <Grid item xs={4}>
+                                    <Typography>Phóng to</Typography>
+                                </Grid>
+                                <Grid item xs={8}>
+                                    <Slider
+                                        defaultValue={0}
+                                        step={10}
+                                        marks
+                                        min={0}
+                                        max={100}
+                                        valueLabelDisplay="on"
+                                        onChange={async (e, value) => {
+                                            await get_webcam(`http://${ip}:8080/ptz?zoom=${value}`)
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
                         </ListItem>
                         <ListItem className='w-full space-x-5'>
-                            <Typography>Front Camera</Typography>
-                            <Switch onChange={async (e) => {
-                                await get_webcam(`http://${ip}:8080/settings/ffc?set=${e.target.checked ? "on" : "off"}`)
-                            }} />
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <Typography>Camera trước</Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Switch onChange={async (e) => {
+                                        await get_webcam(`http://${ip}:8080/settings/ffc?set=${e.target.checked ? "on" : "off"}`)
+                                    }} />
+                                </Grid>
+                            </Grid>
                         </ListItem>
                         <ListItem className='w-full space-x-5'>
-                            <Typography>Orientation</Typography>
-                            <Switch onChange={async (e) => {
-                                await get_webcam(`http://${ip}:8080/settings/orientation?set=${e.target.checked ? "portrait" : "landscape"}`)
-                            }} />
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <Typography>Xoay dọc</Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Switch onChange={async (e) => {
+                                        await get_webcam(`http://${ip}:8080/settings/orientation?set=${e.target.checked ? "portrait" : "landscape"}`)
+                                    }} />
+                                </Grid>
+                            </Grid>
                         </ListItem>
                         <ListItem className='w-full space-x-5'>
-                            <Typography>Hold Focus</Typography>
-                            <Switch onChange={async (e) => {
-                                await get_webcam(`http://${ip}:8080/${e.target.checked ? "focus" : "nofocus"}`)
-                            }} />
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <Typography>Tập trung</Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Switch onChange={async (e) => {
+                                        await get_webcam(`http://${ip}:8080/${e.target.checked ? "focus" : "nofocus"}`)
+                                    }} />
+                                </Grid>
+                            </Grid>
                         </ListItem>
                     </List>
                 </Grid>
@@ -257,7 +281,7 @@ const Camera = () => {
                 <IconButton aria-label="delete" size="large" color='primary' onClick={() => setIsTourOpen(true)}>
                     <QuestionCircleOutlined fontSize="inherit" />
                 </IconButton>
-                <Tour open={isTourOpen} onClose={() => setIsTourOpen(false)} steps={tourSteps} type="primary"/>
+                <Tour open={isTourOpen} onClose={() => setIsTourOpen(false)} steps={tourSteps} type="primary" />
             </div>
         </Box>
     );

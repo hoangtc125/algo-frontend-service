@@ -28,7 +28,7 @@ const ClusterFile = () => {
         window.location.hash = value
         if (value == 1) {
             if (!clusterData.file[0]) {
-                errorNotification("Empty Data", "You have upload excel file first", "bottomRight")
+                errorNotification("Không có dữ liệu", "Hãy tải lên file Excel đơn tuyển thành viên trước", "bottomRight")
             } else {
                 setCurrent(value)
             }
@@ -46,15 +46,15 @@ const ClusterFile = () => {
                 className="site-navigation-steps"
                 items={[
                     {
-                        title: 'Upload Excel File',
-                        description: 'Set up your dataset',
+                        title: 'Tải lên File Excel',
+                        description: 'Chuẩn bị tập dữ liệu tuyển thành viên',
                     },
                     {
-                        title: 'Prepare clustering',
-                        description: 'Configure dataset',
+                        title: 'Chuẩn bị phân cụm dữ liệu',
+                        description: 'Cấu hình thông số',
                     },
                     {
-                        title: 'Clustering',
+                        title: 'Tiến hành phân cụm',
                         description: '',
                     },
                 ]}

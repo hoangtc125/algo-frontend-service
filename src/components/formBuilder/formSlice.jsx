@@ -63,7 +63,7 @@ const formSlice = createSlice({
     addSection: (state, action) => {
       state.sections.push({
         id: action.payload,
-        title: `Section ${action.payload.substr(0, 8)}`,
+        title: `Biểu mẫu ${action.payload.substr(0, 8)}`,
         description: "",
         data: [],
       })

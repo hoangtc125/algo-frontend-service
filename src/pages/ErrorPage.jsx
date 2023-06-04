@@ -20,7 +20,7 @@ export default function ErrorPage() {
           </p>
         </>
       }
-      extra={<Button type="primary" onClick={() => { navigate(-1) }}>Go Back</Button>}
+      extra={<Button type="primary" onClick={() => { navigate(-1) }}>Quay lại</Button>}
     />
   );
 }

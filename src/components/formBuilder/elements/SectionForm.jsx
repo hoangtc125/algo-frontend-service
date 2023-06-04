@@ -56,7 +56,7 @@ const SectionForm = ({
               fullWidth
               required={item.required}
               disabled={item.disabled}
-              label="Section Label"
+              label="Câu hỏi"
               sx={{ mb: 2 }}
             />
             {(item?.options || []).map((opt, key) => (
@@ -65,7 +65,7 @@ const SectionForm = ({
                 <TextField
                   variant="outlined"
                   fullWidth
-                  label={`Section Option ${key + 1}`}
+                  label={`Lựa chọn ${key + 1}`}
                   defaultValue={opt?.value}
                   key={opt?.id}
                   onBlur={(e) =>
@@ -73,16 +73,16 @@ const SectionForm = ({
                   }
                 />
                 <FormControl className="w-full">
-                  <InputLabel id="el-to-section-label">To Section</InputLabel>
+                  <InputLabel id="el-to-section-label">Chuyển đến</InputLabel>
                   <Select
                     labelId="el-to-section-label"
                     id="el-to-section"
-                    label="To Section"
+                    label="Chuyển đến"
                     value={sectionsId.includes(opt?.to) ? opt?.to : ""}
                     onChange={(e) => handleOptionSection(item?.id, opt?.id, e.target.value)}
                   >
                     <MenuItem key={""} value={""}>
-                      No Section
+                      Không
                     </MenuItem>
                     {sectionsInfo &&
                       sectionsInfo.map((el) => (
@@ -92,7 +92,7 @@ const SectionForm = ({
                       ))}
                   </Select>
                 </FormControl>
-                <Tooltip title="Delete Option" aria-label="delete-option">
+                <Tooltip title="Xóa lựa chọn" aria-label="delete-option">
                   <IconButton
                     aria-label="delete-option"
                     onClick={() => deleteOption(item.id, opt?.id)}
@@ -104,12 +104,12 @@ const SectionForm = ({
               </Box>
             ))}
             <Button variant="text" onClick={() => createNewOption(item.id)}>
-              Add Option
+              Thêm lựa chọn
             </Button>
           </Grid>
           <Grid item md={3}>
             <FormControl fullWidth>
-              <InputLabel id="el-type-label">Type</InputLabel>
+              <InputLabel id="el-type-label">Loại</InputLabel>
               <Select
                 labelId="el-type-label"
                 id="el-type"
@@ -136,7 +136,7 @@ const SectionForm = ({
           <p className="text-base text-start ml-6 my-2 text-red-500">Câu hỏi bắt buộc của hệ thống</p>
           :
           <FormGroup row sx={{ alignItems: "center" }}>
-            <Tooltip title="Delete Element" aria-label="delete-element">
+            <Tooltip title="Xóa câu hỏi" aria-label="delete-element">
               <IconButton
                 aria-label="delete-element"
                 onClick={() => deleteEl(item.id)}
@@ -145,7 +145,7 @@ const SectionForm = ({
                 <DeleteOutlineOutlinedIcon color="primary" />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Duplicate Element" aria-label="duplicate-element">
+            <Tooltip title="Sao chép câu hỏi" aria-label="duplicate-element">
               <IconButton
                 aria-label="duplicate-element"
                 onClick={() => duplicateElement(item)}
@@ -164,7 +164,7 @@ const SectionForm = ({
                   color="primary"
                 />
               }
-              label="Required"
+              label="Bắt buộc"
               sx={{ ml: 2 }}
             />
           </FormGroup>

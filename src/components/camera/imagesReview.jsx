@@ -38,7 +38,7 @@ const ImagesReview = () => {
 
     const handleChange = async ({ file }) => {
         if (!["image/jpeg", "image/png"].includes(file.type)) {
-            errorNotification("Wrong type file", `You couldn't upload ${file.type} file`, "bottomRight")
+            errorNotification("Loại file không phù hợp", `Không thể tải lên ${file.type} file`, "bottomRight")
             return
         }
         if (file.status == "removed") {
@@ -71,7 +71,7 @@ const ImagesReview = () => {
                     marginTop: 8,
                 }}
             >
-                Upload
+                Nhấn để tải lên
             </div>
         </div>
     );

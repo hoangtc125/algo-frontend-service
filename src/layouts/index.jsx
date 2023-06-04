@@ -23,11 +23,11 @@ function getItem(label, key, icon, children) {
 }
 
 const siderItems = [
-    getItem(<Link to={"/algo-frontend-service/form-store"}>Club</Link>, 'club', <PieChartOutlined />),
+    getItem(<Link to={"/algo-frontend-service/form-store"}>Câu lạc bộ</Link>, 'club', <PieChartOutlined />),
     getItem('Account', 'account', <UserOutlined />, [
-        getItem(<Link to={"/algo-frontend-service/account"}>Profile</Link>, '/algo-frontend-service/account', <ProfileFilled />),
-        getItem(<Link to={"/algo-frontend-service/account/verify"}>Verify</Link>, '/algo-frontend-service/account/verify', <VerifiedIcon />),
-        getItem(<Link to={"/algo-frontend-service/account/setting"}>Setting</Link>, '/algo-frontend-service/account/setting', <SettingsSuggestIcon />),
+        getItem(<Link to={"/algo-frontend-service/account"}>Trang cá nhân</Link>, '/algo-frontend-service/account', <ProfileFilled />),
+        getItem(<Link to={"/algo-frontend-service/account/verify"}>Xác thực</Link>, '/algo-frontend-service/account/verify', <VerifiedIcon />),
+        getItem(<Link to={"/algo-frontend-service/account/setting"}>Cài đặt</Link>, '/algo-frontend-service/account/setting', <SettingsSuggestIcon />),
     ]),
 ];
 
@@ -54,7 +54,7 @@ const MainLayout = () => {
         const hash = window.location.hash;
         if (hash == "#active") {
             success({
-                title: 'Welcome to Algo',
+                title: 'Chào mừng bạn đến với Algo',
                 centered: true,
                 content: (
                     <Result
@@ -102,7 +102,7 @@ const MainLayout = () => {
                 <Layout className='min-h-screen flex flex-col justify-between'>
                     <Outlet />
                     <Footer className='text-center' >
-                        Thesis at Hanoi University of Science and Technology ©2023 Created by Cong Hoang Tran
+                        Đồ án tôt nghiệp Đại học Bách Khoa Hà Nội ©2023 Trần Công Hoàng 20194060
                     </Footer>
                 </Layout>
             </Layout>

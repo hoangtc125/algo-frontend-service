@@ -20,15 +20,15 @@ const validate = values => {
     const errors = {};
 
     if (!values.password) {
-        errors.password = 'Required';
+        errors.password = 'Không được để trống';
     } else if (values.password.length > 15) {
-        errors.password = 'Must be 15 characters or less';
+        errors.password = 'Tối đa 15 ký tự hoặc ít hơn';
     }
 
     if (!values.username) {
-        errors.username = 'Required';
+        errors.username = 'Không được để trống';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.username)) {
-        errors.username = 'Invalid email address';
+        errors.username = 'Email không hợp lệ';
     }
 
     return errors;
@@ -47,7 +47,7 @@ export default function Login() {
         },
         validate,
         onSubmit: values => {
-            infoNotification("Wait a second", "Your action has been processed", "bottomRight")
+            infoNotification("Đợi giây lát", "Yêu cầu đang được xử lý", "bottomRight")
             dispatch(login(`grant_type=&username=${values.username}&password=${values.password}&scope=&client_id=&client_secret=`))
         },
     });
@@ -69,10 +69,10 @@ export default function Login() {
     const handleForgotPassword = () => {
         Modal.info({
             closable: true,
-            title: 'Reset Password',
+            title: 'Đặt lại Mật khẩu',
             content: (
                 <div className='pr-8'>
-                    <p>A link to reset password will be sent to your email</p>
+                    <p>Đường link đổi mật khẩu sẽ được gửi đến email tài khoản mà bạn đã đăng ký</p>
                     <ForgotPassword />
                 </div>
             ),
@@ -99,7 +99,7 @@ export default function Login() {
             await signInWithPopup(auth, provider);
             handleLoginFirebase()
         } catch (e) {
-            errorNotification("Account already in used", "Please login with another method", "bottomRight")
+            errorNotification("Email đã được sử dụng", "Hãy đăng nhập với phương thức khác", "bottomRight")
         }
     };
 
@@ -109,7 +109,7 @@ export default function Login() {
             await signInWithPopup(auth, provider);
             handleLoginFirebase()
         } catch (e) {
-            errorNotification("Account already in used", "Please login with another method", "bottomRight")
+            errorNotification("Email đã được sử dụng", "Hãy đăng nhập với phương thức khác", "bottomRight")
         }
     };
 
@@ -119,7 +119,7 @@ export default function Login() {
             await signInWithPopup(auth, provider);
             handleLoginFirebase()
         } catch (e) {
-            errorNotification("Account already in used", "Please login with another method", "bottomRight")
+            errorNotification("Email đã được sử dụng", "Hãy đăng nhập với phương thức khác", "bottomRight")
         }
     };
 
@@ -129,7 +129,7 @@ export default function Login() {
             await signInWithPopup(auth, provider);
             handleLoginFirebase()
         } catch (e) {
-            errorNotification("Account already in used", "Please login with another method", "bottomRight")
+            errorNotification("Email đã được sử dụng", "Hãy đăng nhập với phương thức khác", "bottomRight")
         }
     };
 
@@ -144,7 +144,7 @@ export default function Login() {
             }}
         >
             <Typography component="h1" variant="h5">
-                Welcome to Algo
+                Chào mừng bạn đến với Algo
             </Typography>
             <Box
                 component="form"
@@ -158,7 +158,7 @@ export default function Login() {
                     required
                     fullWidth
                     autoFocus={true}
-                    label="Email Address"
+                    label="Địa chỉ Email"
                     name='username'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -171,7 +171,7 @@ export default function Login() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Password"
+                    label="Mật khẩu"
                     type="password"
                     name='password'
                     onChange={formik.handleChange}
@@ -188,17 +188,17 @@ export default function Login() {
                     sx={{ mt: 3, mb: 2 }}
                     className='text-lg sm:text-sm'
                 >
-                    Sign In
+                    Đăng nhập
                 </Button>
                 <Grid container>
                     <Grid item xs>
                         <Link href="#" variant="body2" className='underline' onClick={handleForgotPassword}>
-                            Forgot password?
+                            Quên mật khẩu?
                         </Link>
                     </Grid>
                     <Grid item>
                         <Link to="/algo-frontend-service/register" variant="body2" className='underline'>
-                            Don't have an account? Sign Up
+                            Chưa có tài khoản? Đăng ký ngay
                         </Link>
                     </Grid>
                 </Grid>
@@ -206,9 +206,9 @@ export default function Login() {
                     component="h1"
                     variant="h5"
                     align="center"
-                    className="center-text opacity-50 py-3"
+                    className="center-text opacity-50 py-6"
                 >
-                    Or
+                    Hoặc
                 </Typography>
                 <Grid container spacing={{ xs: 1, md: 2 }}>
                     <Grid item xs={6} sm={6}>

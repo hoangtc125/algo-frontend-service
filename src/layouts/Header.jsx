@@ -22,8 +22,8 @@ function getItem(label, key, icon, children) {
 }
 
 const headerItems = [
-    getItem(<Link to={"/algo-frontend-service/form-store"}>Forms Store</Link>, '/algo-frontend-service/form-store', <CloudServerOutlined />),
-    getItem(<Link to={"/algo-frontend-service/cluster"}>Cluster</Link>, '/algo-frontend-service/cluster', <DesktopOutlined />),
+    getItem(<Link to={"/algo-frontend-service/form-store"}>Kho đơn tuyển thành viên mẫu</Link>, '/algo-frontend-service/form-store', <CloudServerOutlined />),
+    getItem(<Link to={"/algo-frontend-service/cluster"}>Dùng thử phân cụm đơn tuyển thành viên</Link>, '/algo-frontend-service/cluster', <DesktopOutlined />),
 ];
 
 const HeaderPage = () => {
@@ -56,9 +56,9 @@ const HeaderPage = () => {
                                 navigate("/algo-frontend-service/home")
                             }}
                         >
-                            Try without Sign in
+                            Dùng thử phần mềm
                         </Button>
-                            <Button variant="contained"><Link to="/algo-frontend-service/login">Login</Link></Button>
+                            <Button variant="contained"><Link to="/algo-frontend-service/login">Đăng nhập</Link></Button>
                         </Space>
                     )
             }

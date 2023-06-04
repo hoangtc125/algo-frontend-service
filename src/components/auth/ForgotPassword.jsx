@@ -7,9 +7,9 @@ import { errorNotification, infoNotification, successNotification } from '../../
 const validate = values => {
     const errors = {};
     if (!values.username) {
-        errors.username = 'Required';
+        errors.username = 'Không được để trống';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.username)) {
-        errors.username = 'Invalid email address';
+        errors.username = 'Email không hợp lệ';
     }
     return errors;
 };
@@ -21,10 +21,10 @@ const ForgotPassword = () => {
         },
         validate,
         onSubmit: async (values) => {
-            infoNotification("Wait a second", "Your action has been processed", "bottomRight")
+            infoNotification("Đợi giây lát", "Yêu cầu đang được xử lý", "bottomRight")
             const data = await get(`/account/reset-password?email=${values.username}`)
             if (data?.status_code == 200) {
-                successNotification("Check your email", "A link to reset password has been sent", "bottomRight")
+                successNotification("Kiểm tra Email sinh viên của bạn", "Đường link thay đổi mật khẩu đã đươc gửi", "bottomRight")
             } else {
                 errorNotification(data.status_code, data.msg, "bottomRight")
             }
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
                 required
                 fullWidth
                 autoFocus={true}
-                label="Email Address"
+                label="Địa chỉ Email"
                 name='username'
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -60,7 +60,7 @@ const ForgotPassword = () => {
                 sx={{ mt: 3, mb: 2 }}
                 className='text-lg sm:text-sm'
             >
-                Submit
+                Xác nhận
             </Button>
         </Box>
     );

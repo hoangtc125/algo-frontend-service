@@ -8,27 +8,27 @@ const validate = values => {
     const errors = {};
 
     if (!values.password) {
-        errors.password = 'Required';
+        errors.password = 'Không được để trống';
     } else if (values.password.length > 15) {
-        errors.password = 'Must be 15 characters or less';
+        errors.password = 'Tối đa 15 ký tự hoặc ít hơn';
     }
 
     if (!values.repassword) {
-        errors.repassword = 'Required';
+        errors.repassword = 'Không được để trống';
     } else if (values.repassword != values.password) {
-        errors.repassword = 'Not match password';
+        errors.repassword = 'Mật khẩu không khớp';
     }
 
     if (!values.name) {
-        errors.name = 'Required';
+        errors.name = 'Không được để trống';
     } else if (values.name.length > 100) {
-        errors.name = 'Must be 100 characters or less';
+        errors.name = 'Tối đa 100 ký tự hoặc ít hơn';
     }
 
     if (!values.email) {
-        errors.email = 'Required';
+        errors.email = 'Không được để trống';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = 'Invalid email address';
+        errors.email = 'Email không hợp lệ';
     }
 
     return errors;
@@ -44,12 +44,12 @@ export default function Register() {
         },
         validate,
         onSubmit: async (values) => {
-            infoNotification("Wait a second", "Your action has been processed", "bottomRight")
+            infoNotification("Đợi giây lát", "Yêu cầu đang được xử lý", "bottomRight")
             const data = await post(`/account/register`, values)
             if (data?.status_code != 200) {
               errorNotification(data.status_code, data.msg, "bottomRight")
             } else {
-                successNotification("Success", "Check your email to active account", "bottomRight")
+                successNotification("Đăng ký thành công", "Kiểm tra Email đã đăng ký để kích hoạt tài khoản", "bottomRight")
             }
         },
     });
@@ -65,7 +65,7 @@ export default function Register() {
             }}
         >
             <Typography component="h1" variant="h5">
-                Register to Algo
+                Đăng ký tài khoản Algo
             </Typography>
             <Box
                 component="form"
@@ -78,7 +78,7 @@ export default function Register() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Email Address"
+                    label="Địa chỉ Email"
                     name='email'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -91,7 +91,7 @@ export default function Register() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Your Name"
+                    label="Tên hiện thị của bạn"
                     name='name'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -104,7 +104,7 @@ export default function Register() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Password"
+                    label="Mật khẩu"
                     type="password"
                     name='password'
                     onChange={formik.handleChange}
@@ -118,7 +118,7 @@ export default function Register() {
                     margin="normal"
                     required
                     fullWidth
-                    label="Repeat Password"
+                    label="Nhập lại Mật khẩu"
                     type="password"
                     name='repassword'
                     onChange={formik.handleChange}
@@ -135,12 +135,12 @@ export default function Register() {
                     sx={{ mt: 3, mb: 2 }}
                     className='text-lg sm:text-sm'
                 >
-                    Sign Up
+                    Đăng ký tài khoản
                 </Button>
                 <Grid container>
                     <Grid item>
                         <Link to="/algo-frontend-service/login" variant="body2" className='underline'>
-                            Have an account? Sign In
+                            Đã có tài khoản? Đăng nhập
                         </Link>
                     </Grid>
                 </Grid>

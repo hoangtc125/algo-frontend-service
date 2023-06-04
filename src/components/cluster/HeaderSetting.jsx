@@ -28,7 +28,7 @@ const HeaderSetting = ({ item, colDiffData }) => {
                             </Grid>
                             <Grid item className='items-center flex justify-center p-2' xs={10}>
                                 <Typography variant='h6'>
-                                    Data
+                                    Dữ liệu
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -72,7 +72,7 @@ const HeaderSetting = ({ item, colDiffData }) => {
             </Grid>
             <Grid item className='border-r-2 items-center flex justify-center p-2' xs={2}>
                 <FormControl className='w-full lg:w-[70%]'>
-                    <InputLabel id="el-cluster-label">Type</InputLabel>
+                    <InputLabel id="el-cluster-label">Loại</InputLabel>
                     <Select
                         labelId="el-cluster-label"
                         label="Type"

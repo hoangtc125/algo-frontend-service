@@ -35,20 +35,20 @@ const NumberForm = ({
               fullWidth
               required={item.required}
               disabled={item.disabled}
-              label="Number Label"
+              label="Câu hỏi"
               sx={{ mb: 2 }}
             />
             <TextField
               variant="outlined"
               fullWidth
-              label="Number Input Field"
+              label="Câu trả lời số"
               disabled
               type="number"
             />
           </Grid>
           <Grid item xs={3}>
             <FormControl fullWidth>
-              <InputLabel id="el-type-label">Type</InputLabel>
+              <InputLabel id="el-type-label">Loại</InputLabel>
               <Select
                 labelId="el-type-label"
                 id="el-type"
@@ -75,7 +75,7 @@ const NumberForm = ({
           <p className="text-base text-start ml-6 my-2 text-red-500">Câu hỏi bắt buộc của hệ thống</p>
           :
           <FormGroup row sx={{ alignItems: "center" }}>
-            <Tooltip title="Delete Element" aria-label="delete-element">
+            <Tooltip title="Xóa câu hỏi" aria-label="delete-element">
               <IconButton
                 aria-label="delete-element"
                 onClick={() => deleteEl(item.id)}
@@ -84,7 +84,7 @@ const NumberForm = ({
                 <DeleteOutlineOutlinedIcon color="primary" />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Duplicate Element" aria-label="duplicate-element">
+            <Tooltip title="Sao chép câu hỏi" aria-label="duplicate-element">
               <IconButton
                 aria-label="duplicate-element"
                 onClick={() => duplicateElement(item)}
@@ -103,7 +103,7 @@ const NumberForm = ({
                   color="primary"
                 />
               }
-              label="Required"
+              label="Bắt buộc"
               sx={{ ml: 2 }}
             />
           </FormGroup>

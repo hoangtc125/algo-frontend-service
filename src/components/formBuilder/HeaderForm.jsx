@@ -19,7 +19,7 @@ const HeaderForm = ({ sectionId }) => {
           defaultValue={title}
           onBlur={(e) => dispatch(formSlice.actions.updateSection({ sectionId: sectionId, section: { title: e.target.value } }))}
           variant="standard"
-          label="Form Title"
+          label="Tiêu đề biểu mẫu"
           name="title"
           sx={{ mb: 3 }}
           fullWidth
@@ -29,7 +29,7 @@ const HeaderForm = ({ sectionId }) => {
           defaultValue={description}
           onBlur={(e) => dispatch(formSlice.actions.updateSection({ sectionId: sectionId, section: { description: e.target.value } }))}
           variant="standard"
-          label="Form Description"
+          label="Mô tả"
           fullWidth
           sx={{ mb: 2 }}
           multiline

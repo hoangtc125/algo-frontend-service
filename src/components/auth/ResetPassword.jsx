@@ -8,15 +8,15 @@ import { post } from '../../utils/request';
 const validate = values => {
     const errors = {};
     if (!values.password) {
-        errors.password = 'Required';
+        errors.password = 'Không được để trống';
     } else if (values.password.length > 15) {
-        errors.password = 'Must be 15 characters or less';
+        errors.password = 'Tối đa 15 ký tự hoặc ít hơn';
     }
 
     if (!values.repassword) {
-        errors.repassword = 'Required';
+        errors.repassword = 'Không được để trống';
     } else if (values.repassword != values.password) {
-        errors.repassword = 'Not match password';
+        errors.repassword = 'Mật khẩu không khớp';
     }
     return errors;
 };
@@ -33,13 +33,13 @@ const ResetPassword = () => {
         },
         validate,
         onSubmit: async (values) => {
-            infoNotification("Wait a second", "Your action has been processed", "bottomRight")
+            infoNotification("Đợi giây lát", "Yêu cầu đang được xử lý", "bottomRight")
             const data = await post("/account/reset-password", {
                 token: token,
                 password: values.password,
             })
             if (data?.status_code == 200) {
-                successNotification("Reset Successfull", "Please login with new password", "bottomRight")
+                successNotification("Cập nhật thành công", "Hãy đăng nhập với mật khẩu mới", "bottomRight")
             } else {
                 errorNotification(data.status_code, data.msg, "bottomRight")
             }
@@ -57,7 +57,7 @@ const ResetPassword = () => {
             }}
         >
             <Typography component="h1" variant="h5">
-                Reset Password
+                Đặt lại Mật khẩu
             </Typography>
             <Box
                 component="form"
@@ -70,7 +70,7 @@ const ResetPassword = () => {
                     margin="normal"
                     required
                     fullWidth
-                    label="New Password"
+                    label="Mật khẩu mới"
                     type="password"
                     name='password'
                     onChange={formik.handleChange}
@@ -84,7 +84,7 @@ const ResetPassword = () => {
                     margin="normal"
                     required
                     fullWidth
-                    label="Repeat Password"
+                    label="Nhập lại Mật khẩu"
                     type="password"
                     name='repassword'
                     onChange={formik.handleChange}
@@ -101,12 +101,12 @@ const ResetPassword = () => {
                     sx={{ mt: 3, mb: 2 }}
                     className='text-lg sm:text-sm'
                 >
-                    Update
+                    Cập nhật mật khẩu
                 </Button>
                 <Grid container>
                     <Grid item>
                         <Link to="/algo-frontend-service/login" variant="body2" className='underline'>
-                            Have an account? Sign In
+                            Đã có tài khoản? Đăng nhập
                         </Link>
                     </Grid>
                 </Grid>

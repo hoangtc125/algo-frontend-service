@@ -63,7 +63,7 @@ const UploadExcel = () => {
 
     const handleChange = ({ file }) => {
         if (![".xlsx", ".xls"].some(e => String(file.type).endsWith(e))) {
-            errorNotification("Wrong type file", `You couldn't upload ${file.type} file`, "bottomRight")
+            errorNotification("Sai loại tệp", `Bạn không thể tải lên ${file.type} file`, "bottomRight")
             return
         }
         if (file.status == "removed") {
@@ -88,7 +88,7 @@ const UploadExcel = () => {
                 maxCount={1}
                 fileList={clusterFiles}
             >
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                <Button icon={<UploadOutlined />}>Nhấn để tải lên</Button>
             </Upload>
             <Typography variant='body1' component="i">
                 (Lưu ý: Hệ thống tự động bỏ qua các dòng không có dữ liệu và các cột không có tiêu đề)

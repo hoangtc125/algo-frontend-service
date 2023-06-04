@@ -48,42 +48,42 @@ export const CARD_LIST = STUDENT_CARD.map((item) => item.cards).flat();
 
 export const CLUSTER_TYPE = [
     {
-        label: "Numerical",
+        label: "Số",
         value: "numerical",
     },
     {
-        label: "Categorical",
+        label: "Tập hữu hạn",
         value: "categorical",
     },
     {
-        label: "Text",
+        label: "Văn bản",
         value: "text",
     },
 ]
 
 export const formEl = [
     {
-        label: "Text",
+        label: "Văn bản 1 dòng",
         value: "text",
     },
     {
-        label: "TextArea",
+        label: "Văn bản nhiều dòng",
         value: "textarea",
     },
     {
-        label: "Number",
+        label: "Số",
         value: "number",
     },
     {
-        label: "Radio",
+        label: "Chọn 1 đáp án",
         value: "radio",
     },
     {
-        label: "Select",
+        label: "Chọn nhiều đáp án",
         value: "select",
     },
     {
-        label: "Section",
+        label: "Chuyển hướng",
         value: "section",
     },
 ];

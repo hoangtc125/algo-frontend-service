@@ -7,27 +7,27 @@ import { post } from '../../utils/request';
 const validate = values => {
     const errors = {};
     if (!values.password) {
-        errors.password = 'Required';
+        errors.password = 'Không được để trống';
     } else if (values.password.length > 15) {
-        errors.password = 'Must be 15 characters or less';
+        errors.password = 'Tối đa 15 ký tự hoặc ít hơn';
     }
 
     if (!values.newpassword) {
-        errors.newpassword = 'Required';
+        errors.newpassword = 'Không được để trống';
     } else if (values.newpassword.length > 15) {
-        errors.newpassword = 'Must be 15 characters or less';
+        errors.newpassword = 'Tối đa 15 ký tự hoặc ít hơn';
     }
 
     if (!values.repassword) {
-        errors.repassword = 'Required';
+        errors.repassword = 'Không được để trống';
     } else if (values.repassword != values.newpassword) {
-        errors.repassword = 'Not match password';
+        errors.repassword = 'Không khớp với mật khẩu mới';
     }
     return errors;
 };
 
 const AccountSetting = () => {
-    
+
     const formik = useFormik({
         initialValues: {
             password: '',
@@ -36,13 +36,13 @@ const AccountSetting = () => {
         },
         validate,
         onSubmit: async (values) => {
-            infoNotification("Wait a second", "Your action has been processed", "bottomRight")
+            infoNotification("Đợi giây lát", "Yêu cầu đang được xử lý", "bottomRight")
             const data = await post("/account/update-password", {
                 password: values.password,
                 newpassword: values.newpassword,
             })
             if (data?.status_code == 200) {
-                successNotification("Update Successfull", "Your password has been updated", "bottomRight")
+                successNotification("Cập nhật thành công", "Mật khẩu đã được thay đổi", "bottomRight")
             } else {
                 errorNotification(data.status_code, data.msg, "bottomRight")
             }
@@ -60,7 +60,7 @@ const AccountSetting = () => {
             className="p-0 sm:p-4"
         >
             <Typography component="h1" variant="h5">
-                Update Password
+                Cập nhật mật khẩu
             </Typography>
             <Box
                 component="form"
@@ -73,7 +73,7 @@ const AccountSetting = () => {
                     margin="normal"
                     required
                     fullWidth
-                    label="Current Password"
+                    label="Mật khẩu hiện tại"
                     type="password"
                     name='password'
                     onChange={formik.handleChange}
@@ -87,7 +87,7 @@ const AccountSetting = () => {
                     margin="normal"
                     required
                     fullWidth
-                    label="New Password"
+                    label="Mật khẩu mới"
                     type="password"
                     name='newpassword'
                     onChange={formik.handleChange}
@@ -101,7 +101,7 @@ const AccountSetting = () => {
                     margin="normal"
                     required
                     fullWidth
-                    label="Repeat Password"
+                    label="Nhập lại mật khẩu mới"
                     type="password"
                     name='repassword'
                     onChange={formik.handleChange}
@@ -118,7 +118,7 @@ const AccountSetting = () => {
                     sx={{ mt: 3, mb: 2 }}
                     className='text-lg sm:text-sm'
                 >
-                    Update
+                    Thay đổi mật khẩu
                 </Button>
             </Box>
         </Box>

@@ -42,28 +42,28 @@ const AccountVerify = () => {
 
     const tourSteps = [
         {
-            title: 'Select your school or university',
-            description: 'Press this button to choose student card sample',
+            title: 'Chọn loại thẻ sinh viên của bạn',
+            description: 'Nhân Đổi loại thẻ sinh viên để chọn các mấu thẻ mà hệ thống hỗ trợ xác thực',
             target: () => ref1.current,
         },
         {
-            title: 'Upload student card',
-            description: 'Press here to take a shoot or upload from this device',
+            title: 'Tải lên ảnh thẻ sinh viên của bạn',
+            description: 'Nhấn Đổi ảnh thẻ sinh viên để chụp hoặc tải ảnh từ thiết bị',
             target: () => ref2.current,
         },
         {
-            title: 'Process your student card',
-            description: 'Submit your card image, it will be verified by system automatically',
+            title: 'Yêu cầu xác thực thẻ sinh viên',
+            description: 'Hệ thống sẽ tự động nhận diện thông tin từ ảnh thẻ mà bạn đã đăng tải theo mẫu đã chọn',
             target: () => ref3.current,
         },
         {
-            title: 'Check new message in your student email',
-            description: 'System will send a link to verify your student mail, open this link to finish',
+            title: 'Kiểm tra thông tin nhận diện được',
+            description: 'Hệ thống sẽ gửi email xác nhận đến Email sinh viên nhận diện được từ thẻ của bạn',
             target: () => ref4.current,
         },
         {
-            title: 'Result of this process be display here',
-            description: 'If system show Verified, congrats!',
+            title: 'Kết quả xác thực tài khoản',
+            description: 'Sau khi bạn xác thực qua đường link gửi về Email sinh viên, Hệ thống sẽ hiện thị kết quả cuối cùng',
             target: () => ref5.current,
         },
     ];
@@ -101,7 +101,7 @@ const AccountVerify = () => {
         try {
             const data = await post(`/account/verify?school=${school}`, images[0])
             if (data?.status_code == 200) {
-                successNotification("Card has been verifed", "Check your student email to continue", "bottomRight")
+                successNotification("Xác thực thẻ thành công, hãy kiểm tra lại thông tin nhận diện được", "Hệ thống đã gửi đường link xác thực tài khoản về email sinh viên nhận diện được từ ảnh thẻ của bạn", "bottomRight")
                 dispatch(aboutMe())
                 setCurrent(1)
             } else {
@@ -138,13 +138,13 @@ const AccountVerify = () => {
 
     const steps = [
         {
-            title: 'Verify Card',
+            title: 'Xác thực Thẻ sinh viên',
         },
         {
-            title: 'Verify Student Email',
+            title: 'Xác thực Email sinh viên',
         },
         {
-            title: 'Done',
+            title: 'Hoàn tất',
         },
     ];
 
@@ -171,7 +171,7 @@ const AccountVerify = () => {
                             <Typography>{school}</Typography>
                         </div>
                         <Button ref={ref1} className='w-fit' variant="outlined" onClick={() => { setIsCardOpen(true) }}>
-                            Change Shool
+                            Đổi loại thẻ sinh viên
                         </Button>
                     </Box>
                 </Grid>
@@ -183,37 +183,37 @@ const AccountVerify = () => {
                             src={images[0]?.url || IMAGE}
                             className='max-w-full max-h-[50vh] shadow-md'
                         />
-                        <Typography>Your Card Student Image</Typography>
+                        <Typography>Ảnh thẻ sinh viên của bạn</Typography>
                         <Button ref={ref2} className='w-fit' variant="outlined" onClick={handleUploadImage}>
-                            Change Image
+                            Đổi ảnh thẻ sinh viên
                         </Button>
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={3} className='w-full flex justify-center'>
                     <List className='w-full grid grid-cols-1 '>
                         <ListItem>
-                            <ListItemText primary="School" secondary={account?.verify?.detail?.school} />
+                            <ListItemText primary="Trường học" secondary={account?.verify?.detail?.school} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Major" secondary={account?.verify?.detail?.major} />
+                            <ListItemText primary="Chuyên ngành" secondary={account?.verify?.detail?.major} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Full Name" secondary={account?.verify?.detail?.fullname} />
+                            <ListItemText primary="Họ và tên" secondary={account?.verify?.detail?.fullname} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Birth" secondary={account?.verify?.detail?.birth} />
+                            <ListItemText primary="Ngày sinh" secondary={account?.verify?.detail?.birth} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Expired Card" secondary={account?.verify?.detail?.expired_card} />
+                            <ListItemText primary="Ngày hết hạn xác thực" secondary={account?.verify?.detail?.expired_card} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Student Number" secondary={account?.verify?.detail?.number} />
+                            <ListItemText primary="Mã số sinh viên" secondary={account?.verify?.detail?.number} />
                         </ListItem>
                         <ListItem ref={ref4}>
-                            <ListItemText primary="Student Email" secondary={account?.verify?.detail?.email} />
+                            <ListItemText primary="Email sinh viên" secondary={account?.verify?.detail?.email} />
                         </ListItem>
                         <ListItem>
-                            <Chip ref={ref5} label={account?.verify?.status ? "Verified" : "No verify"} color={account?.verify?.status ? "success" : "error"} variant="outlined" />
+                            <Chip ref={ref5} label={account?.verify?.status ? "Đã xác thực" : "Chưa xác thực"} color={account?.verify?.status ? "success" : "error"} variant="outlined" />
                         </ListItem>
                     </List>
                 </Grid>
@@ -227,22 +227,22 @@ const AccountVerify = () => {
                     variant="contained"
                     ref={ref3}
                 >
-                    Verify Card
+                    Xác thực thẻ sinh viên
                 </LoadingButton>
 
-                <Modal centered title="Upload Student Card" width={1000} open={isModalOpen} onOk={handleOk} onCancel={handleOk} destroyOnClose={true}>
+                <Modal centered title="Cập nhật ảnh thẻ sinh viên" width={1000} open={isModalOpen} onOk={handleOk} onCancel={handleOk} destroyOnClose={true}>
                     <Typography variant="body2">
-                        Take a shoot
+                        Chụp ảnh trực tiếp từ điện thoại
                     </Typography>
                     <Camera />
                     <Typography variant="body2">
-                        Update from device
+                        Tải ảnh lên từ thiết bị này
                     </Typography>
                     <ImagesReview />
                 </Modal>
                 <Modal centered width={1250} open={isCardOpen} onOk={handleOkCard} onCancel={handleOkCard} destroyOnClose={true}>
                     <FormControl className='w-full flex flex-col justify-center items-center space-y-5'>
-                        <FormLabel id="card-controlled-radio-buttons-group">Card Type</FormLabel>
+                        <FormLabel id="card-controlled-radio-buttons-group">Mẫu thẻ sinh viên</FormLabel>
                         <RadioGroup
                             aria-labelledby="card-controlled-radio-buttons-group"
                             name="controlled-radio-buttons-group"

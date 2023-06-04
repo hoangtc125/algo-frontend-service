@@ -60,10 +60,10 @@ const BodyForm = ({ formId }) => {
     const handleSubmit = () => {
         dispatch(formSlice.actions.setIsSubmit(true))
         if (!handlePreSubmit(sectionData)) {
-            errorNotification("Submit failed", "Check required question", "bottomRight")
+            errorNotification("Gửi thất bại", "Kiểm tra lại các câu hỏi bắt buộc", "bottomRight")
         } else {
             navigate(`/algo-frontend-service/form-store/${formId}/response`)
-            successNotification("Form has been sent", "Your request will be processed soon", "bottomRight")
+            successNotification("Gửi thành công", "Câu trả lời của bạn sẽ sớm được xử lý", "bottomRight")
         }
     }
 
@@ -133,7 +133,7 @@ const BodyForm = ({ formId }) => {
             {sectionData.map(e => { return renderElements(e) })}
             {formData.id == formId &&
                 <div className="w-full flex justify-start items-center">
-                    <Button variant="contained" onClick={handleSubmit}>SUBMIT</Button>
+                    <Button variant="contained" onClick={handleSubmit}>Gửi</Button>
                 </div>
             }
         </div>

@@ -13,7 +13,7 @@ const FormResponsePage = () => {
 
     return (
         <Box className="m-4">
-            <Button variant='outlined' onClick={() => { navigate(-1) }}>BACK</Button>
+            <Button variant='outlined' onClick={() => { navigate(-1) }}>Quay lại</Button>
             <Grid container spacing={2} direction="row" justifyContent="center" className="p-4">
                 <Grid item xs={11} md={10}>
                     <Box sx={{ mb: 3 }}>

@@ -76,7 +76,7 @@ const FormBuilderPage = () => {
         dispatch(formSlice.actions.addSection(newActiveKey))
         const newPanes = [...items];
         newPanes.push({
-            label: `Section ${newActiveKey.substr(0, 8)}`,
+            label: `Biểu mẫu ${newActiveKey.substr(0, 8)}`,
             children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={newActiveKey} /></div>,
             key: newActiveKey,
         });
@@ -117,8 +117,8 @@ const FormBuilderPage = () => {
         <Box className="m-4 flex flex-col space-y-4">
             <Box className="flex w-full justify-end space-x-4 items-center">
                 <Typography>Bản nháp được lưu 3 giây / lần</Typography>
-                <Link to={`/algo-frontend-service/form-store/${formId}/preview`}><Button variant='outlined'>PREVIEW</Button></Link>
-                <Link to="/algo-frontend-service/form-store"><Button variant='contained'>SAVE</Button></Link>
+                <Link to={`/algo-frontend-service/form-store/${formId}/preview`}><Button variant='outlined'>Xem trước</Button></Link>
+                <Link to="/algo-frontend-service/form-store"><Button variant='contained'>Lưu</Button></Link>
             </Box>
             <Tabs
                 type="editable-card"

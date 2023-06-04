@@ -9,7 +9,7 @@ import { clusterSelector } from '../../redux/selectors'
 
 const ExcelTable = () => {
     const clusterData = useSelector(clusterSelector)
-    const header = clusterData.header.map((e, idx) => ({...e, index: idx})).filter((e, idx) => {
+    const header = clusterData.header.map((e, idx) => ({ ...e, index: idx })).filter((e, idx) => {
         if (idx == 0) {
             return true
         }
@@ -29,7 +29,7 @@ const ExcelTable = () => {
 
     const handleRowClick = (record) => {
         Modal.info({
-            title: "Data Detail",
+            title: "Chi tiết bản ghi",
             className: "min-w-[80vw] max-w-[90vw]",
             centered: true,
             content: (
@@ -125,10 +125,10 @@ const ExcelTable = () => {
                 </Typography>
                 <Box className="w-full flex items-center justify-between">
                     <Typography variant='body1'>
-                        {`Selected ${selectedRowKeys.length} items`}
+                        {`Đã chọn ${selectedRowKeys.length} bản ghi`}
                     </Typography>
                     <Button variant='contained' startIcon={<DownloadIcon />} onClick={handleDownload}>
-                        Download
+                        Tải xuống
                     </Button>
                 </Box>
                 <Table

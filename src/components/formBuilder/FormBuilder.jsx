@@ -41,7 +41,7 @@ const FormBuilder = ({ formId }) => {
       </Grid>
       <Grid item xs={1} md={1}>
         <Space size={20} className="sticky top-8 flex sm:flex-col items-center w-fit bg-white p-2 rounded-xl shadow-md">
-          <Tooltip placement="right" title="Add Element" aria-label="add-element">
+          <Tooltip placement="right" title="Thêm câu hỏi" aria-label="add-element">
             <IconButton
               aria-label="add-element"
               onClick={addElement}

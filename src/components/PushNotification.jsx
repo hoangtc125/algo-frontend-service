@@ -90,7 +90,7 @@ const PushNotification = () =>  {
                     lineHeight: '32px',
                 }}
             >
-                <Button onClick={onLoadMore}>loading more</Button>
+                <Button onClick={onLoadMore}>Tải thêm</Button>
             </div>
         ) : null;
 
@@ -113,7 +113,7 @@ const PushNotification = () =>  {
                     itemLayout="horizontal"
                     loadMore={loadMore}
                     dataSource={notification}
-                    header="Notification"
+                    header="Thông báo"
                     renderItem={(item) => (
                         <List.Item>
                             <Skeleton avatar title={false} loading={item?.loading} active>

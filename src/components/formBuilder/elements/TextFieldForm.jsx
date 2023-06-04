@@ -28,19 +28,19 @@ const TextFieldForm = ({ item, handleValue, deleteEl, handleRequired, handleElTy
               fullWidth
               required={item.required}
               disabled={item.disabled}
-              label="Textfield Label"
+              label="Câu hỏi"
               sx={{ mb: 2 }}
             />
             <TextField
               variant="outlined"
               fullWidth
-              label="Textfield Input Field"
+              label="Câu trả lời 1 dòng"
               disabled
             />
           </Grid>
           <Grid item xs={3}>
             <FormControl fullWidth>
-              <InputLabel id="el-type-label">Type</InputLabel>
+              <InputLabel id="el-type-label">Loại</InputLabel>
               <Select
                 labelId="el-type-label"
                 id="el-type"
@@ -67,7 +67,7 @@ const TextFieldForm = ({ item, handleValue, deleteEl, handleRequired, handleElTy
           <p className="text-base text-start ml-6 my-2 text-red-500">Câu hỏi bắt buộc của hệ thống</p>
           :
           <FormGroup row sx={{ alignItems: "center" }}>
-            <Tooltip title="Delete Element" aria-label="delete-element">
+            <Tooltip title="Xóa câu hỏi" aria-label="delete-element">
               <IconButton
                 aria-label="delete-element"
                 onClick={() => deleteEl(item.id)}
@@ -76,7 +76,7 @@ const TextFieldForm = ({ item, handleValue, deleteEl, handleRequired, handleElTy
                 <DeleteOutlineOutlinedIcon color="primary" />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Duplicate Element" aria-label="duplicate-element">
+            <Tooltip title="Sao chép câu hỏi" aria-label="duplicate-element">
               <IconButton
                 aria-label="duplicate-element"
                 onClick={() => duplicateElement(item)}
@@ -95,7 +95,7 @@ const TextFieldForm = ({ item, handleValue, deleteEl, handleRequired, handleElTy
                   color="primary"
                 />
               }
-              label="Required"
+              label="Bắt buộc"
               sx={{ ml: 2 }}
             />
           </FormGroup>

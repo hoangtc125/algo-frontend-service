@@ -10,7 +10,7 @@ const FormViewerPage = () => {
 
     return (
         <Box className="m-4">
-            <Button variant='outlined' onClick={() => { navigate(-1) }}>BACK</Button>
+            <Button variant='outlined' onClick={() => { navigate(-1) }}>Quay lại</Button>
             <FormViewer formId={formId} />
         </Box>
     );

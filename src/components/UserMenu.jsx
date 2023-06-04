@@ -65,7 +65,7 @@ const  UserMenu = () => {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+        <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
       </Menu>
     </>
   );

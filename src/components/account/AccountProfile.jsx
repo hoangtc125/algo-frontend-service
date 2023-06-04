@@ -42,33 +42,33 @@ const AccountProfile = () => {
                 <Grid item xs={12} md={6} className='w-full'>
                     <List className='w-full grid grid-cols-1 sm:grid-cols-2'>
                         <ListItem>
-                            <ListItemText primary="School" secondary={account?.verify?.detail?.school} />
+                            <ListItemText primary="Trường học" secondary={account?.verify?.detail?.school} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Major" secondary={account?.verify?.detail?.major} />
+                            <ListItemText primary="Chuyên ngành" secondary={account?.verify?.detail?.major} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Full Name" secondary={account?.verify?.detail?.fullname} />
+                            <ListItemText primary="Họ và tên" secondary={account?.verify?.detail?.fullname} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Birth" secondary={account?.verify?.detail?.birth} />
+                            <ListItemText primary="Ngày sinh" secondary={account?.verify?.detail?.birth} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Expired Card" secondary={account?.verify?.detail?.expired_card} />
+                            <ListItemText primary="Ngày hết hạn xác thực" secondary={account?.verify?.detail?.expired_card} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Student Number" secondary={account?.verify?.detail?.number} />
+                            <ListItemText primary="Mã số sinh viên" secondary={account?.verify?.detail?.number} />
                         </ListItem>
                         <ListItem>
-                            <ListItemText primary="Student Email" secondary={account?.verify?.detail?.email} />
+                            <ListItemText primary="Email sinh viên" secondary={account?.verify?.detail?.email} />
                         </ListItem>
                         <ListItem>
                             {
                                 account?.verify?.status
                                     ?
-                                    <Chip label="Verified" color="success" variant="outlined" />
+                                    <Chip label="Đã xác thực" color="success" variant="outlined" />
                                     :
-                                    <Chip label="No verify" color="error" variant="outlined" />
+                                    <Chip label="Chưa xác thực" color="error" variant="outlined" />
                             }
                         </ListItem>
                     </List>
