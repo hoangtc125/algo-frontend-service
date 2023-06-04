@@ -21,4 +21,11 @@ export const isSubmitFormSelector = (state) => state.form.isSubmit
 export const formStoreSelector = (state) => state.formStore.forms
 
 export const clusterSelector = (state) => state.cluster
+export const clusterHeaderSelector = (state) => state.cluster.header
+export const clusterDatasetSelector = (state) => state.cluster.dataset
+export const supervisedSetSelector = (state) => state.cluster.supervisedSet
+export const nameColSelector = (state) => state.cluster.nameCol
+export const emailColSelector = (state) => state.cluster.emailCol
 export const supervisedOptionsSelector = (state) => state.cluster.supervisedOptions
+
+export const clusterFileSelector = (state) => state.clusterFile

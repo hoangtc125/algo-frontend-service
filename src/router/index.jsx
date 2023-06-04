@@ -13,7 +13,7 @@ import HomePage from '../pages/HomePage';
 import FormStorePage from '../pages/form/FormStorePage';
 import FormBuilderPage from '../pages/form/FormBuilderPage';
 import FormViewerPage from '../pages/form/formViewerPage';
-import ClusterPage from '../pages/cluster/ClusterPage';
+import TryClusterPage from '../pages/cluster/TryClusterPage';
 import FormResponsePage from '../pages/form/formResponsePage';
 
 export default createBrowserRouter([
@@ -54,8 +54,8 @@ export default createBrowserRouter([
         path: '/algo-frontend-service/form-store/:formId/response',
       },
       {
-        element: <ClusterPage />,
-        path: '/algo-frontend-service/cluster',
+        element: <TryClusterPage />,
+        path: '/algo-frontend-service/try-cluster',
       },
       {
         element: <ProtectedRoute />,

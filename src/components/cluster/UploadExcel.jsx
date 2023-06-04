@@ -1,28 +1,46 @@
+import { useEffect } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Upload } from 'antd';
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Button, Descriptions, Upload, Badge } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 } from 'uuid';
 import * as XLSX from 'xlsx';
 
 import { errorNotification } from '../../utils/notification';
 import clusterSlice from './clusterSlice';
-import { clusterSelector } from '../../redux/selectors';
-import { Box, Typography } from '@mui/material';
+import clusterFileSlice from './clusterFileSlice';
+import { clusterSelector, clusterFileSelector } from '../../redux/selectors';
+import { formatFileSize, isEmailListValid } from '../../utils/file';
 
 
 const UploadExcel = () => {
     const dispatch = useDispatch()
+    const clusterFile = useSelector(clusterFileSelector)
+    const files = clusterFile.file
+    const file = files[0]
+    const emailCol = clusterFile.emailCol
     const clusterData = useSelector(clusterSelector)
-    const clusterFiles = clusterData.file
+    const header = clusterData.header
+    const collDiffData = clusterData.collDiffData
 
     console.log("re-render");
+
+    useEffect(() => {
+        const saveInterval = setInterval(() => {
+            sessionStorage.setItem("clusterFile", JSON.stringify(clusterFile))
+            console.log("auto-save clusterFile");
+        }, 3000);
+        return () => {
+            clearInterval(saveInterval)
+        }
+    }, [clusterFile])
 
     const assignId = (data) => {
         const newData = data.map((e, id) => {
             if (id == 0) {
                 return [{ title: "ID đánh tự động", disabled: true }, ...e]
             } else {
-                return [v4(), ...e]
+                return [id - 1, ...e]
             }
         })
         return newData
@@ -49,16 +67,30 @@ const UploadExcel = () => {
                 return newRow
             });
             const formData = assignId(filteredData)
-            dispatch(clusterSlice.actions.setDataset(formData.slice(1)));
-            dispatch(clusterSlice.actions.setHeader(formData[0].map(e => ({
+            const formHeader = formData[0].map(e => ({
                 id: v4(),
                 title: e?.title || e,
                 type: "text",
                 disabled: e?.disabled || false,
                 weight: 0,
-            }))));
+            }))
+            const formBody = formData.slice(1)
+            dispatch(clusterSlice.actions.setDataset(formBody));
+            dispatch(clusterSlice.actions.setHeader(formHeader));
+            dispatch(clusterSlice.actions.setCollDiffData(
+                formHeader.map((item, index) => Array.from(new Set(formBody.map(e => e[index] || ''))))
+            ))
+            dispatch(clusterFileSlice.actions.setFile({
+                uid: v4(),
+                name: file.name,
+                status: 'done',
+                size: file.size,
+                type: file.type,
+                numRow: formData.length - 1,
+                numCol: formHeader.length
+            }))
         };
-        reader.readAsBinaryString(file);
+        reader.readAsBinaryString(file.originFileObj);
     }
 
     const handleChange = ({ file }) => {
@@ -68,29 +100,76 @@ const UploadExcel = () => {
         }
         if (file.status == "removed") {
             dispatch(clusterSlice.actions.clear())
+            dispatch(clusterFileSlice.actions.clear())
+            sessionStorage.removeItem("cluster")
             sessionStorage.removeItem("clusterFile")
             return
         }
-        dispatch(clusterSlice.actions.setFile({
-            uid: v4(),
-            name: file.name,
-            status: 'uploading',
-            size: file.size,
-            type: file.type,
-        }))
-        handleDataset(file.originFileObj)
+        handleDataset(file)
     };
 
     return (
-        <Box className="flex flex-col items-center justify-center space-y-4">
+        <Box className="m-4 flex w-full min-h-[50vh] flex-col items-center justify-center space-y-12">
+            <Typography variant='body1'>
+                Dữ liệu được lưu 3 giây / lần
+            </Typography>
             <Upload
                 action={null}
                 onChange={handleChange}
                 maxCount={1}
-                fileList={clusterFiles}
+                fileList={files}
             >
                 <Button icon={<UploadOutlined />}>Nhấn để tải lên</Button>
             </Upload>
+            {file &&
+                <Box className="w-full">
+                    <Typography variant='h6'>
+                        Thông tin file excel
+                    </Typography>
+                    <Descriptions bordered className='shadow-md rounded-lg'>
+                        <Descriptions.Item className='hover:bg-slate-100' label="Tên file">{file.name}</Descriptions.Item>
+                        <Descriptions.Item className='hover:bg-slate-100' label="Số hàng">{file.numRow}</Descriptions.Item>
+                        <Descriptions.Item className='hover:bg-slate-100' label="Số cột">{file.numCol}</Descriptions.Item>
+                        <Descriptions.Item className='hover:bg-slate-100' label="Kích cỡ file">{formatFileSize(file.size)}</Descriptions.Item>
+                        <Descriptions.Item className='hover:bg-slate-100' label="Loại file">{file.type}</Descriptions.Item>
+                        <Descriptions.Item className='hover:bg-slate-100' label="Trạng thái">
+                            <Badge status="processing" text={file.status} />
+                        </Descriptions.Item>
+                        <Descriptions.Item span={3} className='hover:bg-slate-100' label="Cột email liên lạc">
+                            <Grid container>
+                                <Grid item className='items-center flex justify-center p-2' xs={12} md={6}>
+                                    <FormControl className='w-full'>
+                                        <InputLabel id="el-email-label">Cột</InputLabel>
+                                        <Select
+                                            labelId="el-email-label"
+                                            label="Cột"
+                                            onChange={(e) => {
+                                                if (isEmailListValid(collDiffData[header.findIndex(c => c.id == e.target.value)])) {
+                                                    dispatch(clusterFileSlice.actions.setEmailCol(e.target.value))
+                                                } else {
+                                                    errorNotification("Cột không hợp lệ", "Cột chứa dữ liệu có định dạng khác email, hãy kiểm tra lại dữ liệu", "bottomRight")
+                                                }
+                                            }}
+                                            value={emailCol || ``}
+                                        >
+                                            {header.map((el, key) => (
+                                                <MenuItem key={key} value={el.id}>
+                                                    {String(el.title).substring(0, 100)}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item className='items-center flex p-2' xs={12} md={6}>
+                                    <Typography variant='body2'>
+                                        Cập nhật email để thực hiện chức năng gửi mail thông báo kết quả tự động (Không áp dụng trong khi dùng thử)
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Descriptions.Item>
+                    </Descriptions>
+                </Box>
+            }
             <Typography variant='body1' component="i">
                 (Lưu ý: Hệ thống tự động bỏ qua các dòng không có dữ liệu và các cột không có tiêu đề)
             </Typography>

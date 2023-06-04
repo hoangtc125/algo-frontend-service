@@ -1,34 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const clusterFileStorage = JSON.parse(sessionStorage.getItem("clusterFile"))
+const clusterStorage = JSON.parse(sessionStorage.getItem("clusterData"))
 
 const clusterSlice = createSlice({
   name: 'cluster',
   initialState: {
-    file: clusterFileStorage?.file || [],
-    dataset: clusterFileStorage?.dataset || [],
-    header: clusterFileStorage?.header || [],
-    supervisedSet: clusterFileStorage?.supervisedSet || [],
-    supervisedOptions: clusterFileStorage?.supervisedOptions || [],
-    nameCol: clusterFileStorage?.nameCol || ``,
-    emailCol: clusterFileStorage?.emailCol || ``,
+    header: clusterStorage?.header || [],
+    collDiffData: clusterStorage?.collDiffData || [],
+    dataset: clusterStorage?.dataset || [],
+    selectedRecord: clusterStorage?.selectedRecord || [],
+    supervisedSet: clusterStorage?.supervisedSet || [],
+    supervisedOptions: clusterStorage?.supervisedOptions || [],
   },
   reducers: {
     clear: (state, action) => {
-      state.file = []
-      state.dataset = []
       state.header = []
+      state.dataset = []
+      state.selectedRecord = []
       state.supervisedSet = []
       state.supervisedOptions = []
-      state.nameCol = ``
-      state.emailCol = ``
-    },
-    setFile: (state, action) => {
-      state.file = [action.payload];
+      state.collDiffData = []
     },
     setDataset: (state, action) => {
       state.dataset = action.payload
       state.supervisedSet = Array(action.payload.length).fill(null)
+    },
+    setCollDiffData: (state, action) => {
+      state.collDiffData = action.payload;
+    },
+    setSelectedRecord: (state, action) => {
+      state.selectedRecord = action.payload
     },
     setSupervisedOptions: (state, action) => {
       state.supervisedOptions = action.payload
@@ -38,22 +39,10 @@ const clusterSlice = createSlice({
     },
     setHeader: (state, action) => {
       state.header = action.payload
-      if (state.file) {
-        state.file[0] = { ...state.file[0], status: "done" }
-      }
-    },
-    updateFile: (state, action) => {
-      state.file[0] = { ...state.file[0], ...action.payload }
     },
     updateHeader: (state, action) => {
       const index = state.header.findIndex(e => e.id == action.payload.id)
       state.header[index] = { ...state.header[index], ...action.payload.header }
-    },
-    setNameCol: (state, action) => {
-      state.nameCol = action.payload
-    },
-    setEmailCol: (state, action) => {
-      state.emailCol = action.payload
     },
   },
 });

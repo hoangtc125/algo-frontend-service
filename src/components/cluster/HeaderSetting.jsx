@@ -44,7 +44,7 @@ const HeaderSetting = ({ item, colDiffData }) => {
                                     </Grid>
                                     <Grid item className='items-center flex justify-center p-2' xs={10}>
                                         <Typography variant='body1'>
-                                            {e}
+                                            {e == 0 ? "0" : e}
                                         </Typography>
                                     </Grid>
                                 </Grid>

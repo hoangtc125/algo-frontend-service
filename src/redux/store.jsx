@@ -4,6 +4,7 @@ import cameraSlice from '../components/camera/cameraSlice';
 import formSlice from '../components/formBuilder/formSlice';
 import formStoreSlice from '../components/formStore/formStoreSlice';
 import clusterSlice from '../components/cluster/clusterSlice';
+import clusterFileSlice from '../components/cluster/clusterFileSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     form: formSlice.reducer,
     formStore: formStoreSlice.reducer,
     cluster: clusterSlice.reducer,
+    clusterFile: clusterFileSlice.reducer,
   },
 });
 

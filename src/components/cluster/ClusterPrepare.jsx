@@ -1,35 +1,37 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Table, Modal, Descriptions } from 'antd';
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Descriptions, Modal, Table } from 'antd';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import * as XLSX from 'xlsx';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { clusterSelector } from '../../redux/selectors'
+import { clusterFileSelector, clusterSelector } from '../../redux/selectors';
+import HeaderSetting from './HeaderSetting';
+import ClusterSupervised from './ClusterSupervised';
+import clusterSlice from './clusterSlice'
 import { CLUSTER_TYPE } from '../../utils/constant';
-import ClusterSupervised from './clusterSupervised';
-import clusterSlice from './clusterSlice';
+import { handleDownload } from '../../utils/excel';
 
-const ExcelTable = () => {
+const ClusterPrepare = () => {
     const dispatch = useDispatch()
     const clusterData = useSelector(clusterSelector)
-    const header = clusterData.header.map((e, idx) => ({ ...e, index: idx })).filter((e, idx) => {
-        if (idx == 0) {
-            return true
-        }
-        return e.weight > 0
-    })
-    const dataset = clusterData.dataset.map(e => {
-        let row = []
-        for (let index = 0; index < header.length; index++) {
-            const element = header[index];
-            row.push(e[element.index])
-        }
-        return row
-    })
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const header = clusterData.header
+    const dataset = clusterData.dataset
+    const supervisedSet = clusterData.supervisedSet
+    const supervisedOptions = clusterData.supervisedOptions
+    const selectedRecord = clusterData.selectedRecord
+    const collDiffData = clusterData.collDiffData
 
     console.log("re-render");
+
+    useEffect(() => {
+        const saveInterval = setInterval(() => {
+            sessionStorage.setItem("clusterData", JSON.stringify(clusterData))
+            console.log("auto-save clusterData");
+        }, 3000);
+        return () => {
+            clearInterval(saveInterval)
+        }
+    }, [clusterData])
 
     const handleRowClick = (record) => {
         Modal.info({
@@ -95,17 +97,16 @@ const ExcelTable = () => {
                     labelId="el-supervised-set-label"
                     id="el-supervised-set"
                     label="Type"
-                    value={clusterData.supervisedSet[index] || ``}
+                    value={supervisedSet[index] || ``}
                     onChange={(e) => {
                         e.stopPropagation()
-                        dispatch(clusterSlice.actions.setSupervisedSet({index: index, supervisedSet: e.target.value}))
-                        console.log(e.target.value);
+                        dispatch(clusterSlice.actions.setSupervisedSet({ index: index, supervisedSet: e.target.value }))
                     }}
                 >
                     <MenuItem key={""} value={``}>
                         Không
                     </MenuItem>
-                    {clusterData.supervisedOptions.map((el, key) => (
+                    {supervisedOptions.map((el, key) => (
                         <MenuItem key={key} value={el}>
                             {el}
                         </MenuItem>
@@ -123,36 +124,12 @@ const ExcelTable = () => {
         ),
     }]
 
-    function s2ab(s) {
-        const buf = new ArrayBuffer(s.length);
-        const view = new Uint8Array(buf);
-        for (let i = 0; i < s.length; i++) {
-            view[i] = s.charCodeAt(i) & 0xFF;
-        }
-        return buf;
-    }
-
-    const handleDownload = () => {
-        const newWorkbook = XLSX.utils.book_new();
-        const newWorksheet = XLSX.utils.aoa_to_sheet([header.map(e => e.title), ...dataset]);
-        XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, 'Sheet 1');
-        const excelData = XLSX.write(newWorkbook, { type: 'binary', bookType: 'xlsx' });
-        const blobData = new Blob([s2ab(excelData)], { type: 'application/octet-stream' });
-        const downloadUrl = URL.createObjectURL(blobData);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = downloadUrl;
-        downloadLink.download = 'dataset.xlsx';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    }
-
-    const onSelectChange = (newSelectedRowKeys) => {
-        setSelectedRowKeys(newSelectedRowKeys);
+    const onSelectChange = (values) => {
+        dispatch(clusterSlice.actions.setSelectedRecord(values))
     };
 
     const rowSelection = {
-        selectedRowKeys,
+        selectedRowKeys: selectedRecord,
         onChange: onSelectChange,
         columnWidth: 100,
         selections: [
@@ -163,25 +140,65 @@ const ExcelTable = () => {
     };
 
     return (
-        <Box className="m-4 w-full flex flex-col items-center justify-center max-w-[90vw] space-y-8">
+        <Box className="m-4 w-full space-y-12">
+            <Typography variant='body1' className='w-full items-center text-center'>
+                Dữ liệu được lưu 3 giây / lần
+            </Typography>
+            <Box>
+                <Typography variant='h6'>
+                    1. Cập nhật loại dữ liệu
+                </Typography>
+                <Box className="w-full shadow-md rounded-xl">
+                    <div className='w-full flex flex-col justify-center items-center bg-slate-200 rounded-t-xl'>
+                        <Grid container>
+                            <Grid item className='items-center flex justify-center p-2' xs={6}>
+                                <Typography variant='h6'>
+                                    Tên cột
+                                </Typography>
+                            </Grid>
+                            <Grid item className='items-center flex justify-center p-2' xs={1}>
+                                <Typography variant='h6'>
+                                    Giá trị
+                                </Typography>
+                            </Grid>
+                            <Grid item className='items-center flex justify-center p-2' xs={2}>
+                                <Typography variant='h6'>
+                                    Loại dữ liệu
+                                </Typography>
+                            </Grid>
+                            <Grid item className='items-center flex justify-center p-2' xs={3}>
+                                <Typography variant='h6'>
+                                    Trọng số phân cụm
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <Box className="w-full max-h-[60vh] overflow-auto">
+                        {header.map((item, index) => {
+                            return (
+                                <div key={index} className='hover:bg-slate-100 border-b-2'>
+                                    <HeaderSetting item={item} colDiffData={collDiffData[index]} />
+                                </div>
+                            )
+                        })}
+                    </Box>
+                </Box>
+            </Box>
             <Box className="w-full">
                 <Typography variant='h6'>
-                    1. Tạo tập quan sát
+                    2. Tạo tập quan sát
                 </Typography>
                 <ClusterSupervised />
             </Box>
             <Box className="w-full">
                 <Typography variant='h6'>
-                    2. Chọn dữ liệu phân cụm
+                    3. Chọn dữ liệu phân cụm
                 </Typography>
                 <Box className="w-full flex items-center justify-between">
                     <Typography variant='body1'>
-                        {`Đã chọn ${selectedRowKeys.length} bản ghi`}
+                        {`Đã chọn ${selectedRecord.length} bản ghi`}
                     </Typography>
-                    <Typography variant='body1'>
-                        Bảng chỉ hiện thị các cột có trọng số khi phân cụm
-                    </Typography>
-                    <Button variant='contained' startIcon={<DownloadIcon />} onClick={handleDownload}>
+                    <Button variant='contained' startIcon={<DownloadIcon />} onClick={() => { handleDownload(header.map(e => e.title), dataset, "PrepareDataset.xlsx") }}>
                         Tải xuống
                     </Button>
                 </Box>
@@ -189,6 +206,7 @@ const ExcelTable = () => {
                     dataSource={dataset}
                     columns={columns}
                     bordered
+                    size='small'
                     className='cursor-pointer rounded-md shadow-lg'
                     rowSelection={rowSelection}
                     rowKey={(record) => record[0]}
@@ -202,6 +220,6 @@ const ExcelTable = () => {
             </Box>
         </Box>
     );
-};
+}
 
-export default ExcelTable;
+export default ClusterPrepare;

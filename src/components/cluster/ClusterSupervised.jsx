@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Input, Space, Tag, Tooltip, theme } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { supervisedOptionsSelector } from '../../redux/selectors';
@@ -143,4 +143,4 @@ const ClusterSupervised = () => {
     );
 };
 
-export default ClusterSupervised;
+export default React.memo(ClusterSupervised);
