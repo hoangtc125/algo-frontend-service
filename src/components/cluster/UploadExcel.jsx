@@ -68,6 +68,7 @@ const UploadExcel = () => {
         }
         if (file.status == "removed") {
             dispatch(clusterSlice.actions.clear())
+            sessionStorage.removeItem("clusterFile")
             return
         }
         dispatch(clusterSlice.actions.setFile({

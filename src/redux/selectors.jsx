@@ -21,3 +21,4 @@ export const isSubmitFormSelector = (state) => state.form.isSubmit
 export const formStoreSelector = (state) => state.formStore.forms
 
 export const clusterSelector = (state) => state.cluster
+export const supervisedOptionsSelector = (state) => state.cluster.supervisedOptions

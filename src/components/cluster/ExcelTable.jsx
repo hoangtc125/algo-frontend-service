@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Table, Modal, Descriptions } from 'antd';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import * as XLSX from 'xlsx';
 
 import { clusterSelector } from '../../redux/selectors'
 import { CLUSTER_TYPE } from '../../utils/constant';
+import ClusterSupervised from './clusterSupervised';
+import clusterSlice from './clusterSlice';
 
 const ExcelTable = () => {
+    const dispatch = useDispatch()
     const clusterData = useSelector(clusterSelector)
     const header = clusterData.header.map((e, idx) => ({ ...e, index: idx })).filter((e, idx) => {
         if (idx == 0) {
@@ -34,10 +37,10 @@ const ExcelTable = () => {
             className: "min-w-[80vw] max-w-[90vw]",
             centered: true,
             content: (
-                <Descriptions bordered className="w-full max-h-[80vh] overflow-auto" column={1}>
+                <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
                     {
                         record.map((e, id) => (
-                            <Descriptions.Item className='hover:bg-slate-100' label={header[id].title} key={id}>{e}</Descriptions.Item>
+                            <Descriptions.Item span={3} className='hover:bg-slate-100' label={header[id]?.title || "Tập quan sát"} key={id}>{e}</Descriptions.Item>
                         ))
                     }
                 </Descriptions>
@@ -47,7 +50,7 @@ const ExcelTable = () => {
         });
     };
 
-    const columns = header && header.map((item, index) => {
+    const columns = [...header.map((item, index) => {
         const colData = Array.from(new Set(dataset.map(e => e[index])))
         return {
             title: <div className='w-full flex flex-col space-y-2'>
@@ -80,7 +83,45 @@ const ExcelTable = () => {
                 }
             },
         }
-    });
+    }), {
+        title: 'Tập quan sát',
+        key: 'supervisedSet',
+        fixed: 'right',
+        width: 200,
+        render: (text, record, index) => (
+            <FormControl fullWidth>
+                <InputLabel id="el-supervised-set-label">Tập quan sát</InputLabel>
+                <Select
+                    labelId="el-supervised-set-label"
+                    id="el-supervised-set"
+                    label="Type"
+                    value={clusterData.supervisedSet[index] || ``}
+                    onChange={(e) => {
+                        e.stopPropagation()
+                        dispatch(clusterSlice.actions.setSupervisedSet({index: index, supervisedSet: e.target.value}))
+                        console.log(e.target.value);
+                    }}
+                >
+                    <MenuItem key={""} value={``}>
+                        Không
+                    </MenuItem>
+                    {clusterData.supervisedOptions.map((el, key) => (
+                        <MenuItem key={key} value={el}>
+                            {el}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+        ),
+    }, {
+        title: 'Thao tác',
+        key: 'action',
+        fixed: 'right',
+        width: 100,
+        render: (text, record, index) => (
+            <Button variant='outlined' onClick={() => handleRowClick(record)}>Xem</Button>
+        ),
+    }]
 
     function s2ab(s) {
         const buf = new ArrayBuffer(s.length);
@@ -125,11 +166,20 @@ const ExcelTable = () => {
         <Box className="m-4 w-full flex flex-col items-center justify-center max-w-[90vw] space-y-8">
             <Box className="w-full">
                 <Typography variant='h6'>
-                    Chọn dữ liệu phân cụm
+                    1. Tạo tập quan sát
+                </Typography>
+                <ClusterSupervised />
+            </Box>
+            <Box className="w-full">
+                <Typography variant='h6'>
+                    2. Chọn dữ liệu phân cụm
                 </Typography>
                 <Box className="w-full flex items-center justify-between">
                     <Typography variant='body1'>
                         {`Đã chọn ${selectedRowKeys.length} bản ghi`}
+                    </Typography>
+                    <Typography variant='body1'>
+                        Bảng chỉ hiện thị các cột có trọng số khi phân cụm
                     </Typography>
                     <Button variant='contained' startIcon={<DownloadIcon />} onClick={handleDownload}>
                         Tải xuống
@@ -142,9 +192,6 @@ const ExcelTable = () => {
                     className='cursor-pointer rounded-md shadow-lg'
                     rowSelection={rowSelection}
                     rowKey={(record) => record[0]}
-                    onRow={(record) => ({
-                        onClick: () => handleRowClick(record),
-                    })}
                     scroll={{
                         x: 200,
                     }}

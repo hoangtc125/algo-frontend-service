@@ -8,6 +8,8 @@ const clusterSlice = createSlice({
     file: clusterFileStorage?.file || [],
     dataset: clusterFileStorage?.dataset || [],
     header: clusterFileStorage?.header || [],
+    supervisedSet: clusterFileStorage?.supervisedSet || [],
+    supervisedOptions: clusterFileStorage?.supervisedOptions || [],
     nameCol: clusterFileStorage?.nameCol || ``,
     emailCol: clusterFileStorage?.emailCol || ``,
   },
@@ -16,6 +18,8 @@ const clusterSlice = createSlice({
       state.file = []
       state.dataset = []
       state.header = []
+      state.supervisedSet = []
+      state.supervisedOptions = []
       state.nameCol = ``
       state.emailCol = ``
     },
@@ -24,6 +28,13 @@ const clusterSlice = createSlice({
     },
     setDataset: (state, action) => {
       state.dataset = action.payload
+      state.supervisedSet = Array(action.payload.length).fill(null)
+    },
+    setSupervisedOptions: (state, action) => {
+      state.supervisedOptions = action.payload
+    },
+    setSupervisedSet: (state, action) => {
+      state.supervisedSet[action.payload.index] = action.payload.supervisedSet
     },
     setHeader: (state, action) => {
       state.header = action.payload
