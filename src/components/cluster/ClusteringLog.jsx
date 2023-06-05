@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,10 +10,14 @@ const ClusteringLog = () => {
     const dispatch = useDispatch()
     const clusteringLog = useSelector(clusterLogSelector)
     const process = useSelector(processSelector)
+    const boxRef = useRef(null);
 
     console.log("re-render");
 
     useEffect(() => {
+        if (boxRef.current) {
+            boxRef.current.scrollTop = boxRef.current.scrollHeight;
+        }
         if (process == 2) {
             const interval = setInterval(() => {
                 if (clusteringLog.length < 10) {
@@ -26,7 +30,7 @@ const ClusteringLog = () => {
                     clearInterval(interval);
                     dispatch(clusteringSlice.actions.setProcess(3))
                 }
-            }, 250);
+            }, 100);
 
             return () => {
                 clearInterval(interval);
@@ -35,16 +39,18 @@ const ClusteringLog = () => {
     }, [clusteringLog, process]);
 
     return (
-        <Box className="w-full">
+        <Box ref={boxRef} className="w-full max-h-[30vh] overflow-auto">
             {clusteringLog.map((e, idx) => (
-                <Grid key={idx} container spacing={2} className="w-full items-center hover:bg-slate-100">
-                    <Grid item xs={3}>
-                        {e.time}
+                <Box key={idx} className="w-full hover:bg-slate-100">
+                    <Grid container className="w-full items-center">
+                        <Grid item xs={2}>
+                            {e.time}
+                        </Grid>
+                        <Grid item xs={10}>
+                            {e.content}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={9}>
-                        {e.content}
-                    </Grid>
-                </Grid>
+                </Box>
             ))}
         </Box>
     );

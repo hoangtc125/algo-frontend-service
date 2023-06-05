@@ -79,7 +79,7 @@ const ClusterInfoHistory = ({ data }) => {
         <Box className="p-2 w-full space-y-4">
             <Box className="w-full space-y-2">
                 <Typography variant='body1'>
-                    {`a. Số lượng trường thông tin (${header.length})`}
+                    {`a. Số lượng trường thông tin (${header.filter(item => item.weight).length})`}
                 </Typography>
                 <Box className="w-full shadow-md rounded-xl mt-2">
                     <div className='w-full flex flex-col justify-center items-center bg-slate-200 rounded-t-xl pr-4'>

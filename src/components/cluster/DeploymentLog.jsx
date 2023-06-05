@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,13 +10,17 @@ const DeploymentLog = () => {
     const dispatch = useDispatch()
     const deployLog = useSelector(deployLogSelector)
     const process = useSelector(processSelector)
+    const boxRef = useRef(null);
 
     console.log("re-render");
 
     useEffect(() => {
+        if (boxRef.current) {
+            boxRef.current.scrollTop = boxRef.current.scrollHeight;
+        }
         if (process == 1) {
             const interval = setInterval(() => {
-                if (deployLog.length < 10) {
+                if (deployLog.length < 20) {
                     const newLog = {
                         time: getCurrentTime(),
                         content: "abc",
@@ -26,7 +30,7 @@ const DeploymentLog = () => {
                     clearInterval(interval);
                     dispatch(clusteringSlice.actions.setProcess(2))
                 }
-            }, 250);
+            }, 100);
 
             return () => {
                 clearInterval(interval);
@@ -35,16 +39,18 @@ const DeploymentLog = () => {
     }, [deployLog, process]);
 
     return (
-        <Box className="w-full">
+        <Box ref={boxRef} className="w-full max-h-[30vh] overflow-auto">
             {deployLog.map((e, idx) => (
-                <Grid key={idx} container spacing={2} className="w-full items-center hover:bg-slate-100">
-                    <Grid item xs={3}>
-                        {e.time}
+                <Box key={idx} className="w-full hover:bg-slate-100">
+                    <Grid container className="w-full items-center">
+                        <Grid item xs={2}>
+                            {e.time}
+                        </Grid>
+                        <Grid item xs={10}>
+                            {e.content}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={9}>
-                        {e.content}
-                    </Grid>
-                </Grid>
+                </Box>
             ))}
         </Box>
     );

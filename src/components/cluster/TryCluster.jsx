@@ -5,6 +5,7 @@ import { Steps } from 'antd';
 import UploadExcel from './UploadExcel';
 import ClusterPrepare from './ClusterPrepare';
 import Clustering from './Clustering';
+import ClusterHistory from './ClusterHistory';
 
 const TryCluster = () => {
     const hash = String(window.location.hash)
@@ -33,7 +34,11 @@ const TryCluster = () => {
                     },
                     {
                         title: 'Tiến hành phân cụm',
-                        description: '',
+                        description: 'Dựa trên dữ liệu ở bước 2',
+                    },
+                    {
+                        title: 'Lịch sử phân cụm',
+                        description: 'Các bản ghi phân cụm ở bước 3',
                     },
                 ]}
             />
@@ -53,6 +58,12 @@ const TryCluster = () => {
                 current == 2 &&
                 <Box className={`w-full h-full flex flex-col items-center justify-center`}>
                     <Clustering />
+                </Box>
+            }
+            {
+                current == 3 &&
+                <Box className={`w-full h-full flex flex-col items-center justify-center`}>
+                    <ClusterHistory />
                 </Box>
             }
         </Box>

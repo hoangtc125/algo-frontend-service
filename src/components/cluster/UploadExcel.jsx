@@ -12,6 +12,7 @@ import clusterFileSlice from './clusterFileSlice';
 import { clusterSelector, clusterFileSelector } from '../../redux/selectors';
 import { formatFileSize, isEmailListValid } from '../../utils/file';
 import clusteringSlice from './clusteringSlice';
+import clusterHistorySlice from './clusterHistorySlice';
 
 
 const UploadExcel = () => {
@@ -102,11 +103,12 @@ const UploadExcel = () => {
         if (file.status == "removed") {
             dispatch(clusterSlice.actions.clear())
             dispatch(clusterFileSlice.actions.clear())
-            dispatch(clusteringSlice.clear())
-            sessionStorage.removeItem("cluster")
+            dispatch(clusteringSlice.actions.clear())
+            dispatch(clusterHistorySlice.actions.clear())
+            sessionStorage.removeItem("clusterData")
             sessionStorage.removeItem("clusterFile")
-            sessionStorage.removeItem("clusterHistory")
             sessionStorage.removeItem("clustering")
+            sessionStorage.removeItem("clusterHistory")
             return
         }
         handleDataset(file)

@@ -34,3 +34,5 @@ export const clusteringSelector = (state) => state.clustering
 export const deployLogSelector = (state) => state.clustering.deployLog
 export const clusterLogSelector = (state) => state.clustering.clusteringLog
 export const processSelector = (state) => state.clustering.process
+
+export const clusterHistorySelector = (state) => state.clusterHistory.histories
