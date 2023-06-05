@@ -4,6 +4,7 @@ import { Steps } from 'antd';
 
 import UploadExcel from './UploadExcel';
 import ClusterPrepare from './ClusterPrepare';
+import Clustering from './Clustering';
 
 const TryCluster = () => {
     const hash = String(window.location.hash)
@@ -46,6 +47,12 @@ const TryCluster = () => {
                 current == 1 &&
                 <Box className={`w-full h-full flex flex-col items-center justify-center`}>
                     <ClusterPrepare />
+                </Box>
+            }
+            {
+                current == 2 &&
+                <Box className={`w-full h-full flex flex-col items-center justify-center`}>
+                    <Clustering />
                 </Box>
             }
         </Box>

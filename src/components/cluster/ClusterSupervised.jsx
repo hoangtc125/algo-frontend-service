@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { supervisedOptionsSelector } from '../../redux/selectors';
 import clusterSlice from './clusterSlice';
 import { COLOR } from '../../utils/constant';
+import { v4 } from 'uuid';
 
 const ClusterSupervised = () => {
     const { token } = theme.useToken();
@@ -30,7 +31,7 @@ const ClusterSupervised = () => {
     }, [inputVisible]);
 
     const handleClose = (removedTag) => {
-        const newTags = tags.filter((tag) => tag !== removedTag);
+        const newTags = tags.filter((tag) => tag.id != removedTag);
         dispatch(clusterSlice.actions.setSupervisedOptions(newTags))
     };
 
@@ -40,16 +41,21 @@ const ClusterSupervised = () => {
     };
 
     const handleInputConfirm = (e) => {
-        if (e.target.value.trim() && tags.indexOf(e.target.value) === -1) {
-            dispatch(clusterSlice.actions.setSupervisedOptions([...tags, e.target.value]))
+        if (e.target.value.trim() && !tags.map(e => e.value).includes(e.target.value)) {
+            dispatch(clusterSlice.actions.setSupervisedOptions([...tags, {id: v4(), value: e.target.value}]))
         }
         setInputVisible(false);
     };
 
-    const handleEditInputConfirm = (e) => {
-        if (e.target.value.trim() && !tags.includes(e.target.value)) {
-            const newTags = [...tags];
-            newTags[editInputIndex] = e.target.value;
+    const handleEditInputConfirm = (value, tagId) => {
+        if (value.trim() && !tags.map(e => e.value).includes(value)) {
+            const newTags = tags.map(tag => {
+                if (tag.id == tagId) {
+                    return {...tag, value: value}
+                } else {
+                    return tag
+                }
+            });
             dispatch(clusterSlice.actions.setSupervisedOptions(newTags))
         }
         setEditInputIndex(-1);
@@ -75,26 +81,26 @@ const ClusterSupervised = () => {
                         return (
                             <Input
                                 ref={ref1}
-                                key={tag}
+                                key={tag.id}
                                 size="large"
                                 style={tagInputStyle}
-                                defaultValue={tags[index]}
-                                onBlur={handleEditInputConfirm}
-                                onPressEnter={handleEditInputConfirm}
+                                defaultValue={tag.value}
+                                onBlur={(e) => { handleEditInputConfirm(e.target.value, tag.id) }}
+                                onPressEnter={(e) => { handleEditInputConfirm(e.target.value, tag.id) }}
                             />
                         );
                     }
-                    const isLongTag = tag.length > 20;
+                    const isLongTag = tag.value.length > 20;
                     const tagElem = (
                         <Tag
-                            key={tag}
+                            key={tag.id}
                             className='h-fit'
                             closable={index > 1}
                             color={COLOR[index]}
                             style={{
                                 userSelect: 'none',
                             }}
-                            onClose={() => handleClose(tag)}
+                            onClose={() => handleClose(tag.id)}
                         >
                             <span
                                 className='text-lg'
@@ -103,12 +109,12 @@ const ClusterSupervised = () => {
                                     e.preventDefault();
                                 }}
                             >
-                                {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                                {isLongTag ? `${tag.value.slice(0, 20)}...` : tag.value}
                             </span>
                         </Tag>
                     );
                     return isLongTag ? (
-                        <Tooltip title={tag} key={tag}>
+                        <Tooltip title={tag.value} key={tag.id}>
                             {tagElem}
                         </Tooltip>
                     ) : (

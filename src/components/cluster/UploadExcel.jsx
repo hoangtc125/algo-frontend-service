@@ -103,6 +103,7 @@ const UploadExcel = () => {
             dispatch(clusterFileSlice.actions.clear())
             sessionStorage.removeItem("cluster")
             sessionStorage.removeItem("clusterFile")
+            sessionStorage.removeItem("clusterHistory")
             return
         }
         handleDataset(file)
@@ -111,7 +112,7 @@ const UploadExcel = () => {
     return (
         <Box className="m-4 flex w-full min-h-[50vh] flex-col items-center justify-center space-y-12">
             <Typography variant='body1'>
-                Dữ liệu được lưu 3 giây / lần
+                Bản nháp được lưu 3 giây / lần
             </Typography>
             <Upload
                 action={null}

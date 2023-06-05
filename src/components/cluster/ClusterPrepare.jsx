@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Descriptions, Modal, Table, Tag } from 'antd';
+import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
@@ -92,10 +92,10 @@ const ClusterPrepare = () => {
         fixed: 'right',
         width: 200,
         filterSearch: true,
-        filters: supervisedOptions.map(e => (
+        filters: supervisedOptions.map(tag => (
             {
-                text: e,
-                value: e,
+                text: tag.value,
+                value: tag.id,
             }
         )),
         onFilter: (value, record) => value == supervisedSet[record[0]],
@@ -109,7 +109,7 @@ const ClusterPrepare = () => {
                     <Select
                         labelId="el-supervised-set-label"
                         id="el-supervised-set"
-                        label="Type"
+                        label="Tập quan sát"
                         value={supervisedSet[record[0]] || ``}
                         onChange={(e) => {
                             e.stopPropagation()
@@ -119,11 +119,31 @@ const ClusterPrepare = () => {
                         <MenuItem key={""} value={``}>
                             Không
                         </MenuItem>
-                        {supervisedOptions.map((el, key) => (
-                            <MenuItem key={key} value={el}>
-                                <Tag className='text-base' color={COLOR[key]}>{el}</Tag>
-                            </MenuItem>
-                        ))}
+                        {supervisedOptions.map((tag, idx) => {
+                            const isLongTag = tag.value.length > 10;
+                            const tagElem = (
+                                <Tag
+                                    key={tag.id}
+                                    className='text-base'
+                                    color={COLOR[idx]}
+                                >
+                                    {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                                </Tag>
+                            )
+                            return (
+                                <MenuItem key={tag.id} value={tag.id}>
+                                    {
+                                        isLongTag ? (
+                                            <Tooltip title={tag.value} key={tag.id}>
+                                                {tagElem}
+                                            </Tooltip>
+                                        ) : (
+                                            tagElem
+                                        )
+                                    }
+                                </MenuItem>
+                            )
+                        })}
                     </Select>
                 </FormControl>
             )
@@ -156,14 +176,17 @@ const ClusterPrepare = () => {
     return (
         <Box className="m-4 w-full space-y-12">
             <Typography variant='body1' className='w-full items-center text-center'>
-                Dữ liệu được lưu 3 giây / lần
+                Bản nháp được lưu 3 giây / lần
             </Typography>
             <Box>
                 <Typography variant='h6'>
                     1. Cập nhật loại dữ liệu
                 </Typography>
-                <Box className="w-full shadow-md rounded-xl">
-                    <div className='w-full flex flex-col justify-center items-center bg-slate-200 rounded-t-xl'>
+                <Typography variant='body1'>
+                    {`Đã đánh trọng số ${header.filter(e => e.weight).length} bản ghi`}
+                </Typography>
+                <Box className="w-full shadow-md rounded-xl mt-2">
+                    <div className='w-full flex flex-col justify-center items-center bg-slate-200 rounded-t-xl pr-4'>
                         <Grid container>
                             <Grid item className='items-center flex justify-center p-2' xs={6}>
                                 <Typography variant='h6'>
@@ -232,9 +255,6 @@ const ClusterPrepare = () => {
                     rowKey={(record) => record[0]}
                     scroll={{
                         x: 200,
-                    }}
-                    pagination={{
-                        pageSize: 10,
                     }}
                 />
             </Box>

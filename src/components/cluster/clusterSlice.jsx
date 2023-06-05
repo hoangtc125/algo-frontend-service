@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 } from 'uuid';
 
 const clusterStorage = JSON.parse(sessionStorage.getItem("clusterData"))
 
@@ -10,7 +11,7 @@ const clusterSlice = createSlice({
     dataset: clusterStorage?.dataset || [],
     selectedRecord: clusterStorage?.selectedRecord || [],
     supervisedSet: clusterStorage?.supervisedSet || [],
-    supervisedOptions: clusterStorage?.supervisedOptions || ["Cụm 1", "Cụm 2"],
+    supervisedOptions: clusterStorage?.supervisedOptions || [{ id: v4(), value: "Cụm 1" }, { id: v4(), value: "Cụm 2" }],
   },
   reducers: {
     clear: (state, action) => {
@@ -18,7 +19,7 @@ const clusterSlice = createSlice({
       state.dataset = []
       state.selectedRecord = []
       state.supervisedSet = []
-      state.supervisedOptions = ["Cụm 1", "Cụm 2"]
+      state.supervisedOptions = [{ id: v4(), value: "Cụm 1" }, { id: v4(), value: "Cụm 2" }]
       state.collDiffData = []
     },
     setDataset: (state, action) => {
@@ -33,8 +34,8 @@ const clusterSlice = createSlice({
     },
     setSupervisedOptions: (state, action) => {
       state.supervisedOptions = action.payload
-      const newSupervisedSet = state.supervisedSet.map(e => {
-        return action.payload.includes(e) ? e : null
+      const newSupervisedSet = state.supervisedSet.map(tagId => {
+        return action.payload.map(e => e.id).includes(tagId) ? tagId : null
       })
       state.supervisedSet = newSupervisedSet
     },

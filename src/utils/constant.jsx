@@ -65,13 +65,13 @@ export const COLOR = [
     "#EB2F96B3",
     "#722ED1B3",
     "#2F54EBB3",
-    "#1677FFB3",
     "#13A8A8B3",
     "#52C41AB3",
     "#8BBB11B3",
-    "#FADB14",
     "#FA8C16B3",
-    "#F5222DB3"
+    "#F5222DB3",
+    "#1677FFB3",
+    "#FADB14",
 ]
 
 
