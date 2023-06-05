@@ -29,3 +29,8 @@ export const emailColSelector = (state) => state.cluster.emailCol
 export const supervisedOptionsSelector = (state) => state.cluster.supervisedOptions
 
 export const clusterFileSelector = (state) => state.clusterFile
+
+export const clusteringSelector = (state) => state.clustering
+export const deployLogSelector = (state) => state.clustering.deployLog
+export const clusterLogSelector = (state) => state.clustering.clusteringLog
+export const processSelector = (state) => state.clustering.process

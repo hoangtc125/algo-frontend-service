@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { Descriptions, Modal, Space, Table, Tag, Tooltip } from 'antd';
+import { Descriptions, Empty, Modal, Space, Table, Tag, Tooltip } from 'antd';
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { COLOR } from '../../utils/constant';
@@ -127,6 +127,7 @@ const ClusterInfoHistory = ({ data }) => {
                                     </div>
                                 )
                             })}
+                        {header.filter(item => item.weight).length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='p-4' />}
                     </Box>
                 </Box>
             </Box>

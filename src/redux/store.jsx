@@ -5,6 +5,7 @@ import formSlice from '../components/formBuilder/formSlice';
 import formStoreSlice from '../components/formStore/formStoreSlice';
 import clusterSlice from '../components/cluster/clusterSlice';
 import clusterFileSlice from '../components/cluster/clusterFileSlice';
+import clusteringSlice from '../components/cluster/clusteringSlice';
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     formStore: formStoreSlice.reducer,
     cluster: clusterSlice.reducer,
     clusterFile: clusterFileSlice.reducer,
+    clustering: clusteringSlice.reducer,
   },
 });
 

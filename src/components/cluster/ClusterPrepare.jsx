@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
+import { Descriptions, Empty, Modal, Table, Tag, Tooltip } from 'antd';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
@@ -218,6 +218,7 @@ const ClusterPrepare = () => {
                                 </div>
                             )
                         })}
+                        {header.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='p-4'/>}
                     </Box>
                 </Box>
             </Box>
