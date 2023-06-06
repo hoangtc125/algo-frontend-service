@@ -37,7 +37,7 @@ const PushNotification = () =>  {
         if (localStorage.getItem("guest")) {
             return
         }
-        const socket = io(`ws://${env().host || HOST}:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
+        const socket = io(`ws://${env()?.host || HOST}:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
         socket.on("notification", (message) => {
             setNotification(prev => [message, ...prev])
             openNotification("Notification", message?.content, "bottomLeft")

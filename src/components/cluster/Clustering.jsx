@@ -13,6 +13,8 @@ import DeploymentLog from './DeploymentLog';
 import ClusteringLog from './ClusteringLog';
 import clusteringSlice from './clusteringSlice';
 import clusterHistorySlice from './clusterHistorySlice';
+import ClusteringResult from './ClusteringResult';
+import ClusterChart from './ClusterChart';
 
 const Clustering = () => {
     const dispatch = useDispatch()
@@ -76,8 +78,8 @@ const Clustering = () => {
                                     header={
                                         <Box className="w-full flex items-center justify-between">
                                             <Typography variant='body1'>Trích xuất đặc trưng dữ liệu</Typography>
-                                            {process == 1 && <LoadingOutlined />}
-                                            {process > 1 && <CheckCircleOutlined />}
+                                            {process == 1 && <LoadingOutlined className='text-blue-500 text-2xl' />}
+                                            {process > 1 && <CheckCircleOutlined className='text-green-500 text-2xl' />}
                                         </Box>
                                     }
                                     key="1"
@@ -89,9 +91,9 @@ const Clustering = () => {
                                     header={
                                         <Box className="w-full flex items-center justify-between">
                                             <Typography variant='body1'>Phân cụm mờ bán giám sát sSMC-FCM</Typography>
-                                            {process == 1 && <PauseCircleOutlined />}
-                                            {process == 2 && <LoadingOutlined />}
-                                            {process == 3 && <CheckCircleOutlined />}
+                                            {process == 1 && <PauseCircleOutlined className='text-red-500 text-2xl' />}
+                                            {process == 2 && <LoadingOutlined className='text-blue-500 text-2xl' />}
+                                            {process == 3 && <CheckCircleOutlined className='text-green-500 text-2xl' />}
                                         </Box>
                                     }
                                     key="2"
@@ -104,8 +106,26 @@ const Clustering = () => {
                             <Typography variant='h6' className='w-full items-center'>
                                 3. Kết quả phân cụm
                             </Typography>
-                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
+                            {
+                                process == 3
+                                    ?
+                                    <ClusteringResult data={{ ...clusterData }} />
+                                    :
+                                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
+                            }
                             <Button className='text-base' type='default' onClick={handleClustering} disabled={process != 3}>Lưu bản ghi</Button>
+                        </Box>
+                        <Box id="clustering-4" className="w-full flex flex-col items-center justify-center h-full space-y-4">
+                            <Typography variant='h6' className='w-full items-center'>
+                                4. Thống kê kết quả
+                            </Typography>
+                            {/* {
+                                process == 3
+                                    ? */}
+                                    <ClusterChart />
+                                    {/* :
+                                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
+                            } */}
                         </Box>
                     </Box>
                 </Grid>
@@ -126,6 +146,11 @@ const Clustering = () => {
                                 key: 'clustering-3',
                                 href: '#clustering-3',
                                 title: '3. Kết quả phân cụm',
+                            },
+                            {
+                                key: 'clustering-4',
+                                href: '#clustering-4',
+                                title: '4. Thống kê kết quả',
                             },
                         ]}
                     />

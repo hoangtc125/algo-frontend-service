@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
-import { Descriptions, Empty, Modal, Table, Tag, Tooltip } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Descriptions, Empty, FloatButton, Modal, Table, Tag, Tooltip, Tour } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,8 +22,48 @@ const ClusterPrepare = () => {
     const supervisedOptions = clusterData.supervisedOptions
     const selectedRecord = clusterData.selectedRecord
     const collDiffData = clusterData.collDiffData
+    const [isTourOpen, setIsTourOpen] = useState(false);
+    const ref1 = useRef(null);
+    const ref2 = useRef(null);
+    const ref3 = useRef(null);
+    const ref4 = useRef(null);
+    const ref5 = useRef(null);
+    const ref6 = useRef(null);
 
     console.log("re-render");
+
+    const tourSteps = [
+        {
+            title: 'Cập nhật loại dữ liệu của từng cột',
+            description: 'Bạn cần chọn kiểu giá trị của từng cột thuộc tính và đánh trọng số cho những thuộc tính sẽ dùng để phân cụm',
+            target: () => ref1.current,
+        },
+        {
+            title: 'Loại dữ liệu của cột',
+            description: 'Chọn 1 trong 3 loại tương ứng',
+            target: () => ref2.current,
+        },
+        {
+            title: 'Đánh trọng số cho thuộc tính',
+            description: 'Các trường thuộc tính có trọng số lớn hơn 0 sẽ được dùng để phân cụm theo độ lớn',
+            target: () => ref3.current,
+        },
+        {
+            title: 'Tạo tập quan sát',
+            description: 'Người dùng định nghĩa số lượng phân cụm và tên của cụm',
+            target: () => ref4.current,
+        },
+        {
+            title: 'Chọn các bản ghi để phân cụm',
+            description: 'Các bản ghi được chọn có thể đưa vào các tập quan sát',
+            target: () => ref5.current,
+        },
+        {
+            title: 'Chọn tập quan sát cho các bản ghi',
+            description: 'Các bản ghi có cùng độ tương đồng có thể quan sát trước khi đặt chúng vào cùng 1 cụm',
+            target: () => ref6.current,
+        },
+    ];
 
     useEffect(() => {
         const saveInterval = setInterval(() => {
@@ -87,7 +128,7 @@ const ClusterPrepare = () => {
             },
         }
     }), {
-        title: 'Tập quan sát',
+        title: <p ref={ref6} className='items-center m-0'>Tập quan sát</p>,
         key: 'supervisedSet',
         fixed: 'right',
         width: 200,
@@ -197,7 +238,7 @@ const ClusterPrepare = () => {
                 Bản nháp được lưu 3 giây / lần
             </Typography>
             <Box>
-                <Typography variant='h6'>
+                <Typography variant='h6' ref={ref1}>
                     1. Cập nhật loại dữ liệu
                 </Typography>
                 <Typography variant='body1'>
@@ -216,12 +257,12 @@ const ClusterPrepare = () => {
                                     Giá trị
                                 </Typography>
                             </Grid>
-                            <Grid item className='items-center flex justify-center p-2' xs={2}>
+                            <Grid ref={ref2} item className='items-center flex justify-center p-2' xs={2}>
                                 <Typography variant='h6'>
                                     Loại dữ liệu
                                 </Typography>
                             </Grid>
-                            <Grid item className='items-center flex justify-center p-2' xs={3}>
+                            <Grid ref={ref3} item className='items-center flex justify-center p-2' xs={3}>
                                 <Typography variant='h6'>
                                     Trọng số phân cụm
                                 </Typography>
@@ -240,7 +281,7 @@ const ClusterPrepare = () => {
                     </Box>
                 </Box>
             </Box>
-            <Box className="w-full">
+            <Box className="w-full" ref={ref4}>
                 <Typography variant='h6'>
                     2. Tạo tập quan sát
                 </Typography>
@@ -253,7 +294,7 @@ const ClusterPrepare = () => {
                 </Typography>
             </Box>
             <Box className="w-full">
-                <Typography variant='h6'>
+                <Typography variant='h6' ref={ref5}>
                     3. Chọn dữ liệu phân cụm
                 </Typography>
                 <Box className="w-full flex items-center justify-between">
@@ -277,6 +318,14 @@ const ClusterPrepare = () => {
                     }}
                 />
             </Box>
+            <Tour open={isTourOpen} onClose={() => setIsTourOpen(false)} steps={tourSteps} />
+            <FloatButton
+                icon={<QuestionCircleOutlined />}
+                type="primary"
+                onClick={() => setIsTourOpen(true)}
+                tooltip="Guide"
+                className='left-5'
+            />
         </Box>
     );
 }

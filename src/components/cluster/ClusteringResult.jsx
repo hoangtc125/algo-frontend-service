@@ -1,10 +1,171 @@
+import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 
-const ClusteringResult = () => {
+import { COLOR } from '../../utils/constant';
+
+const ClusteringResult = ({ data }) => {
+    const selectedRecord = data.selectedRecord
+    const supervisedOptions = data.supervisedOptions
+    const supervisedSet = data.supervisedSet
+
+    const dataset = selectedRecord.map(e => [e, ...Array.from({ length: supervisedOptions.length }, () => Math.random())])
+    const columns = [{
+        title: "Dữ liệu đầu vào",
+        children: [
+            {
+                title: 'Tập quan sát',
+                key: 'supervisedSet',
+                fixed: 'left',
+                width: 200,
+                filterSearch: true,
+                filters: supervisedOptions.map((tag, idx) => {
+                    const isLongTag = tag.value.length > 10;
+                    const tagElem = (
+                        <Tag
+                            key={tag.id}
+                            className='text-base'
+                            color={COLOR[idx]}
+                        >
+                            {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                        </Tag>
+                    )
+                    return {
+                        text: (
+                            isLongTag ? (
+                                <Tooltip title={tag.value} key={tag.id}>
+                                    {tagElem}
+                                </Tooltip>
+                            ) : (
+                                tagElem
+                            )
+                        ),
+                        value: tag.id,
+                    }
+                }),
+                onFilter: (value, record) => value == supervisedSet[record[0]],
+                sorter: (a, b) => {
+                    return String(supervisedSet[a[0]]).localeCompare(supervisedSet[b[0]])
+                },
+                render: (text, record, index) => {
+                    const idx = supervisedOptions.findIndex(e => e.id == supervisedSet[data.dataset.findIndex(e => e[0] == record[0])])
+                    if (idx == -1) {
+                        return <></>
+                    }
+                    const tag = supervisedOptions[idx]
+                    const isLongTag = tag.value.length > 10;
+                    const tagElem = (
+                        <Tag
+                            key={tag.id}
+                            className='text-sm'
+                            color={COLOR[idx]}
+                        >
+                            {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                        </Tag>
+                    )
+                    return (
+                        isLongTag ? (
+                            <Tooltip title={tag.value} key={tag.id}>
+                                {tagElem}
+                            </Tooltip>
+                        ) : (
+                            tagElem
+                        )
+                    )
+                },
+            }, {
+                title: "ID của bản ghi",
+                dataIndex: 0,
+                key: 'selectedRecordId',
+                fixed: 'left',
+                width: 200,
+                filterSearch: true,
+                filters: selectedRecord.map(e => ({
+                    text: e,
+                    value: e,
+                })),
+                onFilter: (value, record) => value == record[0],
+                sorter: (a, b) => {
+                    return String(a[0]).localeCompare(b[0])
+                }
+            }
+        ]
+    }, {
+        title: "Tỉ lệ phần trăm",
+        children: supervisedOptions.map((tag, idx) => {
+            const isLongTag = tag.value.length > 10;
+            const tagElem = (
+                <Tag
+                    key={tag.id}
+                    className='text-sm'
+                    color={COLOR[idx]}
+                >
+                    {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                </Tag>
+            )
+            return {
+                title: (
+                    isLongTag ? (
+                        <Tooltip title={tag.value} key={tag.id} placement="bottom">
+                            {tagElem}
+                        </Tooltip>
+                    ) : (
+                        tagElem
+                    )
+                ),
+                dataIndex: idx + 1,
+                key: tag.id,
+                ellipsis: true, // Giới hạn độ dài cột
+                width: 200, // Độ rộng cột
+                filterSearch: true,
+                sorter: (a, b) => a[idx + 1] - b[idx + 1]
+            }
+        })
+    }]
+
+    const handleRowClick = (record) => {
+        Modal.info({
+            title: `Kết quả bản ghi ${record[0]}`,
+            className: "min-w-[80vw] max-w-[90vw]",
+            centered: true,
+            content: (
+                <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
+                    {
+                        record.map((e, id) => (
+                            <Descriptions.Item span={3} className='hover:bg-slate-100' label={columns[id]?.title} key={id}>{e}</Descriptions.Item>
+                        ))
+                    }
+                </Descriptions>
+            ),
+            onOk() { },
+            onCancel() { },
+        });
+    };
+
     return (
-        <div>
-            
-        </div>
+        <Box className="p-2 w-full space-y-4">
+            <Box className="w-full space-y-2 flex flex-col items-center justify-center">
+                <Typography variant='body1'>
+                    Tỉ lệ thuộc các cụm của các bản ghi
+                </Typography>
+                <Table
+                    dataSource={dataset}
+                    columns={columns}
+                    bordered
+                    size='small'
+                    className='cursor-pointer rounded-md shadow-lg'
+                    rowKey={(record) => record[0]}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: (event) => { handleRowClick(record) }
+                        };
+                    }}
+                    scroll={{
+                        x: 200,
+                    }}
+                />
+            </Box>
+        </Box>
     );
 }
 

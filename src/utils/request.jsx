@@ -9,7 +9,7 @@ export const post = async (path, payload, options = {}) => {
             data: null,
         }
     }
-    const res = await fetch(`${env().backend_url || BACKEND_URL}${path}`, {
+    const res = await fetch(`${env()?.backend_url || BACKEND_URL}${path}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export const get = async (path, options = {}) => {
             data: null,
         }
     }
-    const res = await fetch(`${env().backend_url || BACKEND_URL}${path}`, {
+    const res = await fetch(`${env()?.backend_url || BACKEND_URL}${path}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

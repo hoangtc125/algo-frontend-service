@@ -7,6 +7,7 @@ const { Meta } = Card;
 
 import CLUSTER from '../../assets/images/cluster.png'
 import { clusterHistorySelector } from '../../redux/selectors';
+import ClusteringResult from './ClusteringResult';
 
 const ClusterHistory = () => {
     const clusterHistory = useSelector(clusterHistorySelector)
@@ -17,9 +18,22 @@ const ClusterHistory = () => {
             closable: true,
             title: record.title,
             centered: true,
-            width: 1000,
+            width: 1200,
             content: (
-                <ClusterInfoHistory data={record.data} />
+                <Box className="w-full flex flex-col items-center justify-center space-y-8">
+                    <Box className="w-full flex flex-col items-start space-y-2 p-2">
+                        <Typography variant='h6'>
+                            Thông tin đầu vào
+                        </Typography>
+                        <ClusterInfoHistory data={record.data} />
+                    </Box>
+                    <Box className="w-full flex flex-col items-start space-y-2 p-2">
+                        <Typography variant='h6'>
+                            Kết quả phân cụm
+                        </Typography>
+                        <ClusteringResult data={record.data} />
+                    </Box>
+                </Box>
             ),
             okText: "Cancel",
         });

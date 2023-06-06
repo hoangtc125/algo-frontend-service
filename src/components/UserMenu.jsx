@@ -11,6 +11,9 @@ import cameraSlice from './camera/cameraSlice';
 import formSlice from './formBuilder/formSlice';
 import formStoreSlice from './formStore/formStoreSlice';
 import clusterSlice from './cluster/clusterSlice';
+import clusterFileSlice from './cluster/clusterFileSlice';
+import clusterHistorySlice from './cluster/clusterHistorySlice';
+import clusteringSlice from './cluster/clusteringSlice';
 
 const  UserMenu = () => {
   const account = useSelector(accountSelector)
@@ -27,7 +30,10 @@ const  UserMenu = () => {
     dispatch(cameraSlice.actions.clear())
     dispatch(formSlice.actions.clear())
     dispatch(formStoreSlice.actions.clear())
+    dispatch(clusterFileSlice.actions.clear())
     dispatch(clusterSlice.actions.clear())
+    dispatch(clusteringSlice.actions.clear())
+    dispatch(clusterHistorySlice.actions.clear())
     navigate("/algo-frontend-service/login")
   };
 
