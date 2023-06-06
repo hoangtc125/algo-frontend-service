@@ -10,6 +10,8 @@ import { accountSelector } from '../redux/selectors';
 import { post } from '../utils/request';
 import { openNotification } from '../utils/notification';
 import { getIconInfo } from '../utils/kind';
+import { env } from '../utils/env';
+import { HOST } from '../utils/constant';
 
 const PushNotification = () =>  {
     const [initLoading, setInitLoading] = useState(true);
@@ -35,7 +37,7 @@ const PushNotification = () =>  {
         if (localStorage.getItem("guest")) {
             return
         }
-        const socket = io(`ws://localhost:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
+        const socket = io(`ws://${env().host || HOST}:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
         socket.on("notification", (message) => {
             setNotification(prev => [message, ...prev])
             openNotification("Notification", message?.content, "bottomLeft")

@@ -21,6 +21,8 @@ import { aboutMe } from '../../layouts/appSlice';
 import { STUDENT_CARD, CARD_LIST } from '../../utils/constant';
 import HUST from '../../assets/images/hust.png'
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { env } from '../../utils/env'; 
+import { HOST } from '../../utils/constant';
 
 const AccountVerify = () => {
     const dispatch = useDispatch()
@@ -116,7 +118,7 @@ const AccountVerify = () => {
         if (localStorage.getItem("guest")) {
             return
         }
-        const socket = io(`ws://localhost:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
+        const socket = io(`ws://${env().host || HOST}:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
         socket.on("verify", (message) => {
             dispatch(aboutMe())
             setCurrent(2)

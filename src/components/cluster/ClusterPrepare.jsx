@@ -92,12 +92,30 @@ const ClusterPrepare = () => {
         fixed: 'right',
         width: 200,
         filterSearch: true,
-        filters: supervisedOptions.map(tag => (
-            {
-                text: tag.value,
+        filters: supervisedOptions.map((tag, idx) => {
+            const isLongTag = tag.value.length > 10;
+            const tagElem = (
+                <Tag
+                    key={tag.id}
+                    className='text-base'
+                    color={COLOR[idx]}
+                >
+                    {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                </Tag>
+            )
+            return {
+                text: (
+                    isLongTag ? (
+                        <Tooltip title={tag.value} key={tag.id}>
+                            {tagElem}
+                        </Tooltip>
+                    ) : (
+                        tagElem
+                    )
+                ),
                 value: tag.id,
             }
-        )),
+        }),
         onFilter: (value, record) => value == supervisedSet[record[0]],
         sorter: (a, b) => {
             return String(supervisedSet[a[0]]).localeCompare(supervisedSet[b[0]])
@@ -218,7 +236,7 @@ const ClusterPrepare = () => {
                                 </div>
                             )
                         })}
-                        {header.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='p-4'/>}
+                        {header.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='p-4' />}
                     </Box>
                 </Box>
             </Box>

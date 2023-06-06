@@ -96,7 +96,7 @@ const UploadExcel = () => {
     }
 
     const handleChange = ({ file }) => {
-        if (![".xlsx", ".xls"].some(e => String(file.type).endsWith(e))) {
+        if (![".xlsx", ".xls", ".sheet"].some(e => String(file.type).endsWith(e))) {
             errorNotification("Sai loại tệp", `Bạn không thể tải lên ${file.type} file`, "bottomRight")
             return
         }
