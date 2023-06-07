@@ -3,10 +3,10 @@ import appSlice from '../layouts/appSlice';
 import cameraSlice from '../components/camera/cameraSlice';
 import formSlice from '../components/formBuilder/formSlice';
 import formStoreSlice from '../components/formStore/formStoreSlice';
-import clusterSlice from '../components/cluster/clusterSlice';
-import clusterFileSlice from '../components/cluster/clusterFileSlice';
-import clusteringSlice from '../components/cluster/clusteringSlice';
-import clusterHistorySlice from '../components/cluster/clusterHistorySlice';
+import clusterSlice from '../components/cluster/slice/clusterSlice';
+import clusterFileSlice from '../components/cluster/slice/clusterFileSlice';
+import clusteringSlice from '../components/cluster/slice/clusteringSlice';
+import clusterHistorySlice from '../components/cluster/slice/clusterHistorySlice';
 
 const store = configureStore({
   reducer: {

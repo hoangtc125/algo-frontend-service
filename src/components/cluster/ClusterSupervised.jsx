@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { supervisedOptionsSelector } from '../../redux/selectors';
-import clusterSlice from './clusterSlice';
+import clusterSlice from './slice/clusterSlice';
 import { COLOR } from '../../utils/constant';
 import { v4 } from 'uuid';
 

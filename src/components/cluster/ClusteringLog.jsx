@@ -2,13 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import { Box, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import clusteringSlice from './clusteringSlice';
-import { clusterLogSelector, processSelector } from '../../redux/selectors';
+import clusteringSlice from './slice/clusteringSlice';
+import { clusterLogSelector, processSelector, selectedRecordSelector } from '../../redux/selectors';
 import { getCurrentTime } from '../../utils/time';
+import { supervisedOptionsSelector } from '../../redux/selectors';
 
 const ClusteringLog = () => {
     const dispatch = useDispatch()
     const clusteringLog = useSelector(clusterLogSelector)
+    const supervisedOptions = useSelector(supervisedOptionsSelector)
+    const selectedRecord = useSelector(selectedRecordSelector)
     const process = useSelector(processSelector)
     const boxRef = useRef(null);
 
@@ -20,7 +23,7 @@ const ClusteringLog = () => {
         }
         if (process == 2) {
             const interval = setInterval(() => {
-                if (clusteringLog.length < 10) {
+                if (clusteringLog.length < 3) {
                     const newLog = {
                         time: getCurrentTime(),
                         content: "abc",
@@ -29,6 +32,9 @@ const ClusteringLog = () => {
                 } else {
                     clearInterval(interval);
                     dispatch(clusteringSlice.actions.setProcess(3))
+                    dispatch(clusteringSlice.actions.setMembership(
+                        selectedRecord.map(e => [e, ...Array.from({ length: supervisedOptions.length }, () => Math.random())])
+                    ))
                 }
             }, 100);
 

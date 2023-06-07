@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clusterSelector } from '../../redux/selectors';
 import HeaderSetting from './HeaderSetting';
 import ClusterSupervised from './ClusterSupervised';
-import clusterSlice from './clusterSlice'
+import clusterSlice from './slice/clusterSlice'
 import { CLUSTER_TYPE } from '../../utils/constant';
 import { handleDownload } from '../../utils/excel';
 import { COLOR } from '../../utils/constant';

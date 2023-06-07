@@ -3,13 +3,16 @@ import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 import { COLOR } from '../../utils/constant';
+import { useSelector } from 'react-redux';
+import { clusterDatasetSelector, clusteringSelector } from '../../redux/selectors';
 
 const ClusteringResult = ({ data }) => {
     const selectedRecord = data.selectedRecord
     const supervisedOptions = data.supervisedOptions
     const supervisedSet = data.supervisedSet
+    const dataset = useSelector(clusteringSelector).membership
+    const clusterDataset = useSelector(clusterDatasetSelector)
 
-    const dataset = selectedRecord.map(e => [e, ...Array.from({ length: supervisedOptions.length }, () => Math.random())])
     const columns = [{
         title: "Dữ liệu đầu vào",
         children: [
@@ -48,7 +51,7 @@ const ClusteringResult = ({ data }) => {
                     return String(supervisedSet[a[0]]).localeCompare(supervisedSet[b[0]])
                 },
                 render: (text, record, index) => {
-                    const idx = supervisedOptions.findIndex(e => e.id == supervisedSet[data.dataset.findIndex(e => e[0] == record[0])])
+                    const idx = supervisedOptions.findIndex(e => e.id == supervisedSet[clusterDataset.findIndex(e => e[0] == record[0])])
                     if (idx == -1) {
                         return <></>
                     }
@@ -131,9 +134,43 @@ const ClusteringResult = ({ data }) => {
             content: (
                 <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
                     {
-                        record.map((e, id) => (
-                            <Descriptions.Item span={3} className='hover:bg-slate-100' label={columns[id]?.title} key={id}>{e}</Descriptions.Item>
-                        ))
+                        record.map((e, id) => {
+                            if (id == 0) {
+                                return (
+                                    <Descriptions.Item span={3} className='hover:bg-slate-100' label={columns[id]?.title} key={id}>{e}</Descriptions.Item>
+                                )
+                            } else {
+                                const tag = supervisedOptions[id - 1]
+                                const isLongTag = tag.value.length > 10;
+                                const tagElem = (
+                                    <Tag
+                                        key={tag.id}
+                                        className='text-sm'
+                                        color={COLOR[id - 1]}
+                                    >
+                                        {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                                    </Tag>
+                                )
+                                return (
+                                    <Descriptions.Item span={3} className='hover:bg-slate-100' label={
+                                        <Box className="w-full flex items-center space-x-4">
+                                            <p className='m-0'>{columns[1]?.title}</p>
+                                            {
+                                                isLongTag ? (
+                                                    <Tooltip title={tag.value} key={tag.id} placement="bottom">
+                                                        {tagElem}
+                                                    </Tooltip>
+                                                ) : (
+                                                    tagElem
+                                                )
+                                            }
+                                        </Box>
+                                    } key={id}>
+                                        {e}
+                                    </Descriptions.Item>
+                                )
+                            }
+                        })
                     }
                 </Descriptions>
             ),
@@ -153,7 +190,7 @@ const ClusteringResult = ({ data }) => {
                     columns={columns}
                     bordered
                     size='small'
-                    className='cursor-pointer rounded-md shadow-lg'
+                    className='w-full cursor-pointer rounded-md shadow-lg'
                     rowKey={(record) => record[0]}
                     onRow={(record, rowIndex) => {
                         return {

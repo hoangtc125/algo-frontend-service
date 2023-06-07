@@ -10,10 +10,10 @@ import appSlice from '../layouts/appSlice';
 import cameraSlice from './camera/cameraSlice';
 import formSlice from './formBuilder/formSlice';
 import formStoreSlice from './formStore/formStoreSlice';
-import clusterSlice from './cluster/clusterSlice';
-import clusterFileSlice from './cluster/clusterFileSlice';
-import clusterHistorySlice from './cluster/clusterHistorySlice';
-import clusteringSlice from './cluster/clusteringSlice';
+import clusterSlice from './cluster/slice/clusterSlice';
+import clusterFileSlice from './cluster/slice/clusterFileSlice';
+import clusterHistorySlice from './cluster/slice/clusterHistorySlice';
+import clusteringSlice from './cluster/slice/clusteringSlice';
 
 const  UserMenu = () => {
   const account = useSelector(accountSelector)

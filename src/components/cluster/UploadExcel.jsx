@@ -7,12 +7,12 @@ import { v4 } from 'uuid';
 import * as XLSX from 'xlsx';
 
 import { errorNotification } from '../../utils/notification';
-import clusterSlice from './clusterSlice';
-import clusterFileSlice from './clusterFileSlice';
+import clusterSlice from './slice/clusterSlice';
+import clusterFileSlice from './slice/clusterFileSlice';
 import { clusterSelector, clusterFileSelector } from '../../redux/selectors';
 import { formatFileSize, isEmailListValid } from '../../utils/file';
-import clusteringSlice from './clusteringSlice';
-import clusterHistorySlice from './clusterHistorySlice';
+import clusteringSlice from './slice/clusteringSlice';
+import clusterHistorySlice from './slice/clusterHistorySlice';
 
 
 const UploadExcel = () => {

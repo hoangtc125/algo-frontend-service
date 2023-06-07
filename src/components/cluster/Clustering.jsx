@@ -11,8 +11,8 @@ import ClusterInfoHistory from './ClusterInfoHistory';
 import { successNotification } from '../../utils/notification';
 import DeploymentLog from './DeploymentLog';
 import ClusteringLog from './ClusteringLog';
-import clusteringSlice from './clusteringSlice';
-import clusterHistorySlice from './clusterHistorySlice';
+import clusteringSlice from './slice/clusteringSlice';
+import clusterHistorySlice from './slice/clusterHistorySlice';
 import ClusteringResult from './ClusteringResult';
 import ClusterChart from './ClusterChart';
 
@@ -27,7 +27,12 @@ const Clustering = () => {
         const newHistory = {
             id,
             title: `Bản ghi ${id.substring(0, 8)}`,
-            data: clusterData
+            data: {
+                header: clusterData.header,
+                supervisedOptions: clusterData.supervisedOptions,
+                supervisedSet: clusterData.supervisedSet,
+                selectedRecord: clusterData.selectedRecord,
+            }
         }
         dispatch(clusterHistorySlice.actions.pushHistory(newHistory))
         successNotification("Lưu thành công", `Bản ghi ${id.substring(0, 8)}`, "bottomRight")
@@ -119,13 +124,13 @@ const Clustering = () => {
                             <Typography variant='h6' className='w-full items-center'>
                                 4. Thống kê kết quả
                             </Typography>
-                            {/* {
+                            {
                                 process == 3
-                                    ? */}
-                                    <ClusterChart />
-                                    {/* :
+                                    ?
+                                    <ClusterChart data={{ ...clusterData }} />
+                                    :
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
-                            } */}
+                            }
                         </Box>
                     </Box>
                 </Grid>

@@ -4,7 +4,7 @@ import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typograph
 import { useDispatch } from 'react-redux';
 
 import { CLUSTER_TYPE } from '../../utils/constant';
-import clusterSlice from './clusterSlice';
+import clusterSlice from './slice/clusterSlice';
 import { areFormElementEqual } from "../../utils/memo";
 
 const HeaderSetting = ({ item, colDiffData }) => {

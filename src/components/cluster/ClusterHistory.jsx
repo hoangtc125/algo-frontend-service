@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Card, Empty, Modal } from 'antd';
 import ClusterInfoHistory from './ClusterInfoHistory';
@@ -8,35 +8,21 @@ const { Meta } = Card;
 import CLUSTER from '../../assets/images/cluster.png'
 import { clusterHistorySelector } from '../../redux/selectors';
 import ClusteringResult from './ClusteringResult';
+import ClusterChart from './ClusterChart';
 
 const ClusterHistory = () => {
     const clusterHistory = useSelector(clusterHistorySelector)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [record, setRecord] = useState()
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
 
     const handleViewHistory = (id) => {
         const record = clusterHistory.find(e => e.id == id)
-        Modal.info({
-            closable: true,
-            title: record.title,
-            centered: true,
-            width: 1200,
-            content: (
-                <Box className="w-full flex flex-col items-center justify-center space-y-8">
-                    <Box className="w-full flex flex-col items-start space-y-2 p-2">
-                        <Typography variant='h6'>
-                            Thông tin đầu vào
-                        </Typography>
-                        <ClusterInfoHistory data={record.data} />
-                    </Box>
-                    <Box className="w-full flex flex-col items-start space-y-2 p-2">
-                        <Typography variant='h6'>
-                            Kết quả phân cụm
-                        </Typography>
-                        <ClusteringResult data={record.data} />
-                    </Box>
-                </Box>
-            ),
-            okText: "Cancel",
-        });
+        setRecord(record)
+        setIsModalOpen(true);
     }
 
     return (
@@ -76,6 +62,32 @@ const ClusterHistory = () => {
                     :
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             }
+            <Modal centered width={1250} open={isModalOpen} onOk={handleOk} onCancel={handleOk} destroyOnClose={true}>
+                <Box className="w-full flex flex-col items-center justify-center space-y-8">
+                    <Box className="w-full flex flex-col items-start space-y-2 p-2">
+                        <Typography variant='h6'>
+                            Thông tin đầu vào
+                        </Typography>
+                        {
+                            record &&
+                            <ClusterInfoHistory data={record.data} />
+                        }
+                    </Box>
+                    <Box className="w-full flex flex-col items-start space-y-2 p-2">
+                        <Typography variant='h6'>
+                            Kết quả phân cụm
+                        </Typography>
+                        {
+                            record &&
+                            <ClusteringResult data={record.data} />
+                        }
+                        {
+                            record &&
+                            <ClusterChart data={record.data} />
+                        }
+                    </Box>
+                </Box>
+            </Modal>
         </Box>
     );
 }

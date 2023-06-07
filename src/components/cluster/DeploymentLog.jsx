@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Box, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import clusteringSlice from './clusteringSlice';
+import clusteringSlice from './slice/clusteringSlice';
 import { deployLogSelector, processSelector } from '../../redux/selectors';
 import { getCurrentTime } from '../../utils/time';
 
@@ -20,7 +20,7 @@ const DeploymentLog = () => {
         }
         if (process == 1) {
             const interval = setInterval(() => {
-                if (deployLog.length < 20) {
+                if (deployLog.length < 3) {
                     const newLog = {
                         time: getCurrentTime(),
                         content: "abc",

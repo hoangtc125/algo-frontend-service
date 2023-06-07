@@ -5,12 +5,15 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import { COLOR } from '../../utils/constant';
 import { handleDownload } from '../../utils/excel';
+import { useSelector } from 'react-redux';
+import { clusterDatasetSelector } from '../../redux/selectors';
 
 const ClusterInfoHistory = ({ data }) => {
+    const clusterDataset = useSelector(clusterDatasetSelector)
     const header = data.header
     const supervisedOptions = data.supervisedOptions
-    const dataset = data.selectedRecord.map(e => data.dataset.find(d => d[0] == e))
-    const supervisedSet = data.selectedRecord.map(e => data.supervisedSet[data.dataset.findIndex(d => d[0] == e)])
+    const dataset = data.selectedRecord.map(e => clusterDataset.find(d => d[0] == e))
+    const supervisedSet = data.selectedRecord.map(e => data.supervisedSet[clusterDataset.findIndex(d => d[0] == e)])
 
     console.log("re-render");
 

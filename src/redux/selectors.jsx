@@ -27,6 +27,7 @@ export const supervisedSetSelector = (state) => state.cluster.supervisedSet
 export const nameColSelector = (state) => state.cluster.nameCol
 export const emailColSelector = (state) => state.cluster.emailCol
 export const supervisedOptionsSelector = (state) => state.cluster.supervisedOptions
+export const selectedRecordSelector = (state) => state.cluster.selectedRecord
 
 export const clusterFileSelector = (state) => state.clusterFile
 
