@@ -49,18 +49,18 @@ const ClusterPrepare = () => {
             target: () => ref3.current,
         },
         {
-            title: 'Tạo tập quan sát',
+            title: 'Tạo tập giám sát',
             description: 'Người dùng định nghĩa số lượng phân cụm và tên của cụm',
             target: () => ref4.current,
         },
         {
             title: 'Chọn các bản ghi để phân cụm',
-            description: 'Các bản ghi được chọn có thể đưa vào các tập quan sát',
+            description: 'Các bản ghi được chọn có thể đưa vào các tập giám sát',
             target: () => ref5.current,
         },
         {
-            title: 'Chọn tập quan sát cho các bản ghi',
-            description: 'Các bản ghi có cùng độ tương đồng có thể quan sát trước khi đặt chúng vào cùng 1 cụm',
+            title: 'Chọn tập giám sát cho các bản ghi',
+            description: 'Các bản ghi có cùng độ tương đồng có thể giám sát trước khi đặt chúng vào cùng 1 cụm',
             target: () => ref6.current,
         },
     ];
@@ -84,7 +84,7 @@ const ClusterPrepare = () => {
                 <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
                     {
                         record.map((e, id) => (
-                            <Descriptions.Item span={3} className='hover:bg-slate-100' label={header[id]?.title || "Tập quan sát"} key={id}>{e}</Descriptions.Item>
+                            <Descriptions.Item span={3} className='hover:bg-slate-100' label={header[id]?.title || "Tập giám sát"} key={id}>{e}</Descriptions.Item>
                         ))
                     }
                 </Descriptions>
@@ -128,7 +128,7 @@ const ClusterPrepare = () => {
             },
         }
     }), {
-        title: <p ref={ref6} className='items-center m-0'>Tập quan sát</p>,
+        title: <p ref={ref6} className='items-center m-0'>Tập giám sát</p>,
         key: 'supervisedSet',
         fixed: 'right',
         width: 200,
@@ -164,11 +164,11 @@ const ClusterPrepare = () => {
         render: (text, record, index) => {
             return (
                 <FormControl fullWidth>
-                    <InputLabel id="el-supervised-set-label">Tập quan sát</InputLabel>
+                    <InputLabel id="el-supervised-set-label">Tập giám sát</InputLabel>
                     <Select
                         labelId="el-supervised-set-label"
                         id="el-supervised-set"
-                        label="Tập quan sát"
+                        label="Tập giám sát"
                         value={supervisedSet[record[0]] || ``}
                         onChange={(e) => {
                             e.stopPropagation()
@@ -281,9 +281,9 @@ const ClusterPrepare = () => {
                     </Box>
                 </Box>
             </Box>
-            <Box className="w-full" ref={ref4}>
-                <Typography variant='h6'>
-                    2. Tạo tập quan sát
+            <Box className="w-full">
+                <Typography variant='h6' ref={ref4}>
+                    2. Tạo tập giám sát
                 </Typography>
                 <Typography variant='body1'>
                     (Tối thiểu 2, tối đa 10)

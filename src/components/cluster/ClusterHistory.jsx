@@ -26,7 +26,7 @@ const ClusterHistory = () => {
     }
 
     return (
-        <Box className="w-full flex flex-col items-center justify-center">
+        <Box className="w-full flex flex-col items-center justify-center min-h-[50vh]">
             <Typography variant='h6'>
                 Lịch sử phân cụm
             </Typography>
@@ -62,7 +62,7 @@ const ClusterHistory = () => {
                     :
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             }
-            <Modal centered width={1250} open={isModalOpen} onOk={handleOk} onCancel={handleOk} destroyOnClose={true}>
+            <Modal centered width={1500} open={isModalOpen} onOk={handleOk} onCancel={handleOk} destroyOnClose={true}>
                 <Box className="w-full flex flex-col items-center justify-center space-y-8">
                     <Box className="w-full flex flex-col items-start space-y-2 p-2">
                         <Typography variant='h6'>

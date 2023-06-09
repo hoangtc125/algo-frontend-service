@@ -17,7 +17,7 @@ const ClusteringResult = ({ data }) => {
         title: "Dữ liệu đầu vào",
         children: [
             {
-                title: 'Tập quan sát',
+                title: 'Tập giám sát',
                 key: 'supervisedSet',
                 fixed: 'left',
                 width: 200,

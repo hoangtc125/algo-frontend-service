@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, Button } from '@mui/material';
 import { LoadingOutlined, PauseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { Anchor, Button, Collapse, Empty, Modal } from 'antd';
+import { Anchor, Collapse, Empty, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 } from 'uuid';
 const { Panel } = Collapse;
@@ -15,6 +15,7 @@ import clusteringSlice from './slice/clusteringSlice';
 import clusterHistorySlice from './slice/clusterHistorySlice';
 import ClusteringResult from './ClusteringResult';
 import ClusterChart from './ClusterChart';
+import { LoadingButton } from '@mui/lab';
 
 const Clustering = () => {
     const dispatch = useDispatch()
@@ -73,10 +74,10 @@ const Clustering = () => {
                             <Typography variant='h6' className='w-full items-center'>
                                 2. Quá trình phân cụm
                             </Typography>
-                            <Button disabled={error} className='text-base' type='default' loading={process == 1 || process == 2} onClick={() => {
+                            <LoadingButton disabled={error} className='text-base' variant='contained' loading={process == 1 || process == 2} onClick={() => {
                                 dispatch(clusteringSlice.actions.clear())
                                 dispatch(clusteringSlice.actions.setProcess(1))
-                            }}>Tiến hành phân cụm</Button>
+                            }}>Tiến hành phân cụm</LoadingButton>
                             <Collapse className='w-full' activeKey={process == 1 ? 1 : (process >= 2 ? [1, 2] : [])}>
                                 <Panel
                                     showArrow={false}
@@ -118,7 +119,7 @@ const Clustering = () => {
                                     :
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
                             }
-                            <Button className='text-base' type='default' onClick={handleClustering} disabled={process != 3}>Lưu bản ghi</Button>
+                            <Button className='text-base' variant='contained' onClick={handleClustering} disabled={process != 3}>Lưu bản ghi</Button>
                         </Box>
                         <Box id="clustering-4" className="w-full flex flex-col items-center justify-center h-full space-y-4">
                             <Typography variant='h6' className='w-full items-center'>

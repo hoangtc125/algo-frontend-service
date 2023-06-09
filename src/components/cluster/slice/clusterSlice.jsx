@@ -9,6 +9,7 @@ const clusterSlice = createSlice({
     header: clusterStorage?.header || [],
     collDiffData: clusterStorage?.collDiffData || [],
     dataset: clusterStorage?.dataset || [],
+    vectorset: clusterStorage?.vectorset || [],
     selectedRecord: clusterStorage?.selectedRecord || [],
     supervisedSet: clusterStorage?.supervisedSet || [],
     supervisedOptions: clusterStorage?.supervisedOptions || [{ id: v4(), value: "Cụm 1" }, { id: v4(), value: "Cụm 2" }],
@@ -17,6 +18,7 @@ const clusterSlice = createSlice({
     clear: (state, action) => {
       state.header = []
       state.dataset = []
+      state.vectorset = []
       state.selectedRecord = []
       state.supervisedSet = []
       state.supervisedOptions = [{ id: v4(), value: "Cụm 1" }, { id: v4(), value: "Cụm 2" }]
@@ -25,6 +27,22 @@ const clusterSlice = createSlice({
     setDataset: (state, action) => {
       state.dataset = action.payload
       state.supervisedSet = Array(action.payload.length).fill(null)
+    },
+    setVectorset: (state, action) => {
+      state.vectorset = Array.from({ length: action.payload.dataset }, () => Array(action.payload.header).fill({
+        "text": [],
+        "numerical": [],
+        "categorical": [],
+      }));
+    },
+    updateVectorset: (state, action) => {
+      const headers = Object.keys(action.payload);
+      headers.forEach(header => {
+        const vectors = action.payload[header];
+        vectors.data.forEach(vector => {
+          state.vectorset[vector.id][header][vectors.type] = [vector.data]
+        });
+      });
     },
     setCollDiffData: (state, action) => {
       state.collDiffData = action.payload;

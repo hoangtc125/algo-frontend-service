@@ -26,7 +26,7 @@ const ClusterInfoHistory = ({ data }) => {
                 <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
                     {
                         record.map((e, id) => (
-                            <Descriptions.Item span={3} className='hover:bg-slate-100' label={header[id]?.title || "Tập quan sát"} key={id}>{e}</Descriptions.Item>
+                            <Descriptions.Item span={3} className='hover:bg-slate-100' label={header[id]?.title || "Tập giám sát"} key={id}>{e}</Descriptions.Item>
                         ))
                     }
                 </Descriptions>
@@ -37,7 +37,7 @@ const ClusterInfoHistory = ({ data }) => {
     };
 
     const columns = [{
-        title: 'Tập quan sát',
+        title: 'Tập giám sát',
         key: 'supervisedSet',
         fixed: 'left',
         width: 120,

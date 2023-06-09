@@ -79,6 +79,7 @@ const UploadExcel = () => {
             const formBody = formData.slice(1)
             dispatch(clusterSlice.actions.setDataset(formBody));
             dispatch(clusterSlice.actions.setHeader(formHeader));
+            dispatch(clusterSlice.actions.setVectorset({dataset: formBody.length, header: formHeader.length}))
             dispatch(clusterSlice.actions.setCollDiffData(
                 formHeader.map((item, index) => Array.from(new Set(formBody.map(e => e[index] || ''))))
             ))

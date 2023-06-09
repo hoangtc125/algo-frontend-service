@@ -47,6 +47,34 @@ export const STUDENT_CARD = [
 
 export const CARD_LIST = STUDENT_CARD.map((item) => item.cards).flat();
 
+export const CLUSTER_FILE_PROCESS = [
+    {
+        title: 'Dữ liệu đầu vào',
+        description: 'Tải file excel dữ liệu đơn tuyển thành viên',
+        status: 'process',
+    },
+    {
+        title: 'Chọn thuộc tính',
+        description: 'Cập nhật loại dữ liệu và đánh trọng số cho các trường thuộc tính tham gia phân cụm',
+        status: 'process',
+    },
+    {
+        title: 'Chọn số lượng cụm',
+        description: 'Chọn số lượng cụm dữ liệu muốn tao ra, có thể đặt tên cho các cụm như tập giám sát',
+        status: 'process',
+    },
+    {
+        title: 'Chọn dữ liệu phân cụm',
+        description: 'Chọn các bản ghi để tiến hành phân cụm và giám sát cho các bản ghi nếu muốn',
+        status: 'process',
+    },
+    {
+        title: 'Tiến hành phân cụm',
+        description: 'Kiểm tra dữ liệu đầu vào đã chọn và nhân nút tiến hành phân cụm',
+        status: 'process',
+    },
+]
+
 export const CLUSTER_TYPE = [
     {
         label: "Số",

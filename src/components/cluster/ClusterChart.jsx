@@ -43,7 +43,7 @@ const ClusterChart = ({ data }) => {
                                 }
                             </Grid>
                             <Grid item xs={10}>
-                                <BarChart width={800} height={300} data={dataChart}>
+                                <BarChart width={1200} height={300} data={dataChart}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="id" />
                                     <YAxis label={{ value: 'Tỉ lệ phần trăm', angle: -90, position: 'insideLeft' }} />

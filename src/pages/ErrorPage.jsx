@@ -9,8 +9,8 @@ export default function ErrorPage() {
 
   return (
     <Result
-      status="404"
-      title="404"
+      status="warning"
+      title="warning"
       subTitle={
         <>
           <h1>Oops!</h1>
