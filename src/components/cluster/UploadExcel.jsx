@@ -101,15 +101,15 @@ const UploadExcel = () => {
             errorNotification("Sai loại tệp", `Bạn không thể tải lên ${file.type} file`, "bottomRight")
             return
         }
+        dispatch(clusterSlice.actions.clear())
+        dispatch(clusterFileSlice.actions.clear())
+        dispatch(clusteringSlice.actions.clear())
+        dispatch(clusterHistorySlice.actions.clear())
+        sessionStorage.removeItem("clusterData")
+        sessionStorage.removeItem("clusterFile")
+        sessionStorage.removeItem("clustering")
+        sessionStorage.removeItem("clusterHistory")
         if (file.status == "removed") {
-            dispatch(clusterSlice.actions.clear())
-            dispatch(clusterFileSlice.actions.clear())
-            dispatch(clusteringSlice.actions.clear())
-            dispatch(clusterHistorySlice.actions.clear())
-            sessionStorage.removeItem("clusterData")
-            sessionStorage.removeItem("clusterFile")
-            sessionStorage.removeItem("clustering")
-            sessionStorage.removeItem("clusterHistory")
             return
         }
         handleDataset(file)

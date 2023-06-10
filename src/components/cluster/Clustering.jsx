@@ -78,7 +78,7 @@ const Clustering = () => {
                                 dispatch(clusteringSlice.actions.clear())
                                 dispatch(clusteringSlice.actions.setProcess(1))
                             }}>Tiến hành phân cụm</LoadingButton>
-                            <Collapse className='w-full' activeKey={process == 1 ? 1 : (process >= 2 ? [1, 2] : [])}>
+                            <Collapse className='w-full' activeKey={[1, 2]}>
                                 <Panel
                                     showArrow={false}
                                     header={

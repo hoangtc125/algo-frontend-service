@@ -26,7 +26,7 @@ const clusteringSlice = createSlice({
       state.process = action.payload;
     },
     setDeployLog: (state, action) => {
-      state.deployLog = action.payload;
+      state.deployLog.push(action.payload);
     },
     setClusteringLog: (state, action) => {
       state.clusteringLog = action.payload

@@ -1,11 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import io from 'socket.io-client';
+import moment from 'moment';
 
 import clusteringSlice from './slice/clusteringSlice';
-import { clusterSelector, deployLogSelector, processSelector } from '../../redux/selectors';
-import { getCurrentTime } from '../../utils/time';
+import { accountSelector, clusterSelector, deployLogSelector, processSelector } from '../../redux/selectors';
 import clusterSlice from './slice/clusterSlice';
+import { post } from '../../utils/request';
+import { errorNotification } from '../../utils/notification';
+import { env } from '../../utils/env';
+import { HOST } from '../../utils/constant';
 
 const DeploymentLog = () => {
     const dispatch = useDispatch()
@@ -13,6 +18,7 @@ const DeploymentLog = () => {
     const process = useSelector(processSelector)
     const clusterData = useSelector(clusterSelector)
     const boxRef = useRef(null);
+    const account = useSelector(accountSelector)
 
     console.log("re-render");
 
@@ -20,27 +26,38 @@ const DeploymentLog = () => {
         if (boxRef.current) {
             boxRef.current.scrollTop = boxRef.current.scrollHeight;
         }
-        if (process == 1) {
-            const interval = setInterval(() => {
-                if (deployLog.length < 3) {
-                    const newLog = {
-                        time: getCurrentTime(),
-                        content: "abc",
-                    };
-                    dispatch(clusteringSlice.actions.setDeployLog([...deployLog, newLog]))
-                } else {
-                    clearInterval(interval);
-                    dispatch(clusteringSlice.actions.setProcess(2))
-                }
-            }, 100);
-
-            return () => {
-                clearInterval(interval);
-            };
-        }
-    }, [deployLog, process]);
+    }, [deployLog]);
 
     useEffect(() => {
+        if (localStorage.getItem("guest")) {
+            return
+        }
+        const socket = io(`ws://${env()?.host || HOST}:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
+        socket.on("deployLog", (message) => {
+            const newLog = {
+                time: moment(message?.time * 1000).format('HH:mm:ss'),
+                content: message.content,
+            };
+            dispatch(clusteringSlice.actions.setDeployLog(newLog))
+        });
+
+        return () => {
+            socket.off("deployLog");
+            socket.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        const vectorize = async (data) => {
+            const res = await post(`/cluster/vectorize?client_id=${account.id}`, data)
+            if (res?.status_code == 200) {
+                dispatch(clusterSlice.actions.updateVectorset(res.data))
+                dispatch(clusteringSlice.actions.setProcess(2))
+            } else {
+                errorNotification(res.status_code, res.msg, "bottomRight")
+            }
+        }
+
         if (process == 1) {
             const selectedRecord = clusterData.selectedRecord.map(e => ({ id: e, data: clusterData.dataset[e] }))
             let res = {}
@@ -64,7 +81,7 @@ const DeploymentLog = () => {
                     }
                 }
             }
-            dispatch(clusterSlice.actions.updateVectorset(res))
+            vectorize(res)
         }
     }, [process])
 

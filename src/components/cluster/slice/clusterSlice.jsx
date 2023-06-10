@@ -40,7 +40,7 @@ const clusterSlice = createSlice({
       headers.forEach(header => {
         const vectors = action.payload[header];
         vectors.data.forEach(vector => {
-          state.vectorset[vector.id][header][vectors.type] = [vector.data]
+          state.vectorset[vector.id][header][vectors.type] = vector.data
         });
       });
     },
