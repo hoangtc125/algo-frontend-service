@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Box, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
+import { Image } from 'antd';
 import moment from 'moment';
 
 import clusteringSlice from './slice/clusteringSlice';
@@ -26,7 +27,7 @@ const DeploymentLog = () => {
         if (boxRef.current) {
             boxRef.current.scrollTop = boxRef.current.scrollHeight;
         }
-    }, [deployLog]);
+    });
 
     useEffect(() => {
         if (localStorage.getItem("guest")) {
@@ -36,6 +37,7 @@ const DeploymentLog = () => {
         socket.on("deployLog", (message) => {
             const newLog = {
                 time: moment(message?.time * 1000).format('HH:mm:ss'),
+                type: message?.type || "text",
                 content: message.content,
             };
             dispatch(clusteringSlice.actions.setDeployLog(newLog))
@@ -49,12 +51,18 @@ const DeploymentLog = () => {
 
     useEffect(() => {
         const vectorize = async (data) => {
-            const res = await post(`/cluster/vectorize?client_id=${account.id}`, data)
-            if (res?.status_code == 200) {
-                dispatch(clusterSlice.actions.updateVectorset(res.data))
-                dispatch(clusteringSlice.actions.setProcess(2))
-            } else {
-                errorNotification(res.status_code, res.msg, "bottomRight")
+            try {
+                const res = await post(`/cluster/vectorize?client_id=${account.id}`, data)
+                if (res?.status_code == 200) {
+                    dispatch(clusterSlice.actions.updateVectorset(res.data))
+                    dispatch(clusteringSlice.actions.setProcess(2))
+                } else {
+                    errorNotification(res.status_code, res.msg, "bottomRight")
+                    dispatch(clusteringSlice.actions.setProcess(0))
+                }
+            } catch {
+                errorNotification("Đã xảy ra lỗi", "Hãy kiểm tra lại các bước làm", "bottomRight")
+                dispatch(clusteringSlice.actions.setProcess(0))
             }
         }
 
@@ -71,13 +79,13 @@ const DeploymentLog = () => {
                         type: element.type,
                         weight: element.weight,
                         collDiffData: clusterData.collDiffData[index],
-                        data: selectedRecord.map(e => ({id: e.id, data: e.data[index]})).filter(e => clusterData.vectorset[e.id][index][element.type].length == 0)
+                        data: selectedRecord.map(e => ({ id: e.id, data: e.data[index] })).filter(e => clusterData.vectorset[e.id][index][element.type].length == 0)
                     }
                 } else {
                     res[index] = {
                         type: element.type,
                         weight: element.weight,
-                        data: selectedRecord.map(e => ({id: e.id, data: e.data[index]})).filter(e => clusterData.vectorset[e.id][index][element.type].length == 0)
+                        data: selectedRecord.map(e => ({ id: e.id, data: e.data[index] })).filter(e => clusterData.vectorset[e.id][index][element.type].length == 0)
                     }
                 }
             }
@@ -86,7 +94,7 @@ const DeploymentLog = () => {
     }, [process])
 
     return (
-        <Box ref={boxRef} className="w-full max-h-[30vh] overflow-auto">
+        <Box ref={boxRef} className="w-full max-h-[50vh] overflow-auto">
             {deployLog.map((e, idx) => (
                 <Box key={idx} className="w-full hover:bg-slate-100">
                     <Grid container className="w-full items-center">
@@ -94,7 +102,13 @@ const DeploymentLog = () => {
                             {e.time}
                         </Grid>
                         <Grid item xs={10}>
-                            {e.content}
+                            {
+                                e?.type == "image"
+                                    ?
+                                    <Image src={`data:image/png;base64,${e.content}`} className='w-full' />
+                                    :
+                                    e.content
+                            }
                         </Grid>
                     </Grid>
                 </Box>

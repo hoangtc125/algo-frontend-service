@@ -12,7 +12,7 @@ const clusterHistorySlice = createSlice({
       state.histories = []
     },
     pushHistory: (state, action) => {
-      sessionStorage.setItem("clusterHistory", JSON.stringify([...state.histories, action.payload]))
+      // sessionStorage.setItem("clusterHistory", JSON.stringify([...state.histories, action.payload]))
       state.histories.push(action.payload)
     },
   },

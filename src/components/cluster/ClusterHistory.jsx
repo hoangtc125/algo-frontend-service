@@ -7,7 +7,7 @@ const { Meta } = Card;
 
 import CLUSTER from '../../assets/images/cluster.png'
 import { clusterHistorySelector } from '../../redux/selectors';
-import ClusteringResult from './ClusteringResult';
+import ClusteringMembership from './ClusteringMembership';
 import ClusterChart from './ClusterChart';
 
 const ClusterHistory = () => {
@@ -79,11 +79,19 @@ const ClusterHistory = () => {
                         </Typography>
                         {
                             record &&
-                            <ClusteringResult data={record.data} />
+                            <ClusteringMembership data={record.data} />
                         }
+                    </Box>
+                    <Box className="w-full flex flex-col items-start space-y-2 p-2">
+                        <Typography variant='h6'>
+                            Thống kê phân cụm
+                        </Typography>
                         {
                             record &&
-                            <ClusterChart data={record.data} />
+                            <>
+                                <ClusteringMembership data={record.data} />
+                                <ClusterChart data={record.data} />
+                            </>
                         }
                     </Box>
                 </Box>

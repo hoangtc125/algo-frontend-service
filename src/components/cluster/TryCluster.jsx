@@ -7,6 +7,10 @@ import ClusterPrepare from './ClusterPrepare';
 import Clustering from './Clustering';
 import ClusterHistory from './ClusterHistory';
 import { CLUSTER_FILE_PROCESS } from '../../utils/constant';
+import clusterSlice from './slice/clusterSlice';
+import clusterFileSlice from './slice/clusterFileSlice';
+import clusteringSlice from './slice/clusteringSlice';
+import clusterHistorySlice from './slice/clusterHistorySlice';
 
 const steps = [
     {
@@ -30,6 +34,19 @@ const steps = [
 const TryCluster = () => {
     const hash = String(window.location.hash)
     const [current, setCurrent] = useState(hash ? parseInt(hash.split("#")[1]) || 2 : 0);
+
+    useEffect(() => {
+        return () => {
+            dispatch(clusterSlice.actions.clear())
+            dispatch(clusterFileSlice.actions.clear())
+            dispatch(clusteringSlice.actions.clear())
+            dispatch(clusterHistorySlice.actions.clear())
+            sessionStorage.removeItem("clusterData")
+            sessionStorage.removeItem("clusterFile")
+            sessionStorage.removeItem("clustering")
+            sessionStorage.removeItem("clusterHistory")
+        }
+    }, [])
 
     const onChange = (value) => {
         window.location.hash = value

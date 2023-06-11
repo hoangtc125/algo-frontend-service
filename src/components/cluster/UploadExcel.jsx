@@ -27,15 +27,15 @@ const UploadExcel = () => {
 
     console.log("re-render");
 
-    useEffect(() => {
-        const saveInterval = setInterval(() => {
-            sessionStorage.setItem("clusterFile", JSON.stringify(clusterFile))
-            console.log("auto-save clusterFile");
-        }, 3000);
-        return () => {
-            clearInterval(saveInterval)
-        }
-    }, [clusterFile])
+    // useEffect(() => {
+    //     const saveInterval = setInterval(() => {
+    //         sessionStorage.setItem("clusterFile", JSON.stringify(clusterFile))
+    //         console.log("auto-save clusterFile");
+    //     }, 3000);
+    //     return () => {
+    //         clearInterval(saveInterval)
+    //     }
+    // }, [clusterFile])
 
     const assignId = (data) => {
         const newData = data.map((e, id) => {
@@ -69,8 +69,8 @@ const UploadExcel = () => {
                 return newRow
             });
             const formData = assignId(filteredData)
-            const formHeader = formData[0].map(e => ({
-                id: v4(),
+            const formHeader = formData[0].map((e, idx) => ({
+                id: idx,
                 title: e?.title || e,
                 type: "text",
                 disabled: e?.disabled || false,

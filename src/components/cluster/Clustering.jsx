@@ -13,7 +13,7 @@ import DeploymentLog from './DeploymentLog';
 import ClusteringLog from './ClusteringLog';
 import clusteringSlice from './slice/clusteringSlice';
 import clusterHistorySlice from './slice/clusterHistorySlice';
-import ClusteringResult from './ClusteringResult';
+import ClusteringMembership from './ClusteringMembership';
 import ClusterChart from './ClusterChart';
 import { LoadingButton } from '@mui/lab';
 
@@ -115,7 +115,7 @@ const Clustering = () => {
                             {
                                 process == 3
                                     ?
-                                    <ClusteringResult data={{ ...clusterData }} />
+                                    <ClusteringMembership data={{ ...clusterData }} />
                                     :
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
                             }
@@ -128,7 +128,10 @@ const Clustering = () => {
                             {
                                 process == 3
                                     ?
-                                    <ClusterChart data={{ ...clusterData }} />
+                                    <>
+                                        <ClusteringMembership data={{ ...clusterData }} />
+                                        <ClusterChart data={{ ...clusterData }} />
+                                    </>
                                     :
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
                             }

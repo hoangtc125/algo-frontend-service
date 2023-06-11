@@ -6,67 +6,41 @@ import { COLOR } from '../../utils/constant';
 import { useSelector } from 'react-redux';
 import { clusterDatasetSelector, clusteringSelector } from '../../redux/selectors';
 
-const ClusteringResult = ({ data }) => {
+const ClusterPredLabel = ({ data }) => {
     const selectedRecord = data.selectedRecord
     const supervisedOptions = data.supervisedOptions
     const supervisedSet = data.supervisedSet
-    const dataset = useSelector(clusteringSelector).membership
+    const header = data.header.map(e => {
+        if (e.weight > 0 || e.id == 0) {
+            return e
+        }
+    }).filter(e => e).push("Kết quả phân cụm")
+    const predLabels = useSelector(clusteringSelector).predLabels
     const clusterDataset = useSelector(clusterDatasetSelector)
+    const dataset = selectedRecord.map(e => {
+        const row = header.map(i => clusterDataset[e][i.id]).push()
+    })
 
-    const columns = [{
-        title: "Dữ liệu đầu vào",
-        children: [
-            {
-                title: 'Tập giám sát',
-                key: 'supervisedSet',
-                fixed: 'left',
-                width: 200,
-                filterSearch: true,
-                filters: supervisedOptions.map((tag, idx) => {
-                    const isLongTag = tag.value.length > 10;
-                    const tagElem = (
-                        <Tag
-                            key={tag.id}
-                            className='text-base'
-                            color={COLOR[idx]}
-                        >
-                            {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
-                        </Tag>
-                    )
-                    return {
-                        text: (
-                            isLongTag ? (
-                                <Tooltip title={tag.value} key={tag.id}>
-                                    {tagElem}
-                                </Tooltip>
-                            ) : (
-                                tagElem
-                            )
-                        ),
-                        value: tag.id,
-                    }
-                }),
-                onFilter: (value, record) => value == supervisedSet[record[0]],
-                sorter: (a, b) => {
-                    return String(supervisedSet[a[0]]).localeCompare(supervisedSet[b[0]])
-                },
-                render: (text, record, index) => {
-                    const idx = supervisedOptions.findIndex(e => e.id == supervisedSet[clusterDataset.findIndex(e => e[0] == record[0])])
-                    if (idx == -1) {
-                        return <></>
-                    }
-                    const tag = supervisedOptions[idx]
-                    const isLongTag = tag.value.length > 10;
-                    const tagElem = (
-                        <Tag
-                            key={tag.id}
-                            className='text-sm'
-                            color={COLOR[idx]}
-                        >
-                            {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
-                        </Tag>
-                    )
-                    return (
+    const columns = [
+        {
+            title: 'Tập giám sát',
+            key: 'supervisedSet',
+            fixed: 'left',
+            width: 200,
+            filterSearch: true,
+            filters: supervisedOptions.map((tag, idx) => {
+                const isLongTag = tag.value.length > 10;
+                const tagElem = (
+                    <Tag
+                        key={tag.id}
+                        className='text-base'
+                        color={COLOR[idx]}
+                    >
+                        {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                    </Tag>
+                )
+                return {
+                    text: (
                         isLongTag ? (
                             <Tooltip title={tag.value} key={tag.id}>
                                 {tagElem}
@@ -74,28 +48,56 @@ const ClusteringResult = ({ data }) => {
                         ) : (
                             tagElem
                         )
-                    )
-                },
-            }, {
-                title: "ID của bản ghi",
-                dataIndex: 0,
-                key: 'selectedRecordId',
-                fixed: 'left',
-                width: 200,
-                filterSearch: true,
-                filters: selectedRecord.map(e => ({
-                    text: e,
-                    value: e,
-                })),
-                onFilter: (value, record) => value == record[0],
-                sorter: (a, b) => {
-                    return String(a[0]).localeCompare(b[0])
+                    ),
+                    value: tag.id,
                 }
+            }),
+            onFilter: (value, record) => value == supervisedSet[record[0]],
+            sorter: (a, b) => {
+                return String(supervisedSet[a[0]]).localeCompare(supervisedSet[b[0]])
+            },
+            render: (text, record, index) => {
+                const idx = supervisedOptions.findIndex(e => e.id == supervisedSet[clusterDataset.findIndex(e => e[0] == record[0])])
+                if (idx == -1) {
+                    return <></>
+                }
+                const tag = supervisedOptions[idx]
+                const isLongTag = tag.value.length > 10;
+                const tagElem = (
+                    <Tag
+                        key={tag.id}
+                        className='text-sm'
+                        color={COLOR[idx]}
+                    >
+                        {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                    </Tag>
+                )
+                return (
+                    isLongTag ? (
+                        <Tooltip title={tag.value} key={tag.id}>
+                            {tagElem}
+                        </Tooltip>
+                    ) : (
+                        tagElem
+                    )
+                )
+            },
+        }, {
+            title: "ID của bản ghi",
+            dataIndex: 0,
+            key: 'selectedRecordId',
+            fixed: 'left',
+            width: 200,
+            filterSearch: true,
+            filters: selectedRecord.map(e => ({
+                text: e,
+                value: e,
+            })),
+            onFilter: (value, record) => value == record[0],
+            sorter: (a, b) => {
+                return String(a[0]).localeCompare(b[0])
             }
-        ]
-    }, {
-        title: "Tỉ lệ phần trăm",
-        children: supervisedOptions.map((tag, idx) => {
+        }, ...supervisedOptions.map((tag, idx) => {
             const isLongTag = tag.value.length > 10;
             const tagElem = (
                 <Tag
@@ -124,7 +126,7 @@ const ClusteringResult = ({ data }) => {
                 sorter: (a, b) => a[idx + 1] - b[idx + 1]
             }
         })
-    }]
+    ]
 
     const handleRowClick = (record) => {
         Modal.info({
@@ -206,4 +208,4 @@ const ClusteringResult = ({ data }) => {
     );
 }
 
-export default ClusteringResult;
+export default ClusterPredLabel;

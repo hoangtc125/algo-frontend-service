@@ -65,15 +65,15 @@ const ClusterPrepare = () => {
         },
     ];
 
-    useEffect(() => {
-        const saveInterval = setInterval(() => {
-            sessionStorage.setItem("clusterData", JSON.stringify(clusterData))
-            console.log("auto-save clusterData");
-        }, 3000);
-        return () => {
-            clearInterval(saveInterval)
-        }
-    }, [clusterData])
+    // useEffect(() => {
+    //     const saveInterval = setInterval(() => {
+    //         sessionStorage.setItem("clusterData", JSON.stringify(clusterData))
+    //         console.log("auto-save clusterData");
+    //     }, 3000);
+    //     return () => {
+    //         clearInterval(saveInterval)
+    //     }
+    // }, [clusterData])
 
     const handleRowClick = (record) => {
         Modal.info({

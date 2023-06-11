@@ -31,7 +31,7 @@ const ClusterChart = ({ data }) => {
                     }))
                     return (
                         <Grid key={id} container className='w-full'>
-                            <Grid item xs={2} className='flex w-full items-center text-center justify-center'>
+                            <Grid item xs={1} className='flex w-full items-center text-center justify-center'>
                                 {
                                     isLongTag ? (
                                         <Tooltip title={tag.value} key={tag.id} placement="bottom">
@@ -42,7 +42,7 @@ const ClusterChart = ({ data }) => {
                                     )
                                 }
                             </Grid>
-                            <Grid item xs={10}>
+                            <Grid item xs={11} className='w-full flex items-center justify-center'>
                                 <BarChart width={1200} height={300} data={dataChart}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="id" />
