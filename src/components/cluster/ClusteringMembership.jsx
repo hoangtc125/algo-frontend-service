@@ -190,7 +190,7 @@ const ClusteringMembership = ({ data }) => {
                     columns={columns}
                     bordered
                     size='small'
-                    className='w-full cursor-pointer rounded-md shadow-lg'
+                    className='w-full cursor-pointer rounded-md shadow-md'
                     rowKey={(record) => record[0]}
                     onRow={(record, rowIndex) => {
                         return {

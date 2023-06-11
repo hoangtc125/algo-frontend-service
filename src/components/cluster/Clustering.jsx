@@ -16,6 +16,7 @@ import clusterHistorySlice from './slice/clusterHistorySlice';
 import ClusteringMembership from './ClusteringMembership';
 import ClusterChart from './ClusterChart';
 import { LoadingButton } from '@mui/lab';
+import ClusterPredLabel from './ClusterPredLabels';
 
 const Clustering = () => {
     const dispatch = useDispatch()
@@ -115,7 +116,7 @@ const Clustering = () => {
                             {
                                 process == 3
                                     ?
-                                    <ClusteringMembership data={{ ...clusterData }} />
+                                    <ClusterPredLabel data={{ ...clusterData }} />
                                     :
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
                             }

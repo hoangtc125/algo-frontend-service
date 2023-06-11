@@ -9,6 +9,7 @@ import CLUSTER from '../../assets/images/cluster.png'
 import { clusterHistorySelector } from '../../redux/selectors';
 import ClusteringMembership from './ClusteringMembership';
 import ClusterChart from './ClusterChart';
+import ClusterPredLabel from './ClusterPredLabels';
 
 const ClusterHistory = () => {
     const clusterHistory = useSelector(clusterHistorySelector)
@@ -79,7 +80,7 @@ const ClusterHistory = () => {
                         </Typography>
                         {
                             record &&
-                            <ClusteringMembership data={record.data} />
+                            <ClusterPredLabel data={record.data} />
                         }
                     </Box>
                     <Box className="w-full flex flex-col items-start space-y-2 p-2">

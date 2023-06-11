@@ -54,6 +54,10 @@ export default createBrowserRouter([
         path: '/algo-frontend-service/form-store/:formId/response',
       },
       {
+        element: <TryClusterPage />,
+        path: '/algo-frontend-service/try-cluster',
+      },
+      {
         element: <ProtectedRoute />,
         children: [
           {
@@ -62,10 +66,6 @@ export default createBrowserRouter([
             children: [
 
             ]
-          },
-          {
-            element: <TryClusterPage />,
-            path: '/algo-frontend-service/try-cluster',
           },
           {
             element: <AccountProfile />,

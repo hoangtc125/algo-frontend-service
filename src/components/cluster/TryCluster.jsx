@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Grid, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import { Affix, Steps } from 'antd';
 
 import UploadExcel from './UploadExcel';
@@ -32,6 +33,7 @@ const steps = [
 ]
 
 const TryCluster = () => {
+    const dispatch = useDispatch()
     const hash = String(window.location.hash)
     const [current, setCurrent] = useState(hash ? parseInt(hash.split("#")[1]) || 2 : 0);
 

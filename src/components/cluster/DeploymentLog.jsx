@@ -30,7 +30,7 @@ const DeploymentLog = () => {
     });
 
     useEffect(() => {
-        if (localStorage.getItem("guest")) {
+        if (localStorage.getItem("guest") || !account?.id) {
             return
         }
         const socket = io(`ws://${env()?.host || HOST}:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })
@@ -52,7 +52,7 @@ const DeploymentLog = () => {
     useEffect(() => {
         const vectorize = async (data) => {
             try {
-                const res = await post(`/cluster/vectorize?client_id=${account.id}`, data)
+                const res = await post(`/cluster/vectorize?client_id=${account?.id}`, data)
                 if (res?.status_code == 200) {
                     dispatch(clusterSlice.actions.updateVectorset(res.data))
                     dispatch(clusteringSlice.actions.setProcess(2))
@@ -60,8 +60,9 @@ const DeploymentLog = () => {
                     errorNotification(res.status_code, res.msg, "bottomRight")
                     dispatch(clusteringSlice.actions.setProcess(0))
                 }
-            } catch {
-                errorNotification("Đã xảy ra lỗi", "Hãy kiểm tra lại các bước làm", "bottomRight")
+            } catch(e) {
+                console.log({e});
+                errorNotification("Đã xảy ra lỗi", "Hãy đăng nhập để thực hiện tính năng này", "bottomRight")
                 dispatch(clusteringSlice.actions.setProcess(0))
             }
         }

@@ -1,5 +1,5 @@
 import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
-import { Box, Typography } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import React from 'react';
 
 import { COLOR } from '../../utils/constant';
@@ -10,15 +10,17 @@ const ClusterPredLabel = ({ data }) => {
     const selectedRecord = data.selectedRecord
     const supervisedOptions = data.supervisedOptions
     const supervisedSet = data.supervisedSet
-    const header = data.header.map(e => {
-        if (e.weight > 0 || e.id == 0) {
-            return e
-        }
-    }).filter(e => e).push("Kết quả phân cụm")
+    const header = data.header
+    // .map(e => {
+    //     if (e.weight > 0 || e.id == 0) {
+    //         return e
+    //     }
+    // })
+    // .filter(e => e)
     const predLabels = useSelector(clusteringSelector).predLabels
     const clusterDataset = useSelector(clusterDatasetSelector)
-    const dataset = selectedRecord.map(e => {
-        const row = header.map(i => clusterDataset[e][i.id]).push()
+    const dataset = predLabels.map(items => {
+        return items.map(item => clusterDataset[item].filter((e, idx) => header[idx].weight > 0 || idx == 0))
     })
 
     const columns = [
@@ -82,48 +84,26 @@ const ClusterPredLabel = ({ data }) => {
                     )
                 )
             },
-        }, {
-            title: "ID của bản ghi",
-            dataIndex: 0,
-            key: 'selectedRecordId',
-            fixed: 'left',
-            width: 200,
-            filterSearch: true,
-            filters: selectedRecord.map(e => ({
-                text: e,
-                value: e,
-            })),
-            onFilter: (value, record) => value == record[0],
-            sorter: (a, b) => {
-                return String(a[0]).localeCompare(b[0])
-            }
-        }, ...supervisedOptions.map((tag, idx) => {
-            const isLongTag = tag.value.length > 10;
-            const tagElem = (
-                <Tag
-                    key={tag.id}
-                    className='text-sm'
-                    color={COLOR[idx]}
-                >
-                    {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
-                </Tag>
-            )
+        }, ...header.map((item, index) => {
             return {
-                title: (
-                    isLongTag ? (
-                        <Tooltip title={tag.value} key={tag.id} placement="bottom">
-                            {tagElem}
-                        </Tooltip>
-                    ) : (
-                        tagElem
-                    )
-                ),
-                dataIndex: idx + 1,
-                key: tag.id,
+                title: item.title,
+                dataIndex: index.toString(),
+                key: index.toString(),
                 ellipsis: true, // Giới hạn độ dài cột
                 width: 200, // Độ rộng cột
-                filterSearch: true,
-                sorter: (a, b) => a[idx + 1] - b[idx + 1]
+                sorter: (a, b) => {
+                    if (!a[index]) {
+                        return false
+                    }
+                    if (!b[index]) {
+                        return true
+                    }
+                    if (item.type == "numerical") {
+                        return a[index] - b[index]
+                    } else {
+                        return String(a[index]).localeCompare(String(b[index]))
+                    }
+                },
             }
         })
     ]
@@ -136,43 +116,9 @@ const ClusterPredLabel = ({ data }) => {
             content: (
                 <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
                     {
-                        record.map((e, id) => {
-                            if (id == 0) {
-                                return (
-                                    <Descriptions.Item span={3} className='hover:bg-slate-100' label={columns[id]?.title} key={id}>{e}</Descriptions.Item>
-                                )
-                            } else {
-                                const tag = supervisedOptions[id - 1]
-                                const isLongTag = tag.value.length > 10;
-                                const tagElem = (
-                                    <Tag
-                                        key={tag.id}
-                                        className='text-sm'
-                                        color={COLOR[id - 1]}
-                                    >
-                                        {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
-                                    </Tag>
-                                )
-                                return (
-                                    <Descriptions.Item span={3} className='hover:bg-slate-100' label={
-                                        <Box className="w-full flex items-center space-x-4">
-                                            <p className='m-0'>{columns[1]?.title}</p>
-                                            {
-                                                isLongTag ? (
-                                                    <Tooltip title={tag.value} key={tag.id} placement="bottom">
-                                                        {tagElem}
-                                                    </Tooltip>
-                                                ) : (
-                                                    tagElem
-                                                )
-                                            }
-                                        </Box>
-                                    } key={id}>
-                                        {e}
-                                    </Descriptions.Item>
-                                )
-                            }
-                        })
+                        record.map((e, id) => (
+                            <Descriptions.Item span={3} className='hover:bg-slate-100' label={header[id]?.title || "Tập giám sát"} key={id}>{e}</Descriptions.Item>
+                        ))
                     }
                 </Descriptions>
             ),
@@ -182,28 +128,58 @@ const ClusterPredLabel = ({ data }) => {
     };
 
     return (
-        <Box className="p-2 w-full space-y-4">
-            <Box className="w-full space-y-2 flex flex-col items-center justify-center">
-                <Typography variant='body1'>
-                    Tỉ lệ thuộc các cụm của các bản ghi
-                </Typography>
-                <Table
-                    dataSource={dataset}
-                    columns={columns}
-                    bordered
-                    size='small'
-                    className='w-full cursor-pointer rounded-md shadow-lg'
-                    rowKey={(record) => record[0]}
-                    onRow={(record, rowIndex) => {
-                        return {
-                            onClick: (event) => { handleRowClick(record) }
-                        };
-                    }}
-                    scroll={{
-                        x: 200,
-                    }}
-                />
-            </Box>
+        <Box className="p-2 w-full flex flex-col space-y-4">
+            {
+                supervisedOptions.map((tag, id) => {
+                    const isLongTag = tag.value.length > 10;
+                    const tagElem = (
+                        <Tag
+                            key={tag.id}
+                            className='text-sm'
+                            color={COLOR[id]}
+                        >
+                            {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                        </Tag>
+                    )
+                    const dataChart = dataset.map(e => ({
+                        id: e[0],
+                        value: e[id + 1]
+                    }))
+                    return (
+                        <Grid key={id} container className='w-full'>
+                            <Grid item xs={1} className='flex w-full items-center text-center justify-center'>
+                                {
+                                    isLongTag ? (
+                                        <Tooltip title={tag.value} key={tag.id} placement="bottom">
+                                            {tagElem}
+                                        </Tooltip>
+                                    ) : (
+                                        tagElem
+                                    )
+                                }
+                            </Grid>
+                            <Grid item xs={11} className='w-full flex items-center justify-center shadow-md'>
+                                <Table
+                                    dataSource={dataset[id]}
+                                    columns={columns}
+                                    bordered
+                                    size='small'
+                                    className='w-full cursor-pointer rounded-md shadow-md'
+                                    rowKey={(record) => record[0]}
+                                    onRow={(record, rowIndex) => {
+                                        return {
+                                            onClick: (event) => { handleRowClick(record) }
+                                        };
+                                    }}
+                                    scroll={{
+                                        x: 200,
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
+                    )
+                })
+            }
         </Box>
     );
 }

@@ -42,7 +42,7 @@ const ClusterChart = ({ data }) => {
                                     )
                                 }
                             </Grid>
-                            <Grid item xs={11} className='w-full flex items-center justify-center'>
+                            <Grid item xs={11} className='w-full flex items-center justify-center shadow-md'>
                                 <BarChart width={1200} height={300} data={dataChart}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="id" />
