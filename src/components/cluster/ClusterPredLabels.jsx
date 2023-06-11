@@ -84,7 +84,7 @@ const ClusterPredLabel = ({ data }) => {
                     )
                 )
             },
-        }, ...header.map((item, index) => {
+        }, ...header.filter((e, idx) => e.weight > 0 || idx == 0).map((item, index) => {
             return {
                 title: item.title,
                 dataIndex: index.toString(),
@@ -110,13 +110,13 @@ const ClusterPredLabel = ({ data }) => {
 
     const handleRowClick = (record) => {
         Modal.info({
-            title: `Kết quả bản ghi ${record[0]}`,
+            title: `Bản ghi ${record[0]}`,
             className: "min-w-[80vw] max-w-[90vw]",
             centered: true,
             content: (
                 <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
                     {
-                        record.map((e, id) => (
+                        clusterDataset[record[0]].map((e, id) => (
                             <Descriptions.Item span={3} className='hover:bg-slate-100' label={header[id]?.title || "Tập giám sát"} key={id}>{e}</Descriptions.Item>
                         ))
                     }
@@ -158,13 +158,13 @@ const ClusterPredLabel = ({ data }) => {
                                     )
                                 }
                             </Grid>
-                            <Grid item xs={11} className='w-full flex items-center justify-center shadow-md'>
+                            <Grid item xs={11} className='w-full flex items-center justify-center'>
                                 <Table
                                     dataSource={dataset[id]}
                                     columns={columns}
                                     bordered
                                     size='small'
-                                    className='w-full cursor-pointer rounded-md shadow-md'
+                                    className='w-full cursor-pointer rounded-md shadow-md p-2'
                                     rowKey={(record) => record[0]}
                                     onRow={(record, rowIndex) => {
                                         return {

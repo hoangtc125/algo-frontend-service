@@ -12,7 +12,13 @@ const clusterSlice = createSlice({
     vectorset: clusterStorage?.vectorset || [],
     selectedRecord: clusterStorage?.selectedRecord || [],
     supervisedSet: clusterStorage?.supervisedSet || [],
-    supervisedOptions: clusterStorage?.supervisedOptions || [{ id: v4(), value: "Cụm 1" }, { id: v4(), value: "Cụm 2" }],
+    supervisedOptions: clusterStorage?.supervisedOptions || [
+      { id: v4(), value: "Cụm 1" },
+      { id: v4(), value: "Cụm 2" },
+      { id: v4(), value: "Cụm 3" },
+      { id: v4(), value: "Cụm 4" },
+      { id: v4(), value: "Cụm 5" },
+    ],
   },
   reducers: {
     clear: (state, action) => {
@@ -21,7 +27,13 @@ const clusterSlice = createSlice({
       state.vectorset = []
       state.selectedRecord = []
       state.supervisedSet = []
-      state.supervisedOptions = [{ id: v4(), value: "Cụm 1" }, { id: v4(), value: "Cụm 2" }]
+      state.supervisedOptions = [
+        { id: v4(), value: "Cụm 1" },
+        { id: v4(), value: "Cụm 2" },
+        { id: v4(), value: "Cụm 3" },
+        { id: v4(), value: "Cụm 4" },
+        { id: v4(), value: "Cụm 5" },
+      ]
       state.collDiffData = []
     },
     setDataset: (state, action) => {

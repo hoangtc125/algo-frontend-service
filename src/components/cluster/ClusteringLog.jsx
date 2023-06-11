@@ -28,7 +28,7 @@ const ClusteringLog = () => {
     });
 
     useEffect(() => {
-        if (localStorage.getItem("guest") || !account?.id) {
+        if (!account?.id) {
             return
         }
         const socket = io(`ws://${env()?.host || HOST}:8001?client_id=${account.id}`, { path: "/ws/socket.io", transports: ['websocket'] })

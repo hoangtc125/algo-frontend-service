@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { get, post } from '../utils/request';
@@ -12,9 +13,10 @@ const appSlice = createSlice({
   initialState: { token: token, account: account?.account, api_permissions: account?.api_permissions, loading: false },
   reducers: {
     setTry: (state, action) => {
-      state.account = GUEST
+      const account = {...GUEST, id: v4()}
+      state.account = account
       state.token = "GUEST"
-      localStorage.setItem("account", JSON.stringify({account: GUEST, api_permissions: []}))
+      localStorage.setItem("account", JSON.stringify({account: account, api_permissions: []}))
       localStorage.setItem("accessToken", "GUEST")
       localStorage.setItem("guest", true)
     },
