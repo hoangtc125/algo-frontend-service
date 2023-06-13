@@ -3,42 +3,26 @@ import { Box, Grid, Typography, Button } from '@mui/material';
 import { LoadingOutlined, PauseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { Anchor, Collapse, Empty, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { v4 } from 'uuid';
 const { Panel } = Collapse;
 
 import { clusterSelector, processSelector } from '../../redux/selectors';
 import ClusterInfoHistory from './ClusterInfoHistory';
-import { successNotification } from '../../utils/notification';
 import DeploymentLog from './DeploymentLog';
 import ClusteringLog from './ClusteringLog';
 import clusteringSlice from './slice/clusteringSlice';
-import clusterHistorySlice from './slice/clusterHistorySlice';
 import ClusteringMembership from './ClusteringMembership';
 import ClusterChart from './ClusterChart';
 import { LoadingButton } from '@mui/lab';
 import ClusterPredLabel from './ClusterPredLabels';
+import { checkDistinctElements } from '../../utils/cluster';
 
 const Clustering = () => {
     const dispatch = useDispatch()
     const clusterData = useSelector(clusterSelector)
     const process = useSelector(processSelector)
-    const error = clusterData.selectedRecord.length == 0 || clusterData.header.filter(item => item.weight).length == 0
-
-    const handleClustering = () => {
-        const id = v4()
-        const newHistory = {
-            id,
-            title: `Bản ghi ${id.substring(0, 8)}`,
-            data: {
-                header: clusterData.header,
-                supervisedOptions: clusterData.supervisedOptions,
-                supervisedSet: clusterData.supervisedSet,
-                selectedRecord: clusterData.selectedRecord,
-            }
-        }
-        dispatch(clusterHistorySlice.actions.pushHistory(newHistory))
-        successNotification("Lưu thành công", `Bản ghi ${id.substring(0, 8)}`, "bottomRight")
-    }
+    const error = clusterData.selectedRecord.length == 0 || clusterData.header.filter(item => item.weight).length == 0 || !checkDistinctElements(
+        clusterData.selectedRecord.map(item => String(clusterData.dataset[item].filter((e, idx) => clusterData.header[idx].weight > 0)))
+    )
 
     return (
         <Box className="m-4 w-full h-full flex flex-col items-center justify-start space-y-8">
@@ -54,10 +38,10 @@ const Clustering = () => {
                             </Typography>
                             {error &&
                                 <Typography variant='body1' component={"i"} className='text-red-500'>
-                                    Không đủ thông tin đầu vào
+                                    Không đủ thông tin đầu vào hoặc các bản ghi đầu vào không có giá trị khác nhau
                                 </Typography>
                             }
-                            <Collapse bordered={true} className="flex flex-col w-full items-center justify-center">
+                            <Collapse bordered={true} className="flex flex-col w-full items-center justify-center" defaultActiveKey={["clusterInput"]}>
                                 <Panel
                                     header={
                                         <Typography variant='body1'>
@@ -120,7 +104,6 @@ const Clustering = () => {
                                     :
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
                             }
-                            <Button className='text-base' variant='contained' onClick={handleClustering} disabled={process != 3}>Lưu bản ghi</Button>
                         </Box>
                         <Box id="clustering-4" className="w-full flex flex-col items-center justify-center h-full space-y-4">
                             <Typography variant='h6' className='w-full items-center'>

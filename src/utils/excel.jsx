@@ -18,8 +18,26 @@ export const handleDownload = (header, dataset, filename) => {
     const downloadUrl = URL.createObjectURL(blobData);
     const downloadLink = document.createElement('a');
     downloadLink.href = downloadUrl;
-    downloadLink.download = filename || 'dataset.xlsx';
+    downloadLink.download = filename || 'algo.xlsx';
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
 }
+
+export const handleDownloadMany = (sheetsData, filename) => {
+    const newWorkbook = XLSX.utils.book_new();
+    sheetsData.forEach(sheetData => {
+      const { header, dataset, sheetName } = sheetData;
+      const newWorksheet = XLSX.utils.aoa_to_sheet([header, ...dataset]);
+      XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, sheetName);
+    });
+    const excelData = XLSX.write(newWorkbook, { type: 'binary', bookType: 'xlsx' });
+    const blobData = new Blob([s2ab(excelData)], { type: 'application/octet-stream' });
+    const downloadUrl = URL.createObjectURL(blobData);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = downloadUrl;
+    downloadLink.download = filename || 'algo.xlsx';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };

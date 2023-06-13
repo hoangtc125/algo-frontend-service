@@ -7,10 +7,11 @@ import { useSelector } from 'react-redux';
 import { clusterDatasetSelector, clusteringSelector } from '../../redux/selectors';
 
 const ClusteringMembership = ({ data }) => {
+    const hash = window.location.hash
     const selectedRecord = data.selectedRecord
     const supervisedOptions = data.supervisedOptions
     const supervisedSet = data.supervisedSet
-    const dataset = useSelector(clusteringSelector).membership
+    const dataset = hash == "#3" ? data.membership : useSelector(clusteringSelector).membership
     const clusterDataset = useSelector(clusterDatasetSelector)
 
     const columns = [{

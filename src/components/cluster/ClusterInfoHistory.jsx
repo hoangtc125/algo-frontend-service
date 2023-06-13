@@ -3,7 +3,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import { Descriptions, Empty, Modal, Space, Table, Tag, Tooltip } from 'antd';
 import DownloadIcon from '@mui/icons-material/Download';
 
-import { COLOR } from '../../utils/constant';
+import { COLOR, CLUSTER_TYPE } from '../../utils/constant';
 import { handleDownload } from '../../utils/excel';
 import { useSelector } from 'react-redux';
 import { clusterDatasetSelector } from '../../redux/selectors';
@@ -118,7 +118,7 @@ const ClusterInfoHistory = ({ data }) => {
                                             </Grid>
                                             <Grid item className='items-center flex justify-center p-2' xs={3}>
                                                 <Typography variant='body1'>
-                                                    {item.type}
+                                                    {CLUSTER_TYPE.find(e => e.value == item.type).label}
                                                 </Typography>
                                             </Grid>
                                             <Grid item className='items-center flex justify-center p-2' xs={3}>

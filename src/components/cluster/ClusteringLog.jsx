@@ -7,9 +7,11 @@ import moment from 'moment';
 
 import clusteringSlice from './slice/clusteringSlice';
 import { accountSelector, clusterLogSelector, clusterSelector, processSelector } from '../../redux/selectors';
+import { errorNotification } from '../../utils/notification';
 import { env } from '../../utils/env';
 import { HOST } from '../../utils/constant';
 import { post } from '../../utils/request';
+import { checkDistinctElements } from '../../utils/cluster';
 
 const ClusteringLog = () => {
     const dispatch = useDispatch()
@@ -49,21 +51,26 @@ const ClusteringLog = () => {
 
     useEffect(() => {
         const clustering = async (data) => {
-            try {
-                const res = await post(`/cluster/clustering?client_id=${account?.id}`, data)
-                if (res?.status_code == 200) {
-                    const membership = res.data.membership.map((e, idx) => [clusterData.selectedRecord[idx], ...e])
-                    dispatch(clusteringSlice.actions.setMembership(membership))
-                    dispatch(clusteringSlice.actions.setPredLabels(res.data.pred_labels))
-                    dispatch(clusteringSlice.actions.setProcess(3))
-                } else {
-                    errorNotification(res.status_code, res.msg, "bottomRight")
+            if (!checkDistinctElements(data.dataset.map(e => String(e)))) {
+                errorNotification("Các bản ghi có đặc trưng giống nhau", "Hãy chọn lại loại dữ liệu phù hợp", "bottomRight")
+                dispatch(clusteringSlice.actions.setProcess(0))
+            } else {
+                try {
+                    const res = await post(`/cluster/clustering?client_id=${account?.id}`, data)
+                    if (res?.status_code == 200) {
+                        const membership = res.data.membership.map((e, idx) => [clusterData.selectedRecord[idx], ...e])
+                        dispatch(clusteringSlice.actions.setMembership(membership))
+                        dispatch(clusteringSlice.actions.setPredLabels(res.data.pred_labels))
+                        dispatch(clusteringSlice.actions.setProcess(3))
+                    } else {
+                        errorNotification(res.status_code, res.msg, "bottomRight")
+                        dispatch(clusteringSlice.actions.setProcess(0))
+                    }
+                } catch(e) {
+                    console.log({e});
+                    errorNotification("Đã xảy ra lỗi", "Hãy đăng nhập để thực hiện tính năng này", "bottomRight")
                     dispatch(clusteringSlice.actions.setProcess(0))
                 }
-            } catch(e) {
-                console.log({e});
-                errorNotification("Đã xảy ra lỗi", "Hãy đăng nhập để thực hiện tính năng này", "bottomRight")
-                dispatch(clusteringSlice.actions.setProcess(0))
             }
         }
 

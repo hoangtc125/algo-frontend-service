@@ -1,23 +1,28 @@
 import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
-import { Box, Grid } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import React from 'react';
+import DownloadIcon from '@mui/icons-material/Download';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { COLOR } from '../../utils/constant';
-import { useSelector } from 'react-redux';
 import { clusterDatasetSelector, clusteringSelector } from '../../redux/selectors';
+import { handleDownloadMany } from '../../utils/excel';
+import clusterSlice from './slice/clusterSlice';
+import clusterHistorySlice from './slice/clusterHistorySlice';
+import { successNotification } from '../../utils/notification';
+import { v4 } from 'uuid';
 
 const ClusterPredLabel = ({ data }) => {
-    const selectedRecord = data.selectedRecord
+    const hash = window.location.hash
+    const dispatch = useDispatch()
     const supervisedOptions = data.supervisedOptions
     const supervisedSet = data.supervisedSet
     const header = data.header
-    // .map(e => {
-    //     if (e.weight > 0 || e.id == 0) {
-    //         return e
-    //     }
-    // })
-    // .filter(e => e)
-    const predLabels = useSelector(clusteringSelector).predLabels
+    const selectedRecord = data.selectedRecord
+    const clusteringData = useSelector(clusteringSelector)
+    const predLabels = hash == "#3" ? data.predLabels : clusteringData.predLabels
+    const membership = hash == "#3" ? data.membership : clusteringData.membership
     const clusterDataset = useSelector(clusterDatasetSelector)
     const dataset = predLabels.map(items => {
         return items.map(item => clusterDataset[item].filter((e, idx) => header[idx].weight > 0 || idx == 0))
@@ -127,8 +132,49 @@ const ClusterPredLabel = ({ data }) => {
         });
     };
 
+    const handleDownload = () => {
+        handleDownloadMany(
+            supervisedOptions.map((tag, id) => ({
+                header: header.filter((e, idx) => e.weight > 0 || idx == 0).map(e => e.title),
+                dataset: dataset[id],
+                sheetName: tag.value,
+            }))
+        )
+    }
+
+    const handleReClustering = (records) => {
+        dispatch(clusterSlice.actions.setSelectedRecord(records))
+        window.scrollTo(0, 0);
+        successNotification("Đã chọn các bản ghi này", "Nhấn Tiến hành phân cụm hoặc trở lại bước 2 để chuẩn bị lại dữ liệu", "bottomRight")
+    }
+
+    const handleSaveHistory = () => {
+        const id = v4()
+        const newHistory = {
+            id,
+            title: `Bản ghi ${id.substring(0, 8)}`,
+            data: {
+                header: header,
+                supervisedOptions: supervisedOptions,
+                supervisedSet: supervisedSet,
+                selectedRecord: selectedRecord,
+                predLabels: predLabels,
+                membership: membership,
+            }
+        }
+        dispatch(clusterHistorySlice.actions.pushHistory(newHistory))
+        successNotification("Lưu thành công", `Bản ghi ${id.substring(0, 8)}`, "bottomRight")
+    }
+
     return (
         <Box className="p-2 w-full flex flex-col space-y-4">
+            <Box className="w-full flex justify-end items-center pr-2 space-x-2">
+                <Button variant='contained' startIcon={<DownloadIcon />} onClick={handleDownload}>Tải xuống</Button>
+                {
+                    hash != "#3" &&
+                    <Button variant='contained' onClick={handleSaveHistory} >Lưu bản ghi</Button>
+                }
+            </Box>
             {
                 supervisedOptions.map((tag, id) => {
                     const isLongTag = tag.value.length > 10;
@@ -141,40 +187,49 @@ const ClusterPredLabel = ({ data }) => {
                             {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
                         </Tag>
                     )
-                    const dataChart = dataset.map(e => ({
-                        id: e[0],
-                        value: e[id + 1]
-                    }))
                     return (
                         <Grid key={id} container className='w-full'>
-                            <Grid item xs={1} className='flex w-full items-center text-center justify-center'>
-                                {
-                                    isLongTag ? (
-                                        <Tooltip title={tag.value} key={tag.id} placement="bottom">
-                                            {tagElem}
-                                        </Tooltip>
-                                    ) : (
-                                        tagElem
-                                    )
-                                }
+                            <Grid item xs={2} className='w-full flex items-center text-center p-2'>
+                                <Box className='flex flex-col w-full items-center text-center justify-center space-y-2'>
+                                    {
+                                        isLongTag ? (
+                                            <Tooltip title={tag.value} key={tag.id} placement="bottom">
+                                                {tagElem}
+                                            </Tooltip>
+                                        ) : (
+                                            tagElem
+                                        )
+                                    }
+                                    <Typography>
+                                        {`(${dataset[id]?.length} ứng viên)`}
+                                    </Typography>
+                                    <Button variant='outlined' startIcon={<AutorenewIcon />} onClick={
+                                        () => { handleReClustering(dataset[id].map(e => e[0])) }
+                                    }>Phân cụm tiếp</Button>
+                                </Box>
                             </Grid>
-                            <Grid item xs={11} className='w-full flex items-center justify-center'>
-                                <Table
-                                    dataSource={dataset[id]}
-                                    columns={columns}
-                                    bordered
-                                    size='small'
-                                    className='w-full cursor-pointer rounded-md shadow-md p-2'
-                                    rowKey={(record) => record[0]}
-                                    onRow={(record, rowIndex) => {
-                                        return {
-                                            onClick: (event) => { handleRowClick(record) }
-                                        };
-                                    }}
-                                    scroll={{
-                                        x: 200,
-                                    }}
-                                />
+                            <Grid item xs={10} className='w-full flex items-center justify-center'>
+                                <Tag
+                                    className='w-full rounded-md px-1'
+                                    color={COLOR[id]}
+                                >
+                                    <Table
+                                        dataSource={dataset[id]}
+                                        columns={columns}
+                                        bordered
+                                        size='small'
+                                        className="w-full cursor-pointer rounded-md shadow-md bg-white"
+                                        rowKey={(record) => record[0]}
+                                        onRow={(record, rowIndex) => {
+                                            return {
+                                                onClick: (event) => { handleRowClick(record) }
+                                            };
+                                        }}
+                                        scroll={{
+                                            x: 200,
+                                        }}
+                                    />
+                                </Tag>
                             </Grid>
                         </Grid>
                     )

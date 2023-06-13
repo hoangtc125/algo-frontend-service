@@ -1,15 +1,16 @@
 import { Box, Grid } from '@mui/material';
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Tag } from 'antd';
 import { useSelector } from 'react-redux';
 
 import { COLOR } from '../../utils/constant';
-import { Tag } from 'antd';
 import { clusteringSelector } from '../../redux/selectors';
 
 const ClusterChart = ({ data }) => {
+    const hash = window.location.hash
     const supervisedOptions = data.supervisedOptions
-    const dataset = useSelector(clusteringSelector).membership
+    const dataset = hash == "#3" ? data.membership : useSelector(clusteringSelector).membership
 
     return (
         <Box className="w-full flex flex-col items-center justify-center space-y-8">
@@ -42,15 +43,20 @@ const ClusterChart = ({ data }) => {
                                     )
                                 }
                             </Grid>
-                            <Grid item xs={11} className='w-full flex items-center justify-center shadow-md'>
-                                <BarChart width={1200} height={300} data={dataChart}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="id" />
-                                    <YAxis label={{ value: 'Tỉ lệ phần trăm', angle: -90, position: 'insideLeft' }} />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="value" fill="rgba(0, 123, 255, 0.5)" />
-                                </BarChart>
+                            <Grid item xs={11} className='w-full flex items-center justify-center'>
+                                <Tag
+                                    className='w-fit rounded-md p-0 px-1'
+                                    color={COLOR[id]}
+                                >
+                                    <BarChart width={1200} height={300} data={dataChart} className='bg-white pt-2 pb-4'>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="id" />
+                                        <YAxis label={{ value: 'Tỉ lệ phần trăm', angle: -90, position: 'insideLeft' }} domain={[0, 1]} />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Bar dataKey="value" fill="rgba(0, 123, 255, 0.5)" />
+                                    </BarChart>
+                                </Tag>
                             </Grid>
                         </Grid>
                     )
