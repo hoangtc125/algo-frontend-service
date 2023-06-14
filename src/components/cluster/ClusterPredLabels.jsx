@@ -1,5 +1,5 @@
 import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import React from 'react';
 import DownloadIcon from '@mui/icons-material/Download';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
@@ -10,6 +10,7 @@ import { clusterDatasetSelector, clusteringSelector } from '../../redux/selector
 import { handleDownloadMany } from '../../utils/excel';
 import clusterSlice from './slice/clusterSlice';
 import clusterHistorySlice from './slice/clusterHistorySlice';
+import clusteringSlice from './slice/clusteringSlice';
 import { successNotification } from '../../utils/notification';
 import { v4 } from 'uuid';
 
@@ -23,8 +24,9 @@ const ClusterPredLabel = ({ data }) => {
     const clusteringData = useSelector(clusteringSelector)
     const predLabels = hash == "#3" ? data.predLabels : clusteringData.predLabels
     const membership = hash == "#3" ? data.membership : clusteringData.membership
+    const predLoop = hash == "#3" ? data.predLoop : clusteringData.predLoop
     const clusterDataset = useSelector(clusterDatasetSelector)
-    const dataset = predLabels.map(items => {
+    const dataset = predLabels[predLoop || predLabels.length - 1].map(items => {
         return items.map(item => clusterDataset[item].filter((e, idx) => header[idx].weight > 0 || idx == 0))
     })
 
@@ -160,6 +162,7 @@ const ClusterPredLabel = ({ data }) => {
                 selectedRecord: selectedRecord,
                 predLabels: predLabels,
                 membership: membership,
+                predLoop: predLoop,
             }
         }
         dispatch(clusterHistorySlice.actions.pushHistory(newHistory))
@@ -169,6 +172,25 @@ const ClusterPredLabel = ({ data }) => {
     return (
         <Box className="p-2 w-full flex flex-col space-y-4">
             <Box className="w-full flex justify-end items-center pr-2 space-x-2">
+                <FormControl>
+                    <InputLabel id="el-loop-label">Kết quả lần lặp số</InputLabel>
+                    <Select
+                        labelId="el-loop-label"
+                        id="el-loop"
+                        label="Kết quả lần lặp số"
+                        className='w-32'
+                        value={predLoop != null ? predLoop + 1 : predLabels.length}
+                        disabled={hash == "#3"}
+                        onChange={(e) => dispatch(clusteringSlice.actions.setPredLoop(e.target.value - 1))}
+                    >
+                        {predLabels &&
+                            predLabels.map((e, idx) => (
+                                <MenuItem key={idx} value={idx + 1}>
+                                    {idx + 1}
+                                </MenuItem>
+                            ))}
+                    </Select>
+                </FormControl>
                 <Button variant='contained' startIcon={<DownloadIcon />} onClick={handleDownload}>Tải xuống</Button>
                 {
                     hash != "#3" &&

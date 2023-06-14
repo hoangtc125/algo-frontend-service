@@ -11,6 +11,7 @@ const clusteringSlice = createSlice({
     clusteringLog: clusteringStorage?.clusteringLog || [],
     membership: clusteringStorage?.membership || [],
     predLabels: clusteringStorage?.predLabels || [],
+    predLoop: clusteringStorage?.predLoop || null,
   },
   reducers: {
     clear: (state, action) => {
@@ -20,6 +21,7 @@ const clusteringSlice = createSlice({
       state.clusteringLog = []
       state.membership = []
       state.predLabels = []
+      state.predLoop = null
     },
     setId: (state, action) => {
       state.id = action.payload;
@@ -38,6 +40,9 @@ const clusteringSlice = createSlice({
     },
     setPredLabels: (state, action) => {
       state.predLabels = action.payload
+    },
+    setPredLoop: (state, action) => {
+      state.predLoop = action.payload
     },
   },
 });

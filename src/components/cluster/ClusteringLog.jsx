@@ -118,10 +118,10 @@ const ClusteringLog = () => {
             {clusteringLog.map((e, idx) => (
                 <Box key={idx} className="w-full hover:bg-slate-100">
                     <Grid container className="w-full items-center">
-                        <Grid item xs={2}>
+                        <Grid item xs={1}>
                             {e.time}
                         </Grid>
-                        <Grid item xs={10}>
+                        <Grid item xs={11}>
                             {
                                 e?.type == "image"
                                     ?

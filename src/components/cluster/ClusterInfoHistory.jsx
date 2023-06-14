@@ -164,7 +164,7 @@ const ClusterInfoHistory = ({ data }) => {
             </Box>
             <Box className="w-full space-y-2">
                 <Typography variant='body1'>
-                    {`c. Số lượng bản ghi (${dataset.length})`}
+                    {`Đã chọn ${dataset.length} bản ghi (Giám sát ${supervisedSet.filter(e => e).length} bản ghi - Tỷ lệ ${dataset.length > 0 ? 100 * Math.floor(supervisedSet.filter(e => e).length / dataset.length * 100) / 100 : 0}%)`}
                 </Typography>
                 <Box className="w-full flex items-center justify-end">
                     <Button variant='contained' startIcon={<DownloadIcon />} onClick={() => { handleDownload(header.map(e => e.title), dataset, "ClusterDataset.xlsx") }}>

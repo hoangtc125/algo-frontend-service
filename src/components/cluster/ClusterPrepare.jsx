@@ -299,7 +299,7 @@ const ClusterPrepare = () => {
                 </Typography>
                 <Box className="w-full flex items-center justify-between">
                     <Typography variant='body1'>
-                        {`Đã chọn ${selectedRecord.length} bản ghi`}
+                        {`Đã chọn ${selectedRecord.length} bản ghi (Giám sát ${selectedRecord.filter(e => supervisedSet[e]).length} bản ghi - Tỷ lệ ${selectedRecord.length > 0 ? 100 * Math.floor(selectedRecord.filter(e => supervisedSet[e]).length / selectedRecord.length * 100) / 100: 0}%)`}
                     </Typography>
                     <Button variant='contained' startIcon={<DownloadIcon />} onClick={() => { handleDownload(header.map(e => e.title), dataset, "PrepareDataset.xlsx") }}>
                         Tải xuống
