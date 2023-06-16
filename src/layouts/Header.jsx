@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { FileOutlined, CloudServerOutlined, DesktopOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { HomeOutlined, CloudServerOutlined, DesktopOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Layout, Menu, Space } from 'antd';
 const { Header } = Layout;
@@ -22,6 +22,7 @@ function getItem(label, key, icon, children) {
 }
 
 const headerItems = [
+    getItem(<Link to={"/algo-frontend-service/"}>Trang chủ</Link>, '/algo-frontend-service/', <HomeOutlined />),
     getItem(<Link to={"/algo-frontend-service/form-store"}>Kho đơn tuyển thành viên mẫu</Link>, '/algo-frontend-service/form-store', <CloudServerOutlined />),
     getItem(<Link to={"/algo-frontend-service/try-cluster"}>Dùng thử phân cụm đơn tuyển thành viên</Link>, '/algo-frontend-service/try-cluster', <DesktopOutlined />),
     getItem(<Link to={"/algo-frontend-service/try-camera"}>Kết nối camera điện thoại với máy tính</Link>, '/algo-frontend-service/try-camera', <VideoCameraOutlined />),

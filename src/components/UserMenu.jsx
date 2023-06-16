@@ -34,7 +34,7 @@ const  UserMenu = () => {
     dispatch(clusterSlice.actions.clear())
     dispatch(clusteringSlice.actions.clear())
     dispatch(clusterHistorySlice.actions.clear())
-    navigate("/algo-frontend-service/login")
+    navigate(window.location.pathname)
   };
 
   const handleClose = () => {

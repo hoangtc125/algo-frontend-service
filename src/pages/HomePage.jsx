@@ -6,7 +6,7 @@ import Clubs from "../components/club/Clubs";
 export default function HomePage() {
 
   return (
-    <Box className="w-full flex flex-col items-center justify-center space-y-8">
+    <Box className="flex flex-col items-center justify-center space-y-8 bg-white p-8">
       <User />
       <Clubs />
     </Box>

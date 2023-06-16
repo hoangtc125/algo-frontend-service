@@ -61,7 +61,7 @@ export default function Login() {
             if (!account) {
                 dispatch(aboutMe())
             } else {
-                navigate("/algo-frontend-service/home")
+                navigate(localStorage.getItem("redirect") ||"/algo-frontend-service/home")
             }
         }
     }, [token, account])

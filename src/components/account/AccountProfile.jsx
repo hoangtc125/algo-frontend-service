@@ -125,18 +125,17 @@ const AccountProfile = () => {
                             <Card
                                 key={idx}
                                 hoverable
-                                style={{ width: 500 }}
-                                className='m-4'
+                                className='m-4 w-[300px] 2xl:w-[500px]'
                                 cover={
                                     <Box className='relative'>
                                         <Image
                                             src={item?.club?.image}
                                             fallback={CLUB[idx % CLUB.length]}
                                             preview={false}
-                                            className='h-48'
+                                            className='opacity-70'
                                         />
                                         <Box
-                                            className="absolute top-2 left-2 right-2 w-full flex flex-col items-start justify-start whitespace-pre-line text-base space-y-2"
+                                            className="absolute top-2 left-2 right-2 w-fit flex flex-col items-start justify-start whitespace-pre-line text-base space-y-1 p-2 shadow-sm rounded-sm bg-slate-50 opacity-80"
                                         >
                                             <Typography variant='body2'>
                                                 {`Vai trò của ${account.name}`}
@@ -159,10 +158,10 @@ const AccountProfile = () => {
                             >
                                 <Box className="w-full flex flex-col items-center justify-center space-y-1">
                                     <Box className="w-full flex flex-col items-center justify-center whitespace-pre-line">
-                                        <strong className='text-3xl uppercase mb-1'>
+                                        <strong className='text-xl 2xl:text-3xl uppercase mb-1'>
                                             {item?.club?.nickname}
                                         </strong>
-                                        <p className='text-2xl mb-1'>
+                                        <p className='text-base 2xl:text-2xl mb-1'>
                                             {item?.club?.name}
                                         </p>
                                     </Box>
@@ -205,10 +204,10 @@ const AccountProfile = () => {
                             >
                                 <Box className="w-full flex flex-col items-center justify-center space-y-1">
                                     <Box className="w-full flex flex-col items-center justify-center whitespace-pre-line">
-                                        <strong className='text-3xl uppercase mb-1'>
+                                        <strong className='text-xl 2xl:text-3xl uppercase mb-1'>
                                             {item?.club?.nickname}
                                         </strong>
-                                        <p className='text-2xl mb-1'>
+                                        <p className='text-base 2xl:text-2xl mb-1'>
                                             {item?.club?.name}
                                         </p>
                                     </Box>

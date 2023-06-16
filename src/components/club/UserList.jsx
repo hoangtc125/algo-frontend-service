@@ -33,7 +33,7 @@ const UserList = ({data}) => {
                             </Box>
                         }
                         description={
-                            <Box className="w-full flex items-center justify-between">
+                            <Box className="w-full flex flex-col md:flex-row items-start justify-between">
                                 {account.email}
                                 {getProviderIcon(account?.provider)}
                             </Box>

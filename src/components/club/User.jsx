@@ -13,6 +13,8 @@ const User = () => {
   const [page, setPage] = useState(0)
   const [searchValue, setSearchValue] = useState("")
 
+  console.log("re-render");
+
   const loadMoreData = async () => {
     if (loading) {
       return;
@@ -40,11 +42,11 @@ const User = () => {
 
   return (
     <Card bordered={false} className='w-full bg-gray-100 border' title={
-      <Box className="w-full flex items-center justify-between space-x-4">
+      <Box className="w-full flex flex-col md:flex-row items-center justify-between space-x-4">
         <Typography variant='h6' >Danh sách người dùng</Typography>
         <Input.Search
           placeholder="Nhập tên người dùng hoặc email"
-          className="w-[400px] focus-within:w-[600px]"
+          className="w-[400px] focus-within:w-[600px] transition-width duration-300 ease-in-out max-w-full"
           allowClear
           enterButton="Tìm kiếm"
           size="large"

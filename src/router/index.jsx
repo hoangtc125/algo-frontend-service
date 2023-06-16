@@ -16,6 +16,7 @@ import FormViewerPage from '../pages/form/formViewerPage';
 import TryClusterPage from '../pages/cluster/TryClusterPage';
 import FormResponsePage from '../pages/form/formResponsePage';
 import TryCameraPage from '../pages/camera/TryCameraPage';
+import ClubProfile from '../components/club/ClubProfile';
 
 export default createBrowserRouter([
   {
@@ -23,7 +24,7 @@ export default createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        element: <LandingPage />,
+        element: <HomePage />,
         path: '/algo-frontend-service/',
       },
       {
@@ -65,6 +66,10 @@ export default createBrowserRouter([
       {
         element: <AccountProfile />,
         path: '/algo-frontend-service/account/:account_id?',
+      },
+      {
+        element: <ClubProfile />,
+        path: '/algo-frontend-service/club/:clubId',
       },
       {
         element: <ProtectedRoute />,
