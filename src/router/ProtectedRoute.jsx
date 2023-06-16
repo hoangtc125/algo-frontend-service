@@ -49,6 +49,7 @@ export default function ProtectedRoute() {
             minHeight: 360,
             background: "#fff",
           }}
+          className='shadow-md rounded-md'
         >
           <Outlet />
         </div>

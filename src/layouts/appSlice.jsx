@@ -10,13 +10,20 @@ const token = JSON.parse(localStorage.getItem("token"))
 
 const appSlice = createSlice({
   name: 'app',
-  initialState: { token: token, account: account?.account, api_permissions: account?.api_permissions, loading: false },
+  initialState: {
+    token: token,
+    account: account?.account,
+    api_permissions: account?.api_permissions || [],
+    member: account?.member || [],
+    follow: account?.follow || [],
+    loading: false,
+  },
   reducers: {
     setTry: (state, action) => {
-      const account = {...GUEST, id: v4()}
+      const account = { ...GUEST, id: v4() }
       state.account = account
       state.token = "GUEST"
-      localStorage.setItem("account", JSON.stringify({account: account, api_permissions: []}))
+      localStorage.setItem("account", JSON.stringify({ account: account }))
       localStorage.setItem("accessToken", "GUEST")
       localStorage.setItem("guest", true)
     },
@@ -26,11 +33,15 @@ const appSlice = createSlice({
     addAccount: (state, action) => {
       state.account = action.payload["account"]
       state.api_permissions = action.payload["api_permissions"]
+      state.member = action.payload["member"]
+      state.follow = action.payload["follow"]
     },
     clear: (state, action) => {
       state.token = null
       state.account = null
       state.api_permissions = null
+      state.member = null
+      state.follow = null
       state.loading = false
     },
   },
@@ -59,6 +70,8 @@ const appSlice = createSlice({
       .addCase(aboutMe.fulfilled, (state, action) => {
         state.account = action.payload["account"]
         state.api_permissions = action.payload["api_permissions"]
+        state.member = action.payload["member"]
+        state.follow = action.payload["follow"]
         state.loading = false
         localStorage.setItem("account", JSON.stringify(action.payload))
       })

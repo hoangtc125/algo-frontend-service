@@ -55,7 +55,7 @@ const  UserMenu = () => {
           overlap="circular"
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           badgeContent={
-            account?.verify?.status ? <VerifiedIcon fontSize="small" color="primary" /> : <></>
+            account?.verify?.status ? <VerifiedIcon className='bg-white rounded-full' fontSize="small" color="primary" /> : <></>
           }
         >
           <Avatar

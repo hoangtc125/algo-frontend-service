@@ -1,12 +1,14 @@
-import Camera from "../components/camera";
-import ImagesReview from "../components/camera/imagesReview";
+import { Box } from "@mui/material";
+
+import User from "../components/club/User";
+import Clubs from "../components/club/Clubs";
 
 export default function HomePage() {
 
   return (
-    <>
-      <Camera />
-      <ImagesReview />
-    </>
+    <Box className="w-full flex flex-col items-center justify-center space-y-8">
+      <User />
+      <Clubs />
+    </Box>
   );
 }

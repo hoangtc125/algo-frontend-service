@@ -68,7 +68,7 @@ const TryCluster = () => {
     };
 
     return (
-        <Box className='w-full flex items-center flex-col space-y-4 bg-white rounded-md p-4 min-h-[80vh]'>
+        <Box className='m-4 shadow-md flex items-center flex-col space-y-4 bg-white rounded-md p-4 min-h-[80vh]'>
             <Steps
                 type="navigation"
                 current={current}

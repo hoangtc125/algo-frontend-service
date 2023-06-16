@@ -15,6 +15,7 @@ import FormBuilderPage from '../pages/form/FormBuilderPage';
 import FormViewerPage from '../pages/form/formViewerPage';
 import TryClusterPage from '../pages/cluster/TryClusterPage';
 import FormResponsePage from '../pages/form/formResponsePage';
+import TryCameraPage from '../pages/camera/TryCameraPage';
 
 export default createBrowserRouter([
   {
@@ -58,6 +59,14 @@ export default createBrowserRouter([
         path: '/algo-frontend-service/try-cluster',
       },
       {
+        element: <TryCameraPage />,
+        path: '/algo-frontend-service/try-camera',
+      },
+      {
+        element: <AccountProfile />,
+        path: '/algo-frontend-service/account/:account_id?',
+      },
+      {
         element: <ProtectedRoute />,
         children: [
           {
@@ -66,10 +75,6 @@ export default createBrowserRouter([
             children: [
 
             ]
-          },
-          {
-            element: <AccountProfile />,
-            path: '/algo-frontend-service/account',
           },
           {
             element: <AccountVerify />,

@@ -1,3 +1,6 @@
+import { Tag } from 'antd'
+import { Chip } from '@mui/material';
+
 import HUST from '../assets/images/hust.png'
 import HUST2 from '../assets/images/hust2.png'
 import NEU from '../assets/images/neu.png'
@@ -103,6 +106,19 @@ export const COLOR = [
     "#FADB14",
 ]
 
+export const COLOR_REAL = [
+    '#F5222D',
+    '#FA8C16',
+    '#52C41A',
+    '#13A8A8',
+    '#1677FF',
+    '#2F54EB',
+    '#722ED1',
+    '#EB2F96',
+    '#8BBB11',
+    '#FADB14',
+]
+
 
 export const formEl = [
     {
@@ -130,6 +146,24 @@ export const formEl = [
         value: "section",
     },
 ];
+
+export const CLUB_ROLE = {
+    "PRESIDENT": "Chủ nhiệm",
+    "SUB_PRESIDENT": "Phó chủ nhiệm",
+    "LEADER": "Trưởng ban",
+    "SUB_LEADER": "Phó ban",
+    "MEMBER": "Thành viên",
+}
+
+export const MEMBERSHIP_STATUS = {
+    "ACTIVE": <Tag bordered={false} color='#52C41A'>Đang hoạt động</Tag>,
+    "PAUSE": <Tag bordered={false} color='#1677FF'>Đang tạm dừng</Tag>,
+    "INACTIVE": <Tag bordered={false} color='#F5222D'>Dừng hoạt động</Tag>,
+}
+
+export const CLUB_TYPE = {
+    "EDU": <Chip color='primary' label="CLB Học thuật" />
+}
 
 export const GUEST = {
     created_by: 'SYSTEM',

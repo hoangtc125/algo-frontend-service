@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Layout, Menu, FloatButton, Image, Modal, Result } from 'antd';
-import { UserOutlined, ProfileFilled, PieChartOutlined } from '@ant-design/icons';
+import { UserOutlined, ProfileFilled, PieChartOutlined, HomeOutlined } from '@ant-design/icons';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { useSelector } from 'react-redux';
@@ -23,6 +23,7 @@ function getItem(label, key, icon, children) {
 }
 
 const siderItems = [
+    getItem(<Link to={"/algo-frontend-service/home"}>Trang chủ</Link>, '/algo-frontend-service/home', <HomeOutlined />),
     getItem(<Link to={"/algo-frontend-service/form-store"}>Câu lạc bộ</Link>, 'club', <PieChartOutlined />),
     getItem('Account', 'account', <UserOutlined />, [
         getItem(<Link to={"/algo-frontend-service/account"}>Trang cá nhân</Link>, '/algo-frontend-service/account', <ProfileFilled />),

@@ -21,7 +21,7 @@ const FormStore = () => {
     }, [])
 
     return (
-        <Box className='flex items-center flex-col space-y-4 bg-white m-4 rounded-md p-4'>
+        <Box className='flex items-center flex-col space-y-4 bg-white m-4 rounded-md p-4 shadow-md'>
             <Typography variant='h4'>Kho đơn tuyển thành viên mẫu</Typography>
             <div className='w-full flex justify-end'>
                 <Button variant='contained'>Tạo thử đơn mới</Button>
