@@ -122,7 +122,7 @@ const Clubs = () => {
             />
           }
           scrollableTarget="scrollableDivClub"
-          className="p-4 flex flex-wrap items-center justify-center"
+          className="p-4 flex flex-wrap items-end justify-center"
         >
           {
             dataFilter.map((club, idx) => {
@@ -134,13 +134,13 @@ const Clubs = () => {
                   className='m-4 w-[300px] 2xl:w-[450px] hover:cursor-default'
                   cover={
                     <Box
-                      className='relative'
+                      className='relative h-96 text-center'
                     >
                       <Image
                         src={club?.image}
                         fallback={CLUB[idx % CLUB.length]}
                         preview={false}
-                        className='opacity-70'
+                        className='opacity-70 object-contain !h-96 text-center'
                       />
                       <Box className='absolute top-2 right-2'>
                         {CLUB_TYPE[club?.type]}

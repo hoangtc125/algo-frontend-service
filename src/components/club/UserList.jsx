@@ -13,7 +13,6 @@ const UserList = ({ data }) => {
         <List
             dataSource={data}
             renderItem={(account, idx) => {
-                console.log(account?.role);
                 return (
                     <Card hoverable
                         key={idx}
@@ -44,21 +43,21 @@ const UserList = ({ data }) => {
                             }
                         />
                         {
-                            account?.role &&
+                            account?.member &&
                             <Box
                                 className="flex flex-col items-start justify-start whitespace-pre-line text-base space-y-1 p-2"
                             >
                                 <Typography variant='body2'>
-                                    {`Chức vụ: ${CLUB_ROLE[account?.role]}`}
+                                    {`Chức vụ: ${CLUB_ROLE[account?.member?.role]}`}
                                 </Typography>
                                 <Typography variant='body2'>
-                                    {`Trạng thái: `}{MEMBERSHIP_STATUS[account?.status]}
+                                    {`Trạng thái: `}{MEMBERSHIP_STATUS[account?.member?.status]}
                                 </Typography>
                                 <Typography variant='body2'>
-                                    {`Ngày tham gia: ${moment(account?.created_at * 1000).format('DD-MM-YYYY')}`}
+                                    {`Ngày tham gia: ${moment(account?.member?.created_at * 1000).format('DD-MM-YYYY')}`}
                                 </Typography>
                                 <Typography variant='body2'>
-                                    {`Thế hệ: ${account?.gen || 1}`}
+                                    {`Thế hệ: ${account?.member?.gen || 1}`}
                                 </Typography>
                             </Box>
                         }

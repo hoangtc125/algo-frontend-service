@@ -16,6 +16,21 @@ export const post = async (path, payload, options = {}) => {
     return data;
 };
 
+export const put = async (path, payload, options = {}) => {
+    const res = await fetch(`${env()?.backend_url || BACKEND_URL}${path}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `${localStorage.getItem('accessToken')}`,
+            ...options,
+        },
+        body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    return data;
+};
+
 export const del = async (path, payload, options = {}) => {
     const res = await fetch(`${env()?.backend_url || BACKEND_URL}${path}`, {
         method: 'delete',
