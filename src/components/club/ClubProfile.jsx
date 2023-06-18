@@ -31,7 +31,6 @@ const ClubProfile = () => {
     const account = useSelector(accountSelector)
     const { clubId } = useParams()
     const [data, setData] = useState({})
-    const [avatar, setAvatar] = useState()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const navigate = useNavigate()
@@ -95,10 +94,6 @@ const ClubProfile = () => {
             if (res?.status_code == 200) {
                 setData(res?.data)
                 dispatch(mapSlice.actions.setPosition(res?.data?.addressPosition))
-                const avatar = await get(`/image/get?id=${res?.data?.image}`)
-                if (avatar?.status_code == 200) {
-                    setAvatar(avatar?.data)
-                }
             } else {
                 errorNotification(res?.status_code, res?.msg, "bottomRight")
                 navigate("/algo-frontend-service/club")
@@ -119,6 +114,20 @@ const ClubProfile = () => {
     useEffect(() => {
         getClub()
     }, [clubId])
+
+    useEffect(() => {
+        dispatch(clubSlice.actions.setInfo({
+            name: data?.name || "",
+            email: data?.email || "",
+            nickname: data?.nickname || "",
+            address: data?.address || "",
+            slogan: data?.slogan || "",
+            description: data?.description || "",
+            type: data?.type || "",
+        }))
+        dispatch(clubSlice.actions.setMember(members))
+        dispatch(clubSlice.actions.setGroup((data?.groups || []).map(e => ({ ...e, members: [] }))))
+    }, [data, members])
 
     const handleFollow = async () => {
         if (!account?.id) {
@@ -205,7 +214,7 @@ const ClubProfile = () => {
                 >
                     <Avatar
                         alt='avatar'
-                        src={avatar?.url || CLUB}
+                        src={data?.avatar?.url || CLUB}
                         className='!w-24 !h-24 sm:!w-52 sm:!h-52 shadow-xl border-4 border-white'
                     />
                 </Badge>
@@ -279,15 +288,6 @@ const ClubProfile = () => {
                             isEdit ?
                                 <div onClick={() => {
                                     dispatch(mapSlice.actions.setPosition(data?.addressPosition))
-                                    dispatch(clubSlice.actions.setInfo({
-                                        name: data?.name || "",
-                                        email: data?.email || "",
-                                        nickname: data?.nickname || "",
-                                        address: data?.address || "",
-                                        slogan: data?.slogan || "",
-                                        description: data?.description || "",
-                                        type: data?.type || "",
-                                    }))
                                     navigate(`/algo-frontend-service/club/${clubId}/edit`)
                                 }}>
                                     <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
@@ -399,7 +399,6 @@ const ClubProfile = () => {
                     {
                         isEdit ?
                             <div onClick={() => {
-                                dispatch(clubSlice.actions.setMember(members))
                                 navigate(`/algo-frontend-service/club/${clubId}/member`)
                             }}>
                                 <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
@@ -414,7 +413,7 @@ const ClubProfile = () => {
                     <UserList data={members} />
                 </Box>
             </Card>
-            <Card title={`Người theo dõi (${followers.length})`} bordered={false}
+            <Card title={<Typography variant='h6'>{`Người theo dõi (${followers.length})`}</Typography>} bordered={false}
                 className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
             >
                 <Box className="w-full items-center max-h-[60vh] overflow-auto">

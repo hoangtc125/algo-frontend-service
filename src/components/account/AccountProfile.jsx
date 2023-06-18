@@ -158,19 +158,19 @@ const AccountProfile = () => {
                                             <Box
                                                 className="absolute top-0 left-0 right-0 w-full h-full flex flex-col items-start justify-start whitespace-pre-line text-base xl:text-lg space-y-1 p-2 opacity-60 hover:opacity-100"
                                             >
-                                                <Typography className='bg-slate-50'>
+                                                <Typography className='bg-slate-50 p-1 rounded-md'>
                                                     {`Vai trò của ${account.name}`}
                                                 </Typography>
-                                                <Typography className='bg-slate-50'>
+                                                <Typography className='bg-slate-50 p-1 rounded-md'>
                                                     {`Chức vụ: ${CLUB_ROLE[item?.member?.role]}`}
                                                 </Typography>
-                                                <Typography className='bg-slate-50'>
+                                                <Typography className='bg-slate-50 p-1 rounded-md'>
                                                     {`Trạng thái: `} <Tag bordered={false} color={MEMBERSHIP_STATUS[item?.member?.status]?.color}>{MEMBERSHIP_STATUS[item?.member?.status]?.label}</Tag>
                                                 </Typography>
-                                                <Typography className='bg-slate-50'>
+                                                <Typography className='bg-slate-50 p-1 rounded-md'>
                                                     {`Ngày tham gia: ${moment(item?.member?.created_at * 1000).format('DD-MM-YYYY')}`}
                                                 </Typography>
-                                                <Typography className='bg-slate-50'>
+                                                <Typography className='bg-slate-50 p-1 rounded-md'>
                                                     {`Thế hệ: ${item?.member?.gen || 1}`}
                                                 </Typography>
                                             </Box>
