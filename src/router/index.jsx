@@ -19,6 +19,7 @@ import TryCameraPage from '../pages/camera/TryCameraPage';
 import ClubProfile from '../components/club/ClubProfile';
 import Test from '../components/Test';
 import CreateInfo from '../components/club/CreateInfo';
+import Member from '../components/club/Member';
 
 export default createBrowserRouter([
   {
@@ -32,6 +33,10 @@ export default createBrowserRouter([
       {
         element: <HomePage />,
         path: '/algo-frontend-service/',
+      },
+      {
+        element: <HomePage />,
+        path: '/algo-frontend-service/club',
       },
       {
         element: <LoginPage />,
@@ -89,7 +94,15 @@ export default createBrowserRouter([
           },
           {
             element: <CreateInfo />,
+            path: '/algo-frontend-service/club/create',
+          },
+          {
+            element: <CreateInfo />,
             path: '/algo-frontend-service/club/:clubId/edit',
+          },
+          {
+            element: <Member />,
+            path: '/algo-frontend-service/club/:clubId/member',
           },
           {
             element: <AccountVerify />,

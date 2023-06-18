@@ -1,8 +1,8 @@
-import { Typography, Avatar, List, ListItem, ListItemText, Box, Grid, Badge, Chip } from '@mui/material';
+import { Typography, Avatar, List, ListItem, ListItemText, Box, Grid, Badge, Chip, Button } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Card, Divider, Empty, Image } from 'antd';
+import { Card, Divider, Empty, Image, Tag } from 'antd';
 import moment from 'moment';
 
 import { getProviderIcon } from '../../utils/kind';
@@ -14,13 +14,19 @@ import CLUB2 from '../../assets/images/club/club2.png'
 import CLUB3 from '../../assets/images/club/club3.png'
 import CLUB4 from '../../assets/images/club/club4.png'
 import CLUB5 from '../../assets/images/club/club5.png'
+import { useSelector } from 'react-redux';
+import { accountSelector } from '../../redux/selectors';
 const CLUB = [CLUB1, CLUB2, CLUB3, CLUB4, CLUB5]
 
 const AccountProfile = () => {
     const { account_id } = useParams()
+    const navigate = useNavigate()
     const [account, setAccount] = useState({})
     const [member, setMember] = useState([])
     const [follow, setFollow] = useState([])
+    const sAccount = useSelector(accountSelector)
+    const isYou = account_id == sAccount?.id
+
     console.log("re-render");
 
     useEffect(() => {
@@ -115,7 +121,20 @@ const AccountProfile = () => {
                     </Grid>
                 </Grid>
             </Card>
-            <Card title="Tham gia" bordered={false}
+            <Card title={
+                <Box className="w-full flex items-end justify-between">
+                    <span>Tham gia</span>
+                    {isYou &&
+                        <Button variant='contained'
+                            onClick={() => {
+                                navigate("/algo-frontend-service/club/create")
+                            }}
+                        >
+                            Tạo CLB của tôi
+                        </Button>
+                    }
+                </Box>
+            } bordered={false}
                 className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
             >
                 <Box className="w-full flex flex-wrap items-center justify-start">
@@ -137,21 +156,21 @@ const AccountProfile = () => {
                                                 className='opacity-70 object-contain !h-52 lg:!h-72 xl:!h-96 text-center p-1'
                                             />
                                             <Box
-                                                className="absolute top-2 left-2 right-2 w-fit flex flex-col items-start justify-start whitespace-pre-line text-base space-y-1 p-2 shadow-sm rounded-sm bg-slate-50 opacity-100"
+                                                className="absolute top-0 left-0 right-0 w-full h-full flex flex-col items-start justify-start whitespace-pre-line text-base xl:text-lg space-y-1 p-2 opacity-60 hover:opacity-100"
                                             >
-                                                <Typography variant='body2'>
+                                                <Typography className='bg-slate-50'>
                                                     {`Vai trò của ${account.name}`}
                                                 </Typography>
-                                                <Typography variant='body2'>
+                                                <Typography className='bg-slate-50'>
                                                     {`Chức vụ: ${CLUB_ROLE[item?.member?.role]}`}
                                                 </Typography>
-                                                <Typography variant='body2'>
-                                                    {`Trạng thái: `}{MEMBERSHIP_STATUS[item?.member?.status]}
+                                                <Typography className='bg-slate-50'>
+                                                    {`Trạng thái: `} <Tag bordered={false} color={MEMBERSHIP_STATUS[item?.member?.status]?.color}>{MEMBERSHIP_STATUS[item?.member?.status]?.label}</Tag>
                                                 </Typography>
-                                                <Typography variant='body2'>
+                                                <Typography className='bg-slate-50'>
                                                     {`Ngày tham gia: ${moment(item?.member?.created_at * 1000).format('DD-MM-YYYY')}`}
                                                 </Typography>
-                                                <Typography variant='body2'>
+                                                <Typography className='bg-slate-50'>
                                                     {`Thế hệ: ${item?.member?.gen || 1}`}
                                                 </Typography>
                                             </Box>

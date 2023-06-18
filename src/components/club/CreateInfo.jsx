@@ -86,12 +86,22 @@ export default function CreateInfo() {
         validate,
         onSubmit: async (values) => {
             infoNotification("Đợi giây lát", "Yêu cầu đang được xử lý", "bottomRight")
-            const data = await put(`/club/update?club_id=${clubId}`, { ...values, addressPosition: position })
-            if (data?.status_code == 200) {
-                successNotification("Thao tác thành công", "", "bottomRight")
-                navigate(`/algo-frontend-service/club/${clubId}`)
+            if (clubId) {
+                const data = await put(`/club/update?club_id=${clubId}`, { ...values, addressPosition: position })
+                if (data?.status_code == 200) {
+                    successNotification("Thao tác thành công", "", "bottomRight")
+                    navigate(`/algo-frontend-service/club/${clubId}`)
+                } else {
+                    errorNotification(data.status_code, data.msg, "bottomRight")
+                }
             } else {
-                errorNotification(data.status_code, data.msg, "bottomRight")
+                const data = await post(`/club/create`, { ...values, addressPosition: position })
+                if (data?.status_code == 200) {
+                    successNotification("Thao tác thành công", "", "bottomRight")
+                    navigate(`/algo-frontend-service/club/${data?.data?.id}`)
+                } else {
+                    errorNotification(data.status_code, data.msg, "bottomRight")
+                }
             }
         },
     });
@@ -227,7 +237,7 @@ export default function CreateInfo() {
                     sx={{ mt: 3, mb: 2 }}
                     className='text-lg sm:text-sm'
                 >
-                    Cập nhật
+                    {clubId ? "Cập nhật" : "Tạo mới"}
                 </Button>
             </Box>
         </Box>

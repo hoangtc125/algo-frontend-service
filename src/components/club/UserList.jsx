@@ -1,5 +1,5 @@
 import { Avatar, Box, Typography } from '@mui/material';
-import { Card, List } from 'antd';
+import { Card, List, Tag } from 'antd';
 import React from 'react';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import moment from 'moment';
@@ -51,7 +51,7 @@ const UserList = ({ data }) => {
                                     {`Chức vụ: ${CLUB_ROLE[account?.member?.role]}`}
                                 </Typography>
                                 <Typography variant='body2'>
-                                    {`Trạng thái: `}{MEMBERSHIP_STATUS[account?.member?.status]}
+                                    {`Trạng thái: `} <Tag bordered={false} color={MEMBERSHIP_STATUS[account?.member?.status]?.color}>{MEMBERSHIP_STATUS[account?.member?.status]?.label}</Tag>
                                 </Typography>
                                 <Typography variant='body2'>
                                     {`Ngày tham gia: ${moment(account?.member?.created_at * 1000).format('DD-MM-YYYY')}`}

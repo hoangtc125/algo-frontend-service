@@ -13,26 +13,24 @@ function LocationMarker() {
 
     console.log("re-render");
 
+    const map = useMapEvents({
+        click(e) {
+            if (edit) {
+                dispatch(mapSlice.actions.setPosition({ ...e.latlng }))
+            }
+        },
+        locationfound(e) {
+            dispatch(mapSlice.actions.setPosition({ ...e.latlng }))
+        },
+    });
+
     useEffect(() => {
         if (!position) {
             map.locate();
         } else {
             map.flyTo(position, map.getZoom());
         }
-    }, []);
-
-    const map = useMapEvents({
-        click(e) {
-            if (edit) {
-                dispatch(mapSlice.actions.setPosition({ ...e.latlng }))
-                map.setView(e.latlng, map.getZoom());
-            }
-        },
-        locationfound(e) {
-            dispatch(mapSlice.actions.setPosition({ ...e.latlng }))
-            map.setView(e.latlng, map.getZoom());
-        },
-    });
+    }, [position]);
 
     return (
         <>
@@ -53,7 +51,7 @@ const MapPicker = () => {
         <div style={{ height: '400px', width: '100%' }} className='border shadow-lg my-2'>
             <MapContainer
                 center={{ lat: 51.505, lng: -0.09 }}
-                zoom={13}
+                zoom={16}
                 scrollWheelZoom={true}
                 style={{ height: '100%', width: '100%' }}
             >

@@ -1,10 +1,10 @@
 import React from 'react';
-import CreateInfo from './club/CreateInfo';
+import Member from './club/Member';
 
 const Test = () => {
     return (
         <>
-            <CreateInfo />
+            <Member />
         </>
     );
 }

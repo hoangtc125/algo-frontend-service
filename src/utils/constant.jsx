@@ -156,9 +156,18 @@ export const CLUB_ROLE = {
 }
 
 export const MEMBERSHIP_STATUS = {
-    "ACTIVE": <Tag bordered={false} color='#52C41A'>Đang hoạt động</Tag>,
-    "PAUSE": <Tag bordered={false} color='#1677FF'>Đang tạm dừng</Tag>,
-    "INACTIVE": <Tag bordered={false} color='#F5222D'>Dừng hoạt động</Tag>,
+    "ACTIVE": {
+        "color" :"#52C41A",
+        "label": "Đang hoạt động"
+    },
+    "PAUSE": {
+        "color" :"#1677FF",
+        "label": "Đang tạm dừng"
+    },
+    "INACTIVE": {
+        "color" :"#F5222D",
+        "label": "Dừng hoạt động"
+    },
 }
 
 export const CLUB_TYPE = {

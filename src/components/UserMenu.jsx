@@ -14,6 +14,7 @@ import clusterSlice from './cluster/slice/clusterSlice';
 import clusterFileSlice from './cluster/slice/clusterFileSlice';
 import clusterHistorySlice from './cluster/slice/clusterHistorySlice';
 import clusteringSlice from './cluster/slice/clusteringSlice';
+import clubSlice from './club/clubSlice';
 
 const  UserMenu = () => {
   const account = useSelector(accountSelector)
@@ -34,6 +35,7 @@ const  UserMenu = () => {
     dispatch(clusterSlice.actions.clear())
     dispatch(clusteringSlice.actions.clear())
     dispatch(clusterHistorySlice.actions.clear())
+    dispatch(clubSlice.actions.clear())
     navigate(window.location.pathname)
   };
 

@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Card, Modal, Tag } from 'antd';
+import { Card, Modal, Popconfirm, Tag } from 'antd';
 import { Avatar, AvatarGroup, Badge, Box, Button, Chip, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import LoginIcon from '@mui/icons-material/Login';
 import EditIcon from '@mui/icons-material/Edit';
@@ -39,7 +40,7 @@ const ClubProfile = () => {
         if (data?.groups) {
             return data.groups.reduce((total, group) => [
                 ...total,
-                ...group.members.map(e => ({ ...e.user, member: { ...e } }))
+                ...group.members.map(e => ({ ...e.user, member: { ...e, user: {} } }))
             ], []);
         }
         return [];
@@ -100,10 +101,12 @@ const ClubProfile = () => {
                 }
             } else {
                 errorNotification(res?.status_code, res?.msg, "bottomRight")
+                navigate("/algo-frontend-service/club")
             }
         } catch (e) {
             console.log({ e });
             errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+            navigate("/algo-frontend-service/club")
         }
     }
 
@@ -135,6 +138,15 @@ const ClubProfile = () => {
         const resp = await del(`/club/follow/delete?club_id=${data.id}`)
         if (resp?.status_code == 200) {
             await getClub()
+        } else {
+            errorNotification(resp.status_code, resp.msg, "bottomRight")
+        }
+    }
+
+    const handleDelClub = async () => {
+        const resp = await del(`/club/delete?club_id=${data.id}`)
+        if (resp?.status_code == 200) {
+            navigate("/algo-frontend-service/club")
         } else {
             errorNotification(resp.status_code, resp.msg, "bottomRight")
         }
@@ -238,11 +250,16 @@ const ClubProfile = () => {
                         }
                         {
                             isFollow ?
-                                <Button variant="contained" color='error' startIcon={<StarBorderIcon />}
-                                    onClick={handleUnFollow}
+                                <Popconfirm
+                                    title="Hủy quan tâm?"
+                                    onConfirm={handleUnFollow}
+                                    okText="Yes"
+                                    cancelText="No"
                                 >
-                                    Hủy quan tâm
-                                </Button>
+                                    <Button variant="contained" color='error' startIcon={<StarBorderIcon />}>
+                                        Hủy quan tâm
+                                    </Button>
+                                </Popconfirm>
                                 :
                                 <Button variant="outlined" startIcon={<StarBorderIcon />}
                                     onClick={handleFollow}
@@ -254,26 +271,42 @@ const ClubProfile = () => {
                 </Box>
             </Box>
             <Card title={
-                <Box className="w-full items-center space-x-2 flex">
-                    <Typography variant='h6'>Giới thiệu</Typography>
+                <Box className="w-full items-center space-x-2 flex justify-between">
+                    <Box className="w-full items-center space-x-2 flex">
+
+                        <Typography variant='h6'>Giới thiệu</Typography>
+                        {
+                            isEdit ?
+                                <div onClick={() => {
+                                    dispatch(mapSlice.actions.setPosition(data?.addressPosition))
+                                    dispatch(clubSlice.actions.setInfo({
+                                        name: data?.name || "",
+                                        email: data?.email || "",
+                                        nickname: data?.nickname || "",
+                                        address: data?.address || "",
+                                        slogan: data?.slogan || "",
+                                        description: data?.description || "",
+                                        type: data?.type || "",
+                                    }))
+                                    navigate(`/algo-frontend-service/club/${clubId}/edit`)
+                                }}>
+                                    <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
+                                </div>
+                                : <></>
+                        }
+                    </Box>
                     {
-                        isEdit ?
-                            <div onClick={() => {
-                                dispatch(mapSlice.actions.setPosition(data?.addressPosition))
-                                dispatch(clubSlice.actions.setInfo({
-                                    name: data?.name || "",
-                                    email: data?.email || "",
-                                    nickname: data?.nickname || "",
-                                    address: data?.address || "",
-                                    slogan: data?.slogan || "",
-                                    description: data?.description || "",
-                                    type: data?.type || "",
-                                }))
-                                navigate(`/algo-frontend-service/club/${clubId}/edit`)
-                            }}>
-                                <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
-                            </div>
-                            : <></>
+                        isEdit &&
+                        <Popconfirm
+                            title="Xóa CLB?"
+                            onConfirm={handleDelClub}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button variant="contained" color='error' startIcon={<DeleteForeverIcon />}>
+                                Xóa CLB
+                            </Button>
+                        </Popconfirm>
                     }
                 </Box>
             } bordered={false}
@@ -319,7 +352,7 @@ const ClubProfile = () => {
                     {
                         isEdit ?
                             <div onClick={() => { }}>
-                                <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
+                                <EditIcon className='bg-slate-100 rounded-lg p-1' fontSize="large" color="#ccc" />
                             </div>
                             : <></>
                     }
@@ -365,7 +398,10 @@ const ClubProfile = () => {
                     <Typography variant='h6'>{`Danh sách thành viên (${members.length})`}</Typography>
                     {
                         isEdit ?
-                            <div onClick={() => { }}>
+                            <div onClick={() => {
+                                dispatch(clubSlice.actions.setMember(members))
+                                navigate(`/algo-frontend-service/club/${clubId}/member`)
+                            }}>
                                 <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
                             </div>
                             : <></>
