@@ -162,7 +162,9 @@ export const MEMBERSHIP_STATUS = {
 }
 
 export const CLUB_TYPE = {
-    "EDU": <Chip color='primary' label="CLB Học thuật" />
+    "EDU": "CLB Học thuật",
+    "VN": "CLB Văn nghệ",
+    "SPORT": "CLB Thể thao",
 }
 
 export const GUEST = {

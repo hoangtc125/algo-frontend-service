@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Card, Modal, Tag } from 'antd';
-import { Avatar, AvatarGroup, Badge, Box, Button, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Badge, Box, Button, Chip, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
@@ -20,15 +20,20 @@ import UserList from './UserList';
 import Camera from '../camera';
 import ImagesReview from '../camera/imagesReview';
 import cameraSlice from '../camera/cameraSlice';
+import MapPicker from '../map/MapPicker';
+import clubSlice from './clubSlice';
+import mapSlice from '../map/mapSlice';
 
-const ClubProfile = ({ rawData }) => {
+const ClubProfile = () => {
     const dispatch = useDispatch()
     const images = useSelector(imagesSelector)
     const account = useSelector(accountSelector)
     const { clubId } = useParams()
-    const [data, setData] = useState(rawData || {})
+    const [data, setData] = useState({})
+    const [avatar, setAvatar] = useState()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const navigate = useNavigate()
 
     const members = useMemo(() => {
         if (data?.groups) {
@@ -43,7 +48,7 @@ const ClubProfile = ({ rawData }) => {
     const isFollow = useMemo(() => followers.find(e => e.id == account?.id) ? true : false, [followers, account]);
     const accountMember = useMemo(() => members.find(e => e.id == account?.id)?.member, [members, account]);
     const accountGroup = useMemo(() => {
-        if (data?.groups) {
+        if (data?.groups && accountMember) {
             return data.groups.filter(e => accountMember.group_id.includes(e.id));
         }
         return [];
@@ -64,7 +69,7 @@ const ClubProfile = ({ rawData }) => {
         }
         try {
             const res = await put(`/club/update?club_id=${clubId}`, {
-                "image": images[0]?.url
+                "image": images[0]
             })
             if (res?.status_code == 200) {
                 successNotification("Cập nhật thành công", "", "bottomRight")
@@ -88,6 +93,11 @@ const ClubProfile = ({ rawData }) => {
             const res = await get(`/club/get?id=${clubId}`)
             if (res?.status_code == 200) {
                 setData(res?.data)
+                dispatch(mapSlice.actions.setPosition(res?.data?.addressPosition))
+                const avatar = await get(`/image/get?id=${res?.data?.image}`)
+                if (avatar?.status_code == 200) {
+                    setAvatar(avatar?.data)
+                }
             } else {
                 errorNotification(res?.status_code, res?.msg, "bottomRight")
             }
@@ -104,9 +114,7 @@ const ClubProfile = ({ rawData }) => {
     }, [account])
 
     useEffect(() => {
-        if (!rawData) {
-            getClub()
-        }
+        getClub()
     }, [clubId])
 
     const handleFollow = async () => {
@@ -178,19 +186,19 @@ const ClubProfile = ({ rawData }) => {
                                 dispatch(cameraSlice.actions.setSingle(true))
                                 setIsCameraOpen(true);
                             }}>
-                                <CameraAltIcon className='bg-slate-100 rounded-full p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
+                                <CameraAltIcon className='bg-gray-200 rounded-full p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
                             </div>
                             : <></>
                     }
                 >
                     <Avatar
                         alt='avatar'
-                        src={(data?.image && data?.image != "string") ? data?.image : CLUB}
-                        className='!w-24 !h-24 sm:!w-52 sm:!h-52 shadow-xl'
+                        src={avatar?.url || CLUB}
+                        className='!w-24 !h-24 sm:!w-52 sm:!h-52 shadow-xl border-4 border-white'
                     />
                 </Badge>
-                <Typography variant="h3" className='text-black uppercase'>{data?.name}</Typography>
-                <Typography variant="h6" className='text-black uppercase'>{data?.nickname}</Typography>
+                <p className='text-black uppercase text-3xl'>{data?.name}</p>
+                <p className='text-black uppercase text-xl'>{data?.nickname}</p>
                 <Box className="w-full flex flex-col xl:flex-row items-center justify-between space-x-4">
                     <Box className="w-full flex-1"></Box>
                     <Box className="w-full flex-1 flex justify-center items-center">
@@ -222,10 +230,11 @@ const ClubProfile = ({ rawData }) => {
                     </Box>
                     <Box className="w-full flex-1 text-center xl:text-end space-x-2">
                         {
-                            !accountMember &&
-                            <Button variant="outlined" startIcon={<LoginIcon />}>
-                                Xin gia nhập
-                            </Button>
+                            !accountMember ?
+                                <Button variant="outlined" startIcon={<LoginIcon />}>
+                                    Xin gia nhập
+                                </Button>
+                                : <Chip color='success' variant='outlined' label="Đã tham gia" />
                         }
                         {
                             isFollow ?
@@ -249,7 +258,19 @@ const ClubProfile = ({ rawData }) => {
                     <Typography variant='h6'>Giới thiệu</Typography>
                     {
                         isEdit ?
-                            <div onClick={() => { }}>
+                            <div onClick={() => {
+                                dispatch(mapSlice.actions.setPosition(data?.addressPosition))
+                                dispatch(clubSlice.actions.setInfo({
+                                    name: data?.name || "",
+                                    email: data?.email || "",
+                                    nickname: data?.nickname || "",
+                                    address: data?.address || "",
+                                    slogan: data?.slogan || "",
+                                    description: data?.description || "",
+                                    type: data?.type || "",
+                                }))
+                                navigate(`/algo-frontend-service/club/${clubId}/edit`)
+                            }}>
                                 <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
                             </div>
                             : <></>
@@ -258,32 +279,39 @@ const ClubProfile = ({ rawData }) => {
             } bordered={false}
                 className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
             >
-                <List className='w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'>
-                    <ListItem className=''>
-                        <ListItemText primary="Tên gọi" secondary={data?.name} />
-                    </ListItem>
-                    <ListItem className=''>
-                        <ListItemText primary="Viết tắt" secondary={data?.nickname} />
-                    </ListItem>
-                    <ListItem className=''>
-                        <ListItemText primary="Mô tả" secondary={data?.description} />
-                    </ListItem>
-                    <ListItem className=''>
-                        <ListItemText primary="Địa chỉ Email" secondary={data?.email} />
-                    </ListItem>
-                    <ListItem className=''>
-                        <ListItemText primary="Địa chỉ" secondary={data?.address} />
-                    </ListItem>
-                    <ListItem className=''>
-                        <ListItemText primary="Slogan" secondary={data?.slogan} />
-                    </ListItem>
-                    <ListItem className=''>
-                        <ListItemText primary="Thành viên" secondary={members?.length} />
-                    </ListItem>
-                    <ListItem className=''>
-                        {CLUB_TYPE[data?.type]}
-                    </ListItem>
-                </List>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <MapPicker />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <List className='w-full grid grid-cols-1 xl:grid-cols-2'>
+                            <ListItem className=''>
+                                <ListItemText primary="Tên gọi" secondary={data?.name} />
+                            </ListItem>
+                            <ListItem className=''>
+                                <ListItemText primary="Viết tắt" secondary={data?.nickname} />
+                            </ListItem>
+                            <ListItem className=''>
+                                <ListItemText primary="Mô tả" secondary={data?.description} />
+                            </ListItem>
+                            <ListItem className=''>
+                                <ListItemText primary="Địa chỉ Email" secondary={data?.email} />
+                            </ListItem>
+                            <ListItem className=''>
+                                <ListItemText primary="Địa chỉ" secondary={data?.address} />
+                            </ListItem>
+                            <ListItem className=''>
+                                <ListItemText primary="Slogan" secondary={data?.slogan} />
+                            </ListItem>
+                            <ListItem className=''>
+                                <ListItemText primary="Thành viên" secondary={members?.length} />
+                            </ListItem>
+                            <ListItem className=''>
+                                <Chip color='secondary' label={CLUB_TYPE[data?.type]} />
+                            </ListItem>
+                        </List>
+                    </Grid>
+                </Grid>
             </Card>
             <Card title={
                 <Box className="w-full items-center space-x-2 flex">

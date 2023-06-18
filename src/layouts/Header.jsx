@@ -27,6 +27,7 @@ const headerItems = [
     getItem(<Link to={"/algo-frontend-service/form-store"}>Kho đơn</Link>, '/algo-frontend-service/form-store', <CloudServerOutlined />),
     getItem(<Link to={"/algo-frontend-service/try-cluster"}>Phân cụm</Link>, '/algo-frontend-service/try-cluster', <DesktopOutlined />),
     getItem(<Link to={"/algo-frontend-service/try-camera"}>Kết nối</Link>, '/algo-frontend-service/try-camera', <VideoCameraOutlined />),
+    getItem(<Link to={"/algo-frontend-service/test"}>Test</Link>, '/algo-frontend-service/test'),
 ];
 
 const HeaderPage = () => {

@@ -25,8 +25,7 @@ const AccountProfile = () => {
 
     useEffect(() => {
         const getAccount = async () => {
-            const url = account_id ? `/account/get?id=${account_id}` : "/account/me"
-            const data = await get(url)
+            const data = await get(`/account/get?id=${account_id}`)
             if (data?.status_code == 200) {
                 setAccount(data?.data.account)
                 setMember(data?.data.member)
@@ -128,17 +127,17 @@ const AccountProfile = () => {
                             >
                                 <Card
                                     hoverable
-                                    className='m-4 w-[300px] 2xl:w-[500px]'
+                                    className='m-4 w-[300px] 2xl:w-[450px]'
                                     cover={
-                                        <Box className='relative'>
+                                        <Box className='relative text-center border'>
                                             <Image
-                                                src={item?.club?.image}
+                                                src={item?.club?.avatar?.url}
                                                 fallback={CLUB[idx % CLUB.length]}
                                                 preview={false}
-                                                className='opacity-70'
+                                                className='opacity-70 object-contain !h-52 lg:!h-72 xl:!h-96 text-center p-1'
                                             />
                                             <Box
-                                                className="absolute top-2 left-2 right-2 w-fit flex flex-col items-start justify-start whitespace-pre-line text-base space-y-1 p-2 shadow-sm rounded-sm bg-slate-50 opacity-80"
+                                                className="absolute top-2 left-2 right-2 w-fit flex flex-col items-start justify-start whitespace-pre-line text-base space-y-1 p-2 shadow-sm rounded-sm bg-slate-50 opacity-100"
                                             >
                                                 <Typography variant='body2'>
                                                     {`Vai trò của ${account.name}`}
@@ -160,7 +159,7 @@ const AccountProfile = () => {
                                     }
                                 >
                                     <Box className="w-full flex flex-col items-center justify-center space-y-1">
-                                        <Box className="w-full flex flex-col items-center justify-center whitespace-pre-line">
+                                        <Box className="w-full flex flex-col text-center items-center justify-center whitespace-pre-line">
                                             <strong className='text-xl 2xl:text-3xl uppercase mb-1'>
                                                 {item?.club?.nickname}
                                             </strong>
@@ -199,22 +198,24 @@ const AccountProfile = () => {
                                 <Card
                                     hoverable
                                     style={{ width: 250 }}
-                                    className='m-2'
+                                    className='m-2 w-[200px] 2xl:w-[300px]'
                                     cover={
-                                        <Image
-                                            src={item?.club?.image}
-                                            fallback={CLUB[idx % CLUB.length]}
-                                            preview={false}
-                                            className='h-48'
-                                        />
+                                        <Box className="w-full border items-center text-center">
+                                            <Image
+                                                src={item?.club?.avatar?.url}
+                                                fallback={CLUB[idx % CLUB.length]}
+                                                preview={false}
+                                                className='opacity-70 object-contain !h-48 text-center p-1'
+                                            />
+                                        </Box>
                                     }
                                 >
                                     <Box className="w-full flex flex-col items-center justify-center space-y-1">
-                                        <Box className="w-full flex flex-col items-center justify-center whitespace-pre-line">
-                                            <strong className='text-xl 2xl:text-3xl uppercase mb-1'>
+                                        <Box className="w-full flex flex-col text-center items-center justify-center whitespace-pre-line">
+                                            <strong className='text-base 2xl:text-xl uppercase mb-1'>
                                                 {item?.club?.nickname}
                                             </strong>
-                                            <p className='text-base 2xl:text-2xl mb-1'>
+                                            <p className='text-sm 2xl:text-base mb-1'>
                                                 {item?.club?.name}
                                             </p>
                                         </Box>

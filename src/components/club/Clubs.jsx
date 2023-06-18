@@ -1,7 +1,7 @@
 import { Card, Empty, Image, Input, List, Modal, Skeleton, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Chip, Typography } from '@mui/material';
 
 import { post } from '../../utils/request';
 import { errorNotification } from '../../utils/notification';
@@ -131,21 +131,28 @@ const Clubs = () => {
                 <Card
                   hoverable
                   key={idx}
-                  className='m-4 w-[300px] 2xl:w-[450px] hover:cursor-default'
+                  className='m-4 w-[350px] xl:w-[450px] hover:cursor-default'
                   cover={
                     <Box
-                      className='relative h-96 text-center'
+                      className='relative h-96 text-center border'
                     >
-                      <Image
-                        src={club?.image}
-                        fallback={CLUB[idx % CLUB.length]}
-                        preview={false}
-                        className='opacity-70 object-contain !h-96 text-center'
-                      />
+                      <Link
+                        to={`/algo-frontend-service/club/${club.id}`}
+                        className='w-full h-full cursor-pointer'
+                      >
+                        <Box className="w-full h-full">
+                          <Image
+                            src={club?.avatar?.url}
+                            fallback={CLUB[idx % CLUB.length]}
+                            preview={false}
+                            className='opacity-70 object-contain !h-52 lg:!h-72 xl:!h-96 text-center p-1'
+                          />
+                        </Box>
+                      </Link>
                       <Box className='absolute top-2 right-2'>
-                        {CLUB_TYPE[club?.type]}
+                        <Chip color='secondary' label={CLUB_TYPE[club?.type]}/>
                       </Box>
-                      <Box className='absolute bottom-2 left-2 right-2 flex flex-col 2xl:flex-row flex-wrap items-start justify-start p-2'>
+                      <Box className='absolute bottom-2 left-2 right-2 flex flex-col lg:flex-row flex-wrap items-start justify-start p-2'>
                         {
                           (club?.groups || []).map((group, idGroup) => {
                             return (
@@ -178,7 +185,7 @@ const Clubs = () => {
                   <Link
                     to={`/algo-frontend-service/club/${club.id}`}
                   >
-                    <Box className="w-full flex flex-col items-center justify-center whitespace-pre-line">
+                    <Box className="w-full flex flex-col text-center items-center justify-center whitespace-pre-line">
                       <strong className='text-xl 2xl:text-3xl uppercase mb-1'>
                         {club?.nickname}
                       </strong>

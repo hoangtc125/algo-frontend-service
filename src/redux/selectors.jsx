@@ -37,3 +37,9 @@ export const clusterLogSelector = (state) => state.clustering.clusteringLog
 export const processSelector = (state) => state.clustering.process
 
 export const clusterHistorySelector = (state) => state.clusterHistory.histories
+
+export const positionSelector = (state) => state.map.position
+export const mapEditSelector = (state) => state.map.edit
+
+export const clubInfoSelector = (state) => state.club.info
+export const clubIdSelector = (state) => state.club.id

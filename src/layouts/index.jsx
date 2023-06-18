@@ -22,19 +22,19 @@ function getItem(label, key, icon, children) {
     };
 }
 
-const siderItems = [
-    getItem(<Link to={"/algo-frontend-service/home"}>Trang chủ</Link>, '/algo-frontend-service/home', <HomeOutlined />),
-    getItem(<Link to={"/algo-frontend-service/form-store"}>Câu lạc bộ</Link>, 'club', <PieChartOutlined />),
-    getItem('Account', 'account', <UserOutlined />, [
-        getItem(<Link to={"/algo-frontend-service/account"}>Trang cá nhân</Link>, '/algo-frontend-service/account', <ProfileFilled />),
-        getItem(<Link to={"/algo-frontend-service/account/verify"}>Xác thực</Link>, '/algo-frontend-service/account/verify', <VerifiedIcon />),
-        getItem(<Link to={"/algo-frontend-service/account/setting"}>Cài đặt</Link>, '/algo-frontend-service/account/setting', <SettingsSuggestIcon />),
-    ]),
-];
-
 const MainLayout = () => {
     const account = useSelector(accountSelector)
     const location = useLocation();
+
+    const siderItems = [
+        getItem(<Link to={"/algo-frontend-service/home"}>Trang chủ</Link>, '/algo-frontend-service/home', <HomeOutlined />),
+        getItem(<Link to={"/algo-frontend-service/form-store"}>Câu lạc bộ</Link>, 'club', <PieChartOutlined />),
+        getItem('Account', 'account', <UserOutlined />, [
+            getItem(<Link to={`/algo-frontend-service/account/${account?.id}`}>Trang cá nhân</Link>, '/algo-frontend-service/account', <ProfileFilled />),
+            getItem(<Link to={"/algo-frontend-service/account/verify"}>Xác thực</Link>, '/algo-frontend-service/account/verify', <VerifiedIcon />),
+            getItem(<Link to={"/algo-frontend-service/account/setting"}>Cài đặt</Link>, '/algo-frontend-service/account/setting', <SettingsSuggestIcon />),
+        ]),
+    ];
 
     useEffect(() => {
         const fetchEnv = async () => {

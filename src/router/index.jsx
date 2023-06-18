@@ -17,12 +17,18 @@ import TryClusterPage from '../pages/cluster/TryClusterPage';
 import FormResponsePage from '../pages/form/formResponsePage';
 import TryCameraPage from '../pages/camera/TryCameraPage';
 import ClubProfile from '../components/club/ClubProfile';
+import Test from '../components/Test';
+import CreateInfo from '../components/club/CreateInfo';
 
 export default createBrowserRouter([
   {
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        element: <Test />,
+        path: '/algo-frontend-service/test',
+      },
       {
         element: <HomePage />,
         path: '/algo-frontend-service/',
@@ -80,6 +86,10 @@ export default createBrowserRouter([
             children: [
 
             ]
+          },
+          {
+            element: <CreateInfo />,
+            path: '/algo-frontend-service/club/:clubId/edit',
           },
           {
             element: <AccountVerify />,

@@ -7,6 +7,8 @@ import clusterSlice from '../components/cluster/slice/clusterSlice';
 import clusterFileSlice from '../components/cluster/slice/clusterFileSlice';
 import clusteringSlice from '../components/cluster/slice/clusteringSlice';
 import clusterHistorySlice from '../components/cluster/slice/clusterHistorySlice';
+import mapSlice from '../components/map/mapSlice';
+import clubSlice from '../components/club/clubSlice';
 
 const store = configureStore({
   reducer: {
@@ -18,6 +20,8 @@ const store = configureStore({
     clusterFile: clusterFileSlice.reducer,
     clustering: clusteringSlice.reducer,
     clusterHistory: clusterHistorySlice.reducer,
+    map: mapSlice.reducer,
+    club: clubSlice.reducer,
   },
 });
 
