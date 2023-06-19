@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Card, Modal, Popconfirm, Tag } from 'antd';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Card, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import { Avatar, AvatarGroup, Badge, Box, Button, Chip, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
@@ -17,7 +17,7 @@ import { del, get, post, put } from '../../utils/request';
 import { CLUB_TYPE, COLOR_REAL } from '../../utils/constant';
 import { accountSelector, imagesSelector } from '../../redux/selectors';
 import LoginPage from '../../pages/auth/LoginPage';
-import UserList from './UserList';
+import UserListOrigin from './UserListOrigin';
 import Camera from '../camera';
 import ImagesReview from '../camera/imagesReview';
 import cameraSlice from '../camera/cameraSlice';
@@ -39,7 +39,9 @@ const ClubProfile = () => {
         if (data?.groups) {
             return data.groups.reduce((total, group) => [
                 ...total,
-                ...group.members.map(e => ({ ...e.user, member: { ...e, user: {} } }))
+                ...group.members
+                    .filter(e => !total.map(t => t.id).includes(e.id))
+                    .map(e => ({ ...e.user, member: { ...e, user: {} } }))
             ], []);
         }
         return [];
@@ -172,7 +174,7 @@ const ClubProfile = () => {
                     <Typography variant='h6'>{group.name}</Typography>
                     <Typography variant='body1'>{group.description}</Typography>
                     <Card title={`Danh sách thành viên (${group.members.length})`} className='w-full'>
-                        <UserList data={group.members.map(e => e.user)} />
+                        <UserListOrigin data={group.members.map(e => e.user)} />
                     </Card>
                 </Box>
             ),
@@ -226,7 +228,13 @@ const ClubProfile = () => {
                         <AvatarGroup max={4}>
                             {
                                 (data?.followers || []).map((e, idx) => (
-                                    <Avatar key={idx} alt={e.user.name} src={e.user.photo_url} />
+                                    <Tooltip key={idx} placement='bottom' title={e.user.name}
+                                        className='hover:cursor-pointer'
+                                    >
+                                        <Link to={`/algo-frontend-service/account/${e.user.id}`}>
+                                            <Avatar alt={e.user.name} src={e.user.photo_url} />
+                                        </Link>
+                                    </Tooltip>
                                 ))
                             }
                         </AvatarGroup>
@@ -238,7 +246,7 @@ const ClubProfile = () => {
                                     centered: true,
                                     content: (
                                         <Box className="w-full max-h-[60vh] overflow-auto">
-                                            <UserList data={followers} />
+                                            <UserListOrigin data={followers} />
                                         </Box>
                                     ),
                                     onOk() { },
@@ -349,13 +357,13 @@ const ClubProfile = () => {
             <Card title={
                 <Box className="w-full items-center space-x-2 flex">
                     <Typography variant='h6'>Cơ cấu tổ chức</Typography>
-                    {
+                    {/* {
                         isEdit ?
                             <div onClick={() => { }}>
                                 <EditIcon className='bg-slate-100 rounded-lg p-1' fontSize="large" color="#ccc" />
                             </div>
                             : <></>
-                    }
+                    } */}
                 </Box>
             } bordered={false}
                 className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
@@ -410,14 +418,14 @@ const ClubProfile = () => {
                 className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
             >
                 <Box className="w-full items-center max-h-[60vh] overflow-auto">
-                    <UserList data={members} />
+                    <UserListOrigin data={members} />
                 </Box>
             </Card>
             <Card title={<Typography variant='h6'>{`Người theo dõi (${followers.length})`}</Typography>} bordered={false}
                 className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
             >
                 <Box className="w-full items-center max-h-[60vh] overflow-auto">
-                    <UserList data={followers} />
+                    <UserListOrigin data={followers} />
                 </Box>
             </Card>
             <Modal centered width={1500} open={isModalOpen} onOk={handleOk} onCancel={handleOk} destroyOnClose={true}>

@@ -45,3 +45,5 @@ export const clubInfoSelector = (state) => state.club.info
 export const clubIdSelector = (state) => state.club.id
 export const clubMembersSelector = (state) => state.club.members || []
 export const clubGroupsSelector = (state) => state.club.groups || []
+export const selectModeSelector = (state) => state.club.select
+export const selectedUserSelector = (state) => state.club.selectedUser

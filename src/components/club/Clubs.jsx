@@ -6,7 +6,7 @@ import { Box, Button, Chip, Typography } from '@mui/material';
 import { post } from '../../utils/request';
 import { errorNotification } from '../../utils/notification';
 import { CLUB_TYPE, COLOR_REAL } from '../../utils/constant';
-import UserList from './UserList';
+import UserListOrigin from './UserListOrigin';
 import CLUB1 from '../../assets/images/club/club1.png'
 import CLUB2 from '../../assets/images/club/club2.png'
 import CLUB3 from '../../assets/images/club/club3.png'
@@ -59,7 +59,7 @@ const Clubs = () => {
       centered: true,
       content: (
         <Box className="w-full max-h-[60vh] overflow-auto">
-          <UserList data={data} />
+          <UserListOrigin data={data} />
         </Box>
       ),
       onOk() { },
@@ -77,7 +77,7 @@ const Clubs = () => {
           <Typography variant='h6'>{group.name}</Typography>
           <Typography variant='body1'>{group.description}</Typography>
           <Card title={`Danh sách thành viên (${group.members.length})`} className='w-full'>
-            <UserList data={group.members.map(e => e.user)} />
+            <UserListOrigin data={group.members.map(e => e.user)} />
           </Card>
         </Box>
       ),

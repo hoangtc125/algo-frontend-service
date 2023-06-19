@@ -1,23 +1,28 @@
 import { Avatar, Badge, Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
-import { Table, Tag } from 'antd';
-import React from 'react';
+import { Modal, Popconfirm, Table, Tag } from 'antd';
+import React, { useState } from 'react';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import DownloadIcon from '@mui/icons-material/Download';
+import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { clubGroupsSelector, clubInfoSelector, clubMembersSelector } from '../../redux/selectors';
-import { useNavigate, useParams } from 'react-router-dom';
+import { clubGroupsSelector, clubInfoSelector, clubMembersSelector, selectedUserSelector } from '../../redux/selectors';
 import { CLUB_ROLE, MEMBERSHIP_STATUS } from '../../utils/constant';
-import { updateMember, updateMemberGroup } from './clubSlice';
+import clubSlice, { createMember, deleteMember, updateMember, updateMemberGroup } from './clubSlice';
 import { errorNotification } from '../../utils/notification';
+import { handleDownload } from '../../utils/excel';
+import User from './User';
 
 const Member = () => {
     const dispatch = useDispatch()
     const members = useSelector(clubMembersSelector)
     const groups = useSelector(clubGroupsSelector)
     const info = useSelector(clubInfoSelector)
+    const selectedUser = useSelector(selectedUserSelector)
     const navigate = useNavigate()
-    const clubId = useParams()
+    const { clubId } = useParams()
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const dataset = members.map(e => [e.member.id, e.name, e.id, e.member.group_id, e.member.role, e.member.created_at, e.member.status])
     const columns = [
         {
@@ -109,13 +114,20 @@ const Member = () => {
                             onChange={(e) => {
                                 console.log(e.target.value);
                                 const admin_group_id = groups.find(e => !e.is_remove)?.id
-                                if (members.filter(e => e.member.group_id.includes(admin_group_id)).length > 1) {
+                                if (text[0] == admin_group_id) {
+                                    if (members.filter(e => e.member.group_id.includes(admin_group_id)).length > 1) {
+                                        dispatch(updateMemberGroup({ member_id: record[0], group_id: text[0], add: false }))
+                                        setTimeout(() => {
+                                            dispatch(updateMemberGroup({ member_id: record[0], group_id: e.target.value, add: true }))
+                                        }, 100);
+                                    } else {
+                                        errorNotification("Không thành công", "Phải có ít nhất 2 người ở Ban quản lý trước khi thay đổi", "bottomRight")
+                                    }
+                                } else {
                                     dispatch(updateMemberGroup({ member_id: record[0], group_id: text[0], add: false }))
                                     setTimeout(() => {
                                         dispatch(updateMemberGroup({ member_id: record[0], group_id: e.target.value, add: true }))
-                                    }, 1000);
-                                } else {
-                                    errorNotification("Không thành công", "Phải có ít nhất 2 người ở Ban quản lý trước khi thay đổi", "bottomRight")
+                                    }, 100);
                                 }
                             }}
                         >
@@ -221,8 +233,52 @@ const Member = () => {
                     </FormControl>
                 )
             }
-        }
+        }, {
+            title: 'Thao tác',
+            key: 'action',
+            fixed: 'right',
+            width: 100,
+            render: (text, record, index) => (
+                <Popconfirm
+                    title={`Xóa ${record[1]}?`}
+                    onConfirm={() => { handleDelMember(record) }}
+                    okText="Yes"
+                    cancelText="No"
+                >
+                    <Button variant='outlined' color='error'>Xóa</Button>
+                </Popconfirm>
+            ),
+        },
     ]
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+        for (let index = 0; index < selectedUser.length; index++) {
+            const user_id = selectedUser[index];
+            dispatch(createMember({
+                "club_id": clubId,
+                "user_id": user_id,
+                "group_id": groups ? [groups[groups.length - 1]?.id] : [],
+                "gen": 1,
+            }))
+        }
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false)
+    }
+
+    const handleDelMember = async (record) => {
+        if (members.find(e => e.member.id == record[0])?.member?.role == "PRESIDENT") {
+            if (members.filter(e => e.member.role == "PRESIDENT").length > 1) {
+                dispatch(deleteMember({ member_id: record[0] }))
+            } else {
+                errorNotification("Không thành công", "Phải có ít nhất 2 chủ nhiệm trước khi thay đổi", "bottomRight")
+            }
+        } else {
+            dispatch(deleteMember({ member_id: record[0] }))
+        }
+    }
 
     return (
         <Box className="w-full flex items-start justify-center">
@@ -231,9 +287,38 @@ const Member = () => {
                 columns={columns}
                 size='small'
                 title={() => (
-                    <Box className="w-full flex flex-col items-center justify-center">
-                        <Typography className='text-black uppercase' variant='h6'>{info?.name}</Typography>
-                        <Typography className='text-black uppercase' variant='body1'>{info?.nickname}</Typography>
+                    <Box className="w-full flex items-center justify-between">
+                        <Box className="flex-1">
+                            <Button variant='outlined'
+                                onClick={() => {
+                                    dispatch(clubSlice.actions.setSelect("select"))
+                                    setIsModalOpen(true)
+                                }}
+                            >Thêm thành viên</Button>
+                        </Box>
+                        <Box className="flex-1 w-full flex flex-col text-center items-center justify-center">
+                            <Typography className='text-black uppercase' variant='h6'>{info?.name}</Typography>
+                            <Typography className='text-black uppercase' variant='body1'>{info?.nickname}</Typography>
+                        </Box>
+                        <Box className="flex-1 text-end items-center">
+                            <Button variant='contained' startIcon={<DownloadIcon />} onClick={() => {
+                                handleDownload(
+                                    columns.map(e => e.title),
+                                    dataset.map((e, idx) => {
+                                        e[0] = idx + 1
+                                        e[2] = `${window.location.origin}/algo-frontend-service/account/${e[2]}`
+                                        e[3] = groups.filter(group => e[3].includes(group.id)).map(group => group.name)
+                                        e[4] = CLUB_ROLE[e[4]]
+                                        e[5] = moment(parseInt(e[5]) * 1000).format('DD-MM-YYYY')
+                                        e[6] = MEMBERSHIP_STATUS[e[6]]?.label
+                                        return e
+                                    }),
+                                    `${info?.name} - Member.xlsx`
+                                )
+                            }}>
+                                Tải xuống
+                            </Button>
+                        </Box>
                     </Box>
                 )}
                 className='w-full min-h-screen bg-gray-100 rounded-md shadow-lg p-3'
@@ -243,6 +328,9 @@ const Member = () => {
                 }}
                 pagination={false}
             />
+            <Modal centered width={1000} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
+                <User />
+            </Modal>
         </Box>
     );
 }

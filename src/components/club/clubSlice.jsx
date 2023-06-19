@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { put } from '../../utils/request';
+import { del, post, put } from '../../utils/request';
 import { errorNotification } from '../../utils/notification';
 
 const clubSlice = createSlice({
@@ -9,6 +9,8 @@ const clubSlice = createSlice({
     info: {},
     members: [],
     groups: [],
+    select: null,
+    selectedUser: [],
   },
   reducers: {
     clear: (state, action) => {
@@ -16,6 +18,8 @@ const clubSlice = createSlice({
       state.info = {}
       state.members = []
       state.groups = []
+      state.select = null
+      state.selectedUser = []
     },
     setId: (state, action) => {
       state.id = action.payload;
@@ -29,6 +33,19 @@ const clubSlice = createSlice({
     setGroup: (state, action) => {
       state.groups = action.payload;
     },
+    setSelectOnly: (state, action) => {
+      state.select = action.payload;
+    },
+    setSelect: (state, action) => {
+      state.select = action.payload;
+      state.selectedUser = []
+    },
+    setSelectedUserRadio: (state, action) => {
+      state.selectedUser = [action.payload];
+    },
+    setSelectedUserSelect: (state, action) => {
+      state.selectedUser = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -36,6 +53,8 @@ const clubSlice = createSlice({
         if (action.payload["status_code"] == 200) {
           let member = state.members.find(e => e.member.id == action.payload["data"]["member_id"])
           member.member = { ...member.member, ...action.payload["data"]["member_update"] }
+        } else {
+          errorNotification(action.payload["status_code"], action.payload["msg"], "bottomRight")
         }
       })
       .addCase(updateMemberGroup.fulfilled, (state, action) => {
@@ -48,6 +67,20 @@ const clubSlice = createSlice({
             group_id = group_id.filter(e => e != action.payload["data"]["group_id"])
           }
           member.member = { ...member.member, "group_id": group_id }
+        } else {
+          errorNotification(action.payload["status_code"], action.payload["msg"], "bottomRight")
+        }
+      })
+      .addCase(deleteMember.fulfilled, (state, action) => {
+        if (action.payload["status_code"] == 200) {
+          state.members = state.members.filter(e => e.member.id != action.payload["data"])
+        } else {
+          errorNotification(action.payload["status_code"], action.payload["msg"], "bottomRight")
+        }
+      })
+      .addCase(createMember.fulfilled, (state, action) => {
+        if (action.payload["status_code"] == 200) {
+          state.members.push(action.payload["data"])
         } else {
           errorNotification(action.payload["status_code"], action.payload["msg"], "bottomRight")
         }
@@ -67,6 +100,22 @@ export const updateMemberGroup = createAsyncThunk(
   'club/updateMemberGroup',
   async ({ member_id, group_id, add }) => {
     const data = await put(`/club/member/update-group?member_id=${member_id}&group_id=${group_id}&add=${add}`)
+    return data;
+  }
+);
+
+export const deleteMember = createAsyncThunk(
+  'club/deleteMember',
+  async ({ member_id }) => {
+    const data = await del(`/club/member/delete?member_id=${member_id}`)
+    return data;
+  }
+);
+
+export const createMember = createAsyncThunk(
+  'club/createMember',
+  async (payload) => {
+    const data = await post(`/club/member/create`, payload)
     return data;
   }
 );
