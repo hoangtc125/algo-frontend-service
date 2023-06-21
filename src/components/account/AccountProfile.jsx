@@ -14,11 +14,14 @@ import CLUB2 from '../../assets/images/club/club2.png'
 import CLUB3 from '../../assets/images/club/club3.png'
 import CLUB4 from '../../assets/images/club/club4.png'
 import CLUB5 from '../../assets/images/club/club5.png'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { accountSelector } from '../../redux/selectors';
+import clubSlice from '../club/clubSlice';
+import mapSlice from '../map/mapSlice';
 const CLUB = [CLUB1, CLUB2, CLUB3, CLUB4, CLUB5]
 
 const AccountProfile = () => {
+    const dispatch = useDispatch()
     const { account_id } = useParams()
     const navigate = useNavigate()
     const [account, setAccount] = useState({})
@@ -127,6 +130,8 @@ const AccountProfile = () => {
                     {isYou &&
                         <Button variant='contained'
                             onClick={() => {
+                                dispatch(mapSlice.actions.clear())
+                                dispatch(clubSlice.actions.clear())
                                 navigate("/algo-frontend-service/club/create")
                             }}
                         >
@@ -216,7 +221,6 @@ const AccountProfile = () => {
                             >
                                 <Card
                                     hoverable
-                                    style={{ width: 250 }}
                                     className='m-2 w-[200px] 2xl:w-[300px]'
                                     cover={
                                         <Box className="w-full border items-center text-center">

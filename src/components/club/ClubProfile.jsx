@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Card, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import { Avatar, AvatarGroup, Badge, Box, Button, Chip, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import StarIcon from '@mui/icons-material/Star';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
@@ -232,7 +233,18 @@ const ClubProfile = () => {
                                         className='hover:cursor-pointer'
                                     >
                                         <Link to={`/algo-frontend-service/account/${e.user.id}`}>
-                                            <Avatar alt={e.user.name} src={e.user.photo_url} />
+                                            <Badge
+                                                overlap="circular"
+                                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                                badgeContent={
+                                                    e.user?.verify?.status ? <VerifiedIcon className='bg-white rounded-full' fontSize="small" color="primary" /> : <></>
+                                                }
+                                            >
+                                                <Avatar
+                                                    alt={e.user.name} src={e.user.photo_url}
+                                                    sx={{ marginLeft: '10px' }}
+                                                />
+                                            </Badge>
                                         </Link>
                                     </Tooltip>
                                 ))

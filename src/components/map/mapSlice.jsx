@@ -8,6 +8,10 @@ const mapSlice = createSlice({
     edit: false,
   },
   reducers: {
+    clear: (state, action) => {
+      state.position = null;
+      state.edit= false
+    },
     setPosition: (state, action) => {
       state.position = action.payload;
     },
