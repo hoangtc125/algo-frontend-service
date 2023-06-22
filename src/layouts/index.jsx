@@ -51,7 +51,7 @@ const MainLayout = () => {
     useEffect(() => {
         const fetchEnv = async () => {
             try {
-                const resp = await fetch(`http://${window.location.hostname}:5173/env.json`)
+                const resp = await fetch(`${window.location.origin}/env.json`)
                 const env = await resp.json()
                 sessionStorage.setItem("env", JSON.stringify(env))
             } catch {

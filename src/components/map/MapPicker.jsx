@@ -28,7 +28,7 @@ function LocationMarker() {
         if (!position) {
             map.locate();
         } else {
-            map.setView(position, map.getZoom());
+            map.flyTo(position, map.getZoom());
         }
     }, [position]);
 

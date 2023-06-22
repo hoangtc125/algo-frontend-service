@@ -234,9 +234,9 @@ const ClusterPrepare = () => {
 
     return (
         <Box className="m-4 w-full space-y-12">
-            <Typography variant='body1' className='w-full items-center text-center'>
+            {/* <Typography variant='body1' className='w-full items-center text-center'>
                 Bản nháp được lưu 3 giây / lần
-            </Typography>
+            </Typography> */}
             <Box>
                 <Typography variant='h6' ref={ref1}>
                     1. Cập nhật loại dữ liệu

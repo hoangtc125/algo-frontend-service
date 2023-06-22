@@ -26,9 +26,9 @@ const Clustering = () => {
 
     return (
         <Box className="m-4 w-full h-full flex flex-col items-center justify-start space-y-8">
-            <Typography variant='body1' className='w-full items-center text-center'>
+            {/* <Typography variant='body1' className='w-full items-center text-center'>
                 Bản nháp được lưu 3 giây / lần
-            </Typography>
+            </Typography> */}
             <Grid container spacing={2}>
                 <Grid item xs={10}>
                     <Box className="w-full mt-2 flex flex-col items-center justify-center space-y-12">
