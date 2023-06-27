@@ -44,23 +44,27 @@ const ImagesReview = () => {
         if (file.status == "removed") {
             dispatch(cameraSlice.actions.removeImage(file))
             return
-        } 
-            let image = {
-                uid: v4(),
-                name: file.name,
-                status: 'done',
-                url: file.url,
-                type: file.type,
-            }
-            if (!image.url) {
-                const base64Image = await getBase64(file.originFileObj)
-                image.url = base64Image
-            }
-            if (single) {
-                dispatch(cameraSlice.actions.addSingleImage(image))
-            } else {
-                dispatch(cameraSlice.actions.addImage(image))
-            }
+        }
+        if (file?.originFileObj?.size > 5000000) {
+            errorNotification("Kích thước quá lớn", `Hãy tải lên ảnh nhỏ hơn 5MB`, "bottomRight")
+            return
+        }
+        let image = {
+            uid: v4(),
+            name: file.name,
+            status: 'done',
+            url: file.url,
+            type: file.type,
+        }
+        if (!image.url) {
+            const base64Image = await getBase64(file.originFileObj)
+            image.url = base64Image
+        }
+        if (single) {
+            dispatch(cameraSlice.actions.addSingleImage(image))
+        } else {
+            dispatch(cameraSlice.actions.addImage(image))
+        }
     };
 
     const uploadButton = (
