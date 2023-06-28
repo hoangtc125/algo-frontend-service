@@ -27,8 +27,8 @@ const steps = [
         description: 'Dựa trên dữ liệu ở bước 2',
     },
     {
-        title: 'Lịch sử phân cụm',
-        description: 'Các bản ghi phân cụm ở bước 3',
+        title: 'Đánh giá ứng viên',
+        description: 'Lịch sử phân cụm',
     },
 ]
 

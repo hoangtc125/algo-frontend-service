@@ -1,6 +1,6 @@
-import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
+import { Descriptions, Modal, Table, Tag, Input, Tooltip } from 'antd';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DownloadIcon from '@mui/icons-material/Download';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,6 +29,28 @@ const ClusterPredLabel = ({ data }) => {
     const dataset = predLabels[predLoop || predLabels.length - 1].map(items => {
         return items.map(item => clusterDataset[item].filter((e, idx) => header[idx].weight > 0 || idx == 0))
     })
+    const ref1 = useRef(null)
+    const [editInputIndex, setEditInputIndex] = useState(-1);
+
+    useEffect(() => {
+        if (editInputIndex) {
+            ref1.current?.focus();
+        }
+    }, [editInputIndex]);
+
+    const handleEditInputConfirm = (value, tagId) => {
+        if (value.trim() && !supervisedOptions.map(e => e.value).includes(value)) {
+            const newTags = supervisedOptions.map(tag => {
+                if (tag.id == tagId) {
+                    return { ...tag, value: value }
+                } else {
+                    return tag
+                }
+            });
+            dispatch(clusterSlice.actions.setSupervisedOptions(newTags))
+        }
+        setEditInputIndex(-1);
+    };
 
     const columns = [
         {
@@ -66,30 +88,77 @@ const ClusterPredLabel = ({ data }) => {
                 return String(supervisedSet[a[0]]).localeCompare(supervisedSet[b[0]])
             },
             render: (text, record, index) => {
-                const idx = supervisedOptions.findIndex(e => e.id == supervisedSet[clusterDataset.findIndex(e => e[0] == record[0])])
-                if (idx == -1) {
-                    return <></>
-                }
-                const tag = supervisedOptions[idx]
-                const isLongTag = tag.value.length > 10;
-                const tagElem = (
-                    <Tag
-                        key={tag.id}
-                        className='text-sm'
-                        color={COLOR[idx]}
-                    >
-                        {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
-                    </Tag>
-                )
-                return (
-                    isLongTag ? (
-                        <Tooltip title={tag.value} key={tag.id}>
-                            {tagElem}
-                        </Tooltip>
-                    ) : (
-                        tagElem
+                if (hash == "#3") {
+                    const idx = supervisedOptions.findIndex(e => e.id == supervisedSet[clusterDataset.findIndex(e => e[0] == record[0])])
+                    if (idx == -1) {
+                        return <></>
+                    }
+                    const tag = supervisedOptions[idx]
+                    const isLongTag = tag.value.length > 10;
+                    const tagElem = (
+                        <Tag
+                            key={tag.id}
+                            className='text-sm'
+                            color={COLOR[idx]}
+                        >
+                            {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                        </Tag>
                     )
-                )
+                    return (
+                        isLongTag ? (
+                            <Tooltip title={tag.value} key={tag.id}>
+                                {tagElem}
+                            </Tooltip>
+                        ) : (
+                            tagElem
+                        )
+                    )
+                } else {
+                    return (
+                        <FormControl fullWidth>
+                            <InputLabel id="el-supervised-set-label">Tập giám sát</InputLabel>
+                            <Select
+                                labelId="el-supervised-set-label"
+                                id="el-supervised-set"
+                                label="Tập giám sát"
+                                value={supervisedSet[record[0]] || ``}
+                                onChange={(e) => {
+                                    e.stopPropagation()
+                                    dispatch(clusterSlice.actions.setSupervisedSet({ index: record[0], supervisedSet: e.target.value }))
+                                }}
+                            >
+                                <MenuItem key={""} value={``}>
+                                    Không
+                                </MenuItem>
+                                {supervisedOptions.map((tag, idx) => {
+                                    const isLongTag = tag.value.length > 10;
+                                    const tagElem = (
+                                        <Tag
+                                            key={tag.id}
+                                            className='text-base'
+                                            color={COLOR[idx]}
+                                        >
+                                            {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                                        </Tag>
+                                    )
+                                    return (
+                                        <MenuItem key={tag.id} value={tag.id}>
+                                            {
+                                                isLongTag ? (
+                                                    <Tooltip title={tag.value} key={tag.id}>
+                                                        {tagElem}
+                                                    </Tooltip>
+                                                ) : (
+                                                    tagElem
+                                                )
+                                            }
+                                        </MenuItem>
+                                    )
+                                })}
+                            </Select>
+                        </FormControl>
+                    )
+                }
             },
         }, ...header.filter((e, idx) => e.weight > 0 || idx == 0).map((item, index) => {
             return {
@@ -112,7 +181,15 @@ const ClusterPredLabel = ({ data }) => {
                     }
                 },
             }
-        })
+        }), {
+            title: 'Thao tác',
+            key: 'action',
+            fixed: 'right',
+            width: 100,
+            render: (text, record, index) => (
+                <Button variant='outlined' onClick={() => handleRowClick(record)}>Xem</Button>
+            ),
+        }
     ]
 
     const handleRowClick = (record) => {
@@ -162,7 +239,7 @@ const ClusterPredLabel = ({ data }) => {
                 selectedRecord: selectedRecord,
                 predLabels: predLabels,
                 membership: membership,
-                predLoop: predLoop,
+                predLoop: predLoop || predLabels.length - 1,
             }
         }
         dispatch(clusterHistorySlice.actions.pushHistory(newHistory))
@@ -203,23 +280,45 @@ const ClusterPredLabel = ({ data }) => {
                     const tagElem = (
                         <Tag
                             key={tag.id}
-                            className='text-sm'
+                            className='text-base'
                             color={COLOR[id]}
+                            style={{
+                                userSelect: 'none',
+                            }}
                         >
-                            {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                            <span
+                                className='text-lg'
+                                onDoubleClick={(e) => {
+                                    setEditInputIndex(id);
+                                    e.preventDefault();
+                                }}
+                            >
+                                {isLongTag ? `${tag.value.slice(0, 10)}...` : tag.value}
+                            </span>
                         </Tag>
-                    )
+                    );
                     return (
                         <Grid key={id} container className='w-full'>
                             <Grid item xs={2} className='w-full flex items-center text-center p-2'>
                                 <Box className='flex flex-col w-full items-center text-center justify-center space-y-2'>
-                                    {
-                                        isLongTag ? (
-                                            <Tooltip title={tag.value} key={tag.id} placement="bottom">
-                                                {tagElem}
-                                            </Tooltip>
-                                        ) : (
-                                            tagElem
+                                    {(editInputIndex == id && hash != "#3") ?
+                                        <Input
+                                            ref={ref1}
+                                            key={tag.id}
+                                            size="large"
+                                            className='w-full'
+                                            defaultValue={tag.value}
+                                            onBlur={(e) => { handleEditInputConfirm(e.target.value, tag.id) }}
+                                            onPressEnter={(e) => { handleEditInputConfirm(e.target.value, tag.id) }}
+                                        /> :
+                                        (
+                                            isLongTag ? (
+                                                <Tooltip title={tag.value} key={tag.id} placement="bottom">
+                                                    {tagElem}
+                                                </Tooltip>
+                                            ) : (
+                                                tagElem
+                                            )
                                         )
                                     }
                                     <Typography>
@@ -242,11 +341,11 @@ const ClusterPredLabel = ({ data }) => {
                                         size='small'
                                         className="w-full cursor-pointer rounded-md shadow-md bg-white"
                                         rowKey={(record) => record[0]}
-                                        onRow={(record, rowIndex) => {
-                                            return {
-                                                onClick: (event) => { handleRowClick(record) }
-                                            };
-                                        }}
+                                        // onRow={(record, rowIndex) => {
+                                        //     return {
+                                        //         onClick: (event) => { handleRowClick(record) }
+                                        //     };
+                                        // }}
                                         scroll={{
                                             x: 200,
                                         }}

@@ -72,6 +72,9 @@ const clusterSlice = createSlice({
     setSupervisedSet: (state, action) => {
       state.supervisedSet[action.payload.index] = action.payload.supervisedSet
     },
+    clearSupervisedSet: (state, action) => {
+      state.supervisedSet = Array(state.dataset.length).fill(null)
+    },
     setHeader: (state, action) => {
       state.header = action.payload
     },

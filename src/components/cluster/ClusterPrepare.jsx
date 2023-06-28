@@ -298,9 +298,14 @@ const ClusterPrepare = () => {
                     3. Chọn dữ liệu phân cụm
                 </Typography>
                 <Box className="w-full flex items-center justify-between">
-                    <Typography variant='body1'>
-                        {`Đã chọn ${selectedRecord.length} bản ghi (Giám sát ${selectedRecord.filter(e => supervisedSet[e]).length} bản ghi - Tỷ lệ ${selectedRecord.length > 0 ? 100 * Math.floor(selectedRecord.filter(e => supervisedSet[e]).length / selectedRecord.length * 100) / 100: 0}%)`}
-                    </Typography>
+                    <Box className="flex space-x-2 text-center items-center">
+                        <Typography variant='body1' className='text-center'>
+                            {`Đã chọn ${selectedRecord.length} bản ghi (Giám sát ${selectedRecord.filter(e => supervisedSet[e]).length} bản ghi - Tỷ lệ ${selectedRecord.length > 0 ? 100 * Math.floor(selectedRecord.filter(e => supervisedSet[e]).length / selectedRecord.length * 100) / 100 : 0}%)`}
+                        </Typography>
+                        <Button color='error' onClick={() => { dispatch(clusterSlice.actions.clearSupervisedSet()) }}>
+                            Bỏ tất cả giám sát
+                        </Button>
+                    </Box>
                     <Button variant='contained' startIcon={<DownloadIcon />} onClick={() => { handleDownload(header.map(e => e.title), dataset, "PrepareDataset.xlsx") }}>
                         Tải xuống
                     </Button>
