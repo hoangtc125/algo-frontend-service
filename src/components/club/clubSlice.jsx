@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { del, post, put } from '../../utils/request';
-import { errorNotification } from '../../utils/notification';
+import { errorNotification, successNotification } from '../../utils/notification';
 
 const clubSlice = createSlice({
   name: 'club',
@@ -11,6 +11,7 @@ const clubSlice = createSlice({
     groups: [],
     select: null,
     selectedUser: [],
+    events: [],
   },
   reducers: {
     clear: (state, action) => {
@@ -20,6 +21,7 @@ const clubSlice = createSlice({
       state.groups = []
       state.select = null
       state.selectedUser = []
+      state.events = []
     },
     setId: (state, action) => {
       state.id = action.payload;
@@ -45,6 +47,9 @@ const clubSlice = createSlice({
     },
     setSelectedUserSelect: (state, action) => {
       state.selectedUser = action.payload;
+    },
+    setEvents: (state, action) => {
+      state.events = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -85,6 +90,21 @@ const clubSlice = createSlice({
           errorNotification(action.payload["status_code"], action.payload["msg"], "bottomRight")
         }
       })
+      .addCase(updateEvent.fulfilled, (state, action) => {
+        if (action.payload["status_code"] == 200) {
+          successNotification("Thành công", "", "bottomRight")
+        } else {
+          errorNotification(action.payload["status_code"], action.payload["msg"], "bottomRight")
+        }
+      })
+      .addCase(createEvent.fulfilled, (state, action) => {
+        if (action.payload["status_code"] == 200) {
+          successNotification("Thành công", "", "bottomRight")
+          state.events.push(action.payload["data"])
+        } else {
+          errorNotification(action.payload["status_code"], action.payload["msg"], "bottomRight")
+        }
+      })
   },
 });
 
@@ -116,6 +136,23 @@ export const createMember = createAsyncThunk(
   'club/createMember',
   async (payload) => {
     const data = await post(`/club/member/create`, payload)
+    return data;
+  }
+);
+
+
+export const updateEvent = createAsyncThunk(
+  'club/updateEvent',
+  async ({event_id, payload}) => {
+    const data = await put(`/recruit/event/update?event_id=${event_id}`, payload)
+    return data;
+  }
+);
+
+export const createEvent = createAsyncThunk(
+  'club/createEvent',
+  async (payload) => {
+    const data = await post(`/recruit/event/create`, payload)
     return data;
   }
 );

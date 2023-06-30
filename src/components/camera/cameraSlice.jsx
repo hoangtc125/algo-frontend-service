@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const cameraSlice = createSlice({
   name: 'camera',
-  initialState: { single: false, ip: "192.168.1.9", images: [], loading: false },
+  initialState: { single: false, ip: "100.111.112.90", images: [], loading: false },
   reducers: {
     changeIP: (state, action) => {
       state.ip = action.payload;
@@ -27,7 +27,7 @@ const cameraSlice = createSlice({
     clear: (state, action) => {
       state.images = []
       state.single = false
-      state.ip = "192.168.1.9"
+      state.ip = "100.111.112.90"
       state.loading = false
     },
   },

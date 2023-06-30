@@ -20,6 +20,9 @@ import ClubProfile from '../components/club/ClubProfile';
 import Test from '../components/Test';
 import CreateInfo from '../components/club/CreateInfo';
 import Member from '../components/club/Member';
+import ClubEvents from '../components/club/ClubEvents';
+import CreateEvent from '../components/club/CreateEvent';
+import EventDetail from '../components/club/EventDetail';
 
 export default createBrowserRouter([
   {
@@ -95,6 +98,18 @@ export default createBrowserRouter([
           {
             element: <CreateInfo />,
             path: '/algo-frontend-service/club/create',
+          },
+          {
+            element: <ClubEvents />,
+            path: '/algo-frontend-service/club/:clubId/events',
+          },
+          {
+            element: <CreateEvent />,
+            path: '/algo-frontend-service/club/:clubId/create-event',
+          },
+          {
+            element: <EventDetail />,
+            path: '/algo-frontend-service/event/:eventId',
           },
           {
             element: <CreateInfo />,

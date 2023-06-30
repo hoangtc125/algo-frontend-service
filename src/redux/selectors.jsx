@@ -47,3 +47,4 @@ export const clubMembersSelector = (state) => state.club.members || []
 export const clubGroupsSelector = (state) => state.club.groups || []
 export const selectModeSelector = (state) => state.club.select
 export const selectedUserSelector = (state) => state.club.selectedUser
+export const eventsSelector = (state) => state.club.events

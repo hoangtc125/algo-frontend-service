@@ -22,6 +22,7 @@
     "@mui/material": "^5.13.2",
     "@reduxjs/toolkit": "^1.9.5",
     "antd": "^5.5.1",
+    "dayjs": "^1.11.8",
     "firebase": "^9.21.0",
     "formik": "^2.2.9",
     "gh-pages": "^5.0.0",

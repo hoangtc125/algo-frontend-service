@@ -25,6 +25,7 @@ import cameraSlice from '../camera/cameraSlice';
 import MapPicker from '../map/MapPicker';
 import clubSlice from './clubSlice';
 import mapSlice from '../map/mapSlice';
+import ClubEventList from './ClubEventList';
 
 const ClubProfile = () => {
     const dispatch = useDispatch()
@@ -412,6 +413,24 @@ const ClubProfile = () => {
                         ))
                     }
                 </Grid>
+            </Card>
+            <Card title={
+                <Box className="w-full items-center space-x-2 flex">
+                    <Typography variant='h6'>Danh sách sự kiện</Typography>
+                    {
+                        isEdit ?
+                            <div onClick={() => {
+                                navigate(`/algo-frontend-service/club/${clubId}/events`)
+                            }}>
+                                <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
+                            </div>
+                            : <></>
+                    }
+                </Box>
+            } bordered={false}
+                className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
+            >
+                <ClubEventList />
             </Card>
             <Card title={
                 <Box className="w-full items-center space-x-2 flex">
