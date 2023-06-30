@@ -10,6 +10,7 @@ import formSlice from '../../components/formBuilder/formSlice';
 import { FORM_BUILDER } from '../../utils/constant';
 import { formSelector, infoFormSelector } from '../../redux/selectors';
 import { Link, useParams } from 'react-router-dom';
+import { get } from '../../utils/request';
 
 const FormBuilderPage = () => {
     const dispatch = useDispatch()
@@ -20,11 +21,78 @@ const FormBuilderPage = () => {
     const [items, setItems] = useState([]);
     console.log("re-render");
 
+    // useEffect(() => {
+    //     if (formId == FORM_BUILDER.id) {
+    //         dispatch(formSlice.actions.clear())
+    //         dispatch(formSlice.actions.fakeForm())
+    //         const fakeItems = FORM_BUILDER.sections.map((e, k) => {
+    //             return {
+    //                 label: e.title,
+    //                 children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
+    //                 key: e.id,
+    //                 closable: k != 0,
+    //             }
+    //         })
+    //         setItems(fakeItems)
+    //     } else {
+    //         if (formData.id != formId) {
+    //             dispatch(formSlice.actions.clear())
+    //             dispatch(formSlice.actions.createForm(formId))
+    //             setItems([{
+    //                 label: "",
+    //                 children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId} /></div>,
+    //                 key: formId,
+    //                 closable: false,
+    //             }])
+    //         } else {
+    //             const recoveryItems = formData.sections.map((e, k) => {
+    //                 return {
+    //                     label: e.title,
+    //                     children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
+    //                     key: e.id,
+    //                     closable: k != 0,
+    //                 }
+    //             })
+    //             setItems(recoveryItems)
+    //         }
+    //     }
+    //     setActiveKey(formId)
+    // }, [])
+
+    const getFormQuestion = async (id) => {
+        try {
+            const res = await get(`/recruit/form-question/get?id=${id}`)
+            if (res?.status_code == 200) {
+                dispatch(formSlice.actions.createForm({id: res?.data?.id, data: res?.data?.sections}))
+                setItems(res?.data?.sections.map((e, idx) => {
+                    return {
+                        label: "",
+                        children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
+                        key: e.id,
+                        closable: idx != 0,
+                    }
+                }))
+                // setItems([{
+                //     label: "",
+                //     children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId} /></div>,
+                //     key: formId,
+                //     closable: false,
+                // }])
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    }
+
     useEffect(() => {
-        if (formId == FORM_BUILDER.id) {
+        if (formData.id != formId) {
             dispatch(formSlice.actions.clear())
-            dispatch(formSlice.actions.fakeForm())
-            const fakeItems = FORM_BUILDER.sections.map((e, k) => {
+            getFormQuestion(formId)
+        } else {
+            const recoveryItems = formData.sections.map((e, k) => {
                 return {
                     label: e.title,
                     children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
@@ -32,28 +100,7 @@ const FormBuilderPage = () => {
                     closable: k != 0,
                 }
             })
-            setItems(fakeItems)
-        } else {
-            if (formData.id != formId) {
-                dispatch(formSlice.actions.clear())
-                dispatch(formSlice.actions.createForm(formId))
-                setItems([{
-                    label: "",
-                    children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={formId} /></div>,
-                    key: formId,
-                    closable: false,
-                }])
-            } else {
-                const recoveryItems = formData.sections.map((e, k) => {
-                    return {
-                        label: e.title,
-                        children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
-                        key: e.id,
-                        closable: k != 0,
-                    }
-                })
-                setItems(recoveryItems)
-            }
+            setItems(recoveryItems)
         }
         setActiveKey(formId)
     }, [])

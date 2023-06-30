@@ -11,6 +11,7 @@ const HeaderForm = ({ sectionId }) => {
   const description = useSelector(descriptionSectionSelector(sectionId))
 
   console.log("re-render");
+  console.log({title, description});
 
   return (
     <Box sx={{ mb: 3 }}>

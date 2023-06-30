@@ -21,44 +21,8 @@ const formSlice = createSlice({
       state.sections = FORM_BUILDER.sections
     },
     createForm: (state, action) => {
-      state.id = action.payload;
-      state.sections.push({
-        id: action.payload,
-        title: "Đơn tuyển thành viên",
-        description: "",
-        data: [
-          {
-            id: '162b384f-b495-4c8a-b2d4-f3462c12147d',
-            value: 'Email cá nhân',
-            type: 'text',
-            answer: '',
-            disabled: true,
-            required: true,
-            options: [
-              {
-                id: '85000685-e1c5-4447-bb8f-3a541f45be7b',
-                value: '',
-                to: ''
-              }
-            ]
-          },
-          {
-            id: '04ed6a64-26f6-45ad-abd5-bf1c9d425608',
-            value: 'Họ và tên',
-            type: 'text',
-            answer: '',
-            disabled: true,
-            required: true,
-            options: [
-              {
-                id: '2a92e6d4-2ac8-4379-94d6-36cc75ae4c75',
-                value: '',
-                to: ''
-              }
-            ]
-          },
-        ],
-      })
+      state.id = action.payload.id;
+      state.sections = action.payload.data
     },
     addSection: (state, action) => {
       state.sections.push({

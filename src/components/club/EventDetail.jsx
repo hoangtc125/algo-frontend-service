@@ -8,6 +8,7 @@ import { accountSelector } from '../../redux/selectors';
 import { get } from '../../utils/request';
 import { COLOR_REAL, EVENT_TYPE, PROCESS_STATUS } from '../../utils/constant';
 import { Tag, Tooltip } from 'antd';
+import Round from './Round';
 
 const EventDetail = () => {
 
@@ -80,18 +81,9 @@ const EventDetail = () => {
             </Box>
             {
                 (event?.rounds || []).map((round, idRound) => {
-                    return (
-                        <Box className="flex" key={idRound}>
-                            <Tag color={COLOR_REAL[idRound]} className='hover:cursor-pointer text-sm 2xl:text-base m-1 hover:text-lg' onClick={() => {
-                            }}>
-                                {round.name}
-                            </Tag>
-                            {
-                                round.kind == "FORM" && round.form_question_id &&
-                                <Link to={`/algo-frontend-service/apply/${round.form_question_id}`}>Đơn tuyển thành viên tại đây</Link>
-                            }
-                        </Box>
-                    )
+                    if (round.kind == "FORM") {
+                        return <Round key={idRound} idRound={idRound} round={round} eventId={eventId} clubId={event.club_id}/>
+                    }
                 })
             }
         </Box>

@@ -16,7 +16,7 @@ const BodyForm = ({ formId }) => {
 
     const dispatch = useDispatch()
     const formData = useSelector(formSelector)
-    const sectionData = formData.sections.find(e => e.id == formId).data || []
+    const sectionData = formData.sections.find(e => e.id == formId)?.data || []
 
     console.log("re-render");
 

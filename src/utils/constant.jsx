@@ -229,10 +229,10 @@ export const EVENT_TYPE = {
 }
 
 export const FORM_BUILDER = {
-    id: 'b62cd80f-7e84-4373-8f30-42ab09a34f5d', 
+    id: 'sample', 
     sections: [
         {
-            id: 'b62cd80f-7e84-4373-8f30-42ab09a34f5d',
+            id: 'sample',
             title: 'Mẫu đơn tuyển thành viên',
             description: 'Mẫu đơn tuyển thành viên cho các Câu lạc bộ học thuật về Công nghệ thông tin',
             data: [
