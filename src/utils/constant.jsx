@@ -208,19 +208,23 @@ export const GUEST = {
 export const PROCESS_STATUS = {
     "ON": {
         "color" :"#52C41A",
-        "label": "Đang diễn ra"
+        "label": "Đang diễn ra",
+        "description": "Đơn đang mở, ứng viên có thể điền đơn",
     },
     "NOT_BEGIN": {
         "color" :"#1677FF",
-        "label": "Chưa diễn ra"
+        "label": "Chưa diễn ra",
+        "description": "Đơn chưa mở, không thể điền đơn",
     },
     "PAUSE": {
         "color" :"#1677FF",
-        "label": "Đang tạm dừng"
+        "label": "Đang tạm dừng",
+        "description": "Đơn đang tạm dừng thu thập thông tin",
     },
     "FINISHED": {
         "color" :"#F5222D",
-        "label": "Đã kết thúc"
+        "label": "Đã kết thúc",
+        "description": "Đơn đã đóng, không thể điền đơn",
     },
 }
 

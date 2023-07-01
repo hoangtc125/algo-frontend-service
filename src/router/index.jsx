@@ -109,7 +109,7 @@ export default createBrowserRouter([
           },
           {
             element: <EventDetail />,
-            path: '/algo-frontend-service/event/:eventId',
+            path: '/algo-frontend-service/club/:clubId/events/:eventId',
           },
           {
             element: <CreateInfo />,

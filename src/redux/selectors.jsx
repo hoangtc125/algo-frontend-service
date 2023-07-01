@@ -19,6 +19,7 @@ export const formIdSelector = (state) => state.form.id
 export const isSubmitFormSelector = (state) => state.form.isSubmit
 
 export const formStoreSelector = (state) => state.formStore.forms
+export const selectedFormSelector = (state) => state.formStore.selected
 
 export const clusterSelector = (state) => state.cluster
 export const clusterHeaderSelector = (state) => state.cluster.header

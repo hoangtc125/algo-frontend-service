@@ -113,7 +113,7 @@ const ClubEventList = () => {
                                                         </Tag>
                                                         {
                                                             round.kind == "FORM" && round.form_question_id &&
-                                                            <Link to={`/algo-frontend-service/apply/${round.form_question_id}`}>Đơn tuyển thành viên tại đây</Link>
+                                                            <Link to={`/algo-frontend-service/form-store/${round.form_question_id}/preview`}>Đơn tuyển thành viên tại đây</Link>
                                                         }
                                                     </Box>
                                                 )
@@ -128,7 +128,7 @@ const ClubEventList = () => {
                             </Typography>
                             {event?.owners.map(e => e?.user?.id).includes(account?.id) ?
                                 <div className='w-full items-center text-center' onClick={() => {
-                                    navigate(`/algo-frontend-service/event/${event?.id}`)
+                                    navigate(`events/${event?.id}`)
                                 }}>
                                     <EditIcon className='bg-slate-100 rounded-lg p-1 hover:cursor-pointer' fontSize="large" color="#ccc" />
                                 </div>

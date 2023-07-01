@@ -1,16 +1,41 @@
-import { Box, Button, Typography } from '@mui/material';
-import { Card, Tag } from 'antd';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Card, Modal, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { COLOR_REAL } from '../../utils/constant';
+import { COLOR_REAL, PROCESS_STATUS } from '../../utils/constant';
 import FORM from '../../assets/images/form.png'
-import { get, post } from '../../utils/request';
-import { errorNotification } from '../../utils/notification';
+import { get, post, put } from '../../utils/request';
+import { errorNotification, successNotification } from '../../utils/notification';
 import { Link } from 'react-router-dom';
+import FormStore from '../formStore/formStore';
+import { useSelector } from 'react-redux';
+import { selectedFormSelector } from '../../redux/selectors';
 
 const Round = ({ idRound, round, eventId, clubId }) => {
     const [data, setData] = useState(round)
     const [formQuestion, setFormQuestion] = useState(null)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const selected = useSelector(selectedFormSelector)
     console.log("re-render");
+
+    const handleOk = async () => {
+        try {
+            const res = await post(`/recruit/form-question/create?club_id=${clubId}&event_id=${eventId}&round_id=${data.id}`, selected)
+            if (res?.status_code == 200) {
+                setData({ ...data, form_question_id: res?.data })
+                setFormQuestion(selected)
+                setIsModalOpen(false);
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false)
+    }
 
     const getFormQuestion = async (id) => {
         try {
@@ -41,6 +66,37 @@ const Round = ({ idRound, round, eventId, clubId }) => {
         }
     }
 
+    const updataRoundStatus = async (status) => {
+        try {
+            const res = await put(`/recruit/round/update?event_id=${eventId}&round_id=${data.id}`, { status })
+            if (res?.status_code == 200) {
+                setData({ ...data, status })
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    }
+
+    const publicFormQuestion = async () => {
+        try {
+            const res = await put(`/recruit/form-question/update?form_question_id=${formQuestion.id}&event_id=${eventId}`, {
+                kind: "public"
+            })
+            if (res?.status_code == 200) {
+                successNotification("Successfull", "", "bottomRight")
+                setFormQuestion({ ...formQuestion, kind: "public" })
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    }
+
     useEffect(() => {
         if (data.form_question_id) {
             getFormQuestion(data.form_question_id)
@@ -49,11 +105,27 @@ const Round = ({ idRound, round, eventId, clubId }) => {
 
     return (
         <Card title={
-            <Box className="flex space-x-2">
-                <Tag color={COLOR_REAL[idRound]} className='hover:cursor-pointer text-sm 2xl:text-base m-1 hover:text-lg' onClick={() => {
+            <Box className="flex space-x-2 justify-between h-fit p-3">
+                <Tag color={COLOR_REAL[idRound]} className='hover:cursor-pointer h-fit text-sm 2xl:text-base m-1 hover:text-lg' onClick={() => {
                 }}>
                     {data.name}
                 </Tag>
+                <FormControl className='h-fit'>
+                    <InputLabel id="el-status-event-label">Trạng thái</InputLabel>
+                    <Select
+                        labelId="el-status-event-label"
+                        id="el-status-event"
+                        label="Trạng thái"
+                        defaultValue={round?.status || "NOT_BEGIN"}
+                        onChange={(e) => { updataRoundStatus(e.target.value) }}
+                    >
+                        {Object.keys(PROCESS_STATUS).map((e, idx) => (
+                            <MenuItem key={idx} value={e}>
+                                <Tag color={PROCESS_STATUS[e]?.color || "success"}>{PROCESS_STATUS[e]?.label}</Tag>
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Box>
         } bordered={true}
             className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
@@ -66,7 +138,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                     {!formQuestion ?
                         <Box className="w-full items-center text-center flex space-x-4">
                             <Button onClick={(() => { createNewFormQuestion() })}>Tạo đơn tuyển thành viên mới</Button>
-                            <Button>Chọn mẫu đơn có sẵn trong hệ thống</Button>
+                            <Button onClick={() => {setIsModalOpen(true)}}>Chọn mẫu đơn có sẵn trong hệ thống</Button>
                         </Box> :
                         <Box className="w-full flex space-x-2">
                             <Card
@@ -91,10 +163,25 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                                     />
                                 </Link>
                             </Card>
+                            <Box className="w-full flex flex-col space-y-3 items-start">
+                                {
+                                    formQuestion.kind == "private" ?
+                                        <Button onClick={publicFormQuestion}>Công khai biểu mẫu</Button> :
+                                        <Typography>Kho đơn: <Link to={`/algo-frontend-service/event`} className='text-blue-500'>Đã công khai</Link></Typography>
+                                }
+                                <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion.id}/preview`}</Link></Typography>
+                                <Typography>Số lượng câu trả lời: <Link to={`/algo-frontend-service/`} className='text-blue-500'>{0}</Link></Typography>
+                                <Typography>Trạng thái:
+                                    <Tag color={PROCESS_STATUS[data?.status || "NOT_BEGIN"]?.color || "success"}>{PROCESS_STATUS[data?.status || "NOT_BEGIN"]?.description}</Tag>
+                                </Typography>
+                            </Box>
                         </Box>
                     }
                 </Box>
             </Box>
+            <Modal centered width={1250} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
+                <FormStore mode={"#select"} />
+            </Modal>
         </Card>
     );
 }

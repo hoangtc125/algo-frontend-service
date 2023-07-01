@@ -127,7 +127,7 @@ const ClubEvents = () => {
                             </Tag>
                             {
                                 round.kind == "FORM" && round.form_question_id &&
-                                <Link to={`/algo-frontend-service/apply/${round.form_question_id}`}>Đơn tuyển thành viên tại đây</Link>
+                                <Link to={`/algo-frontend-service/form-store/${round.form_question_id}/preview`}>Đơn tuyển thành viên tại đây</Link>
                             }
                         </Box>
                     )
@@ -169,7 +169,7 @@ const ClubEvents = () => {
                 <Box className="space-x-2 items-center text-center">
                     <Button variant='outlined' color='info'
                         onClick={() => {
-                            navigate(`/algo-frontend-service/event/${record[0]}`)
+                            navigate(`${record[0]}`)
                         }}
                     >Xem</Button>
                 </Box>
