@@ -7,10 +7,13 @@ import { get, post, put } from '../../utils/request';
 import { errorNotification, successNotification } from '../../utils/notification';
 import { Link } from 'react-router-dom';
 import FormStore from '../formStore/formStore';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectedFormSelector } from '../../redux/selectors';
+import FormCluster from '../cluster/FormCluster';
+import clusterSlice from '../cluster/slice/clusterSlice';
 
 const Round = ({ idRound, round, eventId, clubId }) => {
+    const dispatch = useDispatch()
     const [data, setData] = useState(round)
     const [formQuestion, setFormQuestion] = useState(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,6 +35,60 @@ const Round = ({ idRound, round, eventId, clubId }) => {
             errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
         }
     };
+
+    const assignId = (data) => {
+        const newData = data.map((e, id) => {
+            if (id == 0) {
+                return [{ title: "ID đánh tự động", disabled: true }, ...e]
+            } else {
+                return [id - 1, ...e]
+            }
+        })
+        return newData
+    }
+
+    useEffect(() => {
+        if (!formQuestion?.answers) {
+            return
+        }
+        let filteredData = [[]]
+        let types = ["text"]
+        formQuestion.sections.map(s => s.data.map(e => {
+            filteredData[0].push(e.value)
+            if (["text", "textarea"].includes(e.type)) {
+                types.push("text")
+            } else if ("number" == e.type) {
+                types.push("numerical")
+            } else {
+                types.push("categorical")
+            }
+            return 1
+        }))
+        for (let index = 0; index < formQuestion.answers.length; index++) {
+            let answer = []
+            formQuestion.answers[index].sections.map(s => s.data.map(e => {
+                answer.push(e.answer)
+                return 1
+            }))
+            filteredData.push(answer)
+        }
+        const formData = assignId(filteredData)
+        const formHeader = formData[0].map((e, idx) => ({
+            id: idx,
+            title: e?.title || e,
+            type: types[idx],
+            disabled: e?.disabled || false,
+            weight: 0,
+        }))
+        const formBody = formData.slice(1)
+        console.log({formHeader, formBody});
+        dispatch(clusterSlice.actions.setDataset(formBody));
+        dispatch(clusterSlice.actions.setHeader(formHeader));
+        dispatch(clusterSlice.actions.setVectorset({dataset: formBody.length, header: formHeader.length}))
+        dispatch(clusterSlice.actions.setCollDiffData(
+            formHeader.map((item, index) => Array.from(new Set(formBody.map(e => e[index] || ''))))
+        ))
+    }, [formQuestion])
 
     const handleCancel = () => {
         setIsModalOpen(false)
@@ -138,7 +195,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                     {!formQuestion ?
                         <Box className="w-full items-center text-center flex space-x-4">
                             <Button onClick={(() => { createNewFormQuestion() })}>Tạo đơn tuyển thành viên mới</Button>
-                            <Button onClick={() => {setIsModalOpen(true)}}>Chọn mẫu đơn có sẵn trong hệ thống</Button>
+                            <Button onClick={() => { setIsModalOpen(true) }}>Chọn mẫu đơn có sẵn trong hệ thống</Button>
                         </Box> :
                         <Box className="w-full flex space-x-2">
                             <Card
@@ -170,13 +227,19 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                                         <Typography>Kho đơn: <Link to={`/algo-frontend-service/event`} className='text-blue-500'>Đã công khai</Link></Typography>
                                 }
                                 <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion.id}/preview`}</Link></Typography>
-                                <Typography>Số lượng câu trả lời: <Link to={`/algo-frontend-service/`} className='text-blue-500'>{0}</Link></Typography>
+                                <Typography>Số lượng câu trả lời: <span className='text-blue-500'>{(formQuestion?.answers || []).length}</span></Typography>
                                 <Typography>Trạng thái:
                                     <Tag color={PROCESS_STATUS[data?.status || "NOT_BEGIN"]?.color || "success"}>{PROCESS_STATUS[data?.status || "NOT_BEGIN"]?.description}</Tag>
                                 </Typography>
                             </Box>
                         </Box>
                     }
+                    <Typography variant='body1'>
+                        2. Đánh giá ứng viên
+                    </Typography>
+                    <Box className="w-full">
+                        <FormCluster />
+                    </Box>
                 </Box>
             </Box>
             <Modal centered width={1250} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>

@@ -106,14 +106,17 @@ const ClubEventList = () => {
                                         {
                                             (event?.rounds || []).map((round, idRound) => {
                                                 return (
-                                                    <Box className="flex" key={idRound}>
-                                                        <Tag color={COLOR_REAL[idRound]} className='hover:cursor-pointer text-sm 2xl:text-base m-1 hover:text-lg' onClick={() => {
+                                                    <Box className="flex flex-col w-full" key={idRound}>
+                                                        <Tag color={COLOR_REAL[idRound]} className='text-sm 2xl:text-base m-1 hover:text-lg' onClick={() => {
                                                         }}>
                                                             {round.name}
                                                         </Tag>
                                                         {
                                                             round.kind == "FORM" && round.form_question_id &&
-                                                            <Link to={`/algo-frontend-service/form-store/${round.form_question_id}/preview`}>Đơn tuyển thành viên tại đây</Link>
+                                                            <Box>
+                                                                <Link to={`/algo-frontend-service/form-store/${round.form_question_id}/preview`}>Đơn tuyển thành viên tại đây</Link>
+                                                                <Tag color={PROCESS_STATUS[round?.status || "NOT_BEGIN"]?.color || "success"}>{PROCESS_STATUS[round?.status || "NOT_BEGIN"]?.description}</Tag>
+                                                            </Box>
                                                         }
                                                     </Box>
                                                 )

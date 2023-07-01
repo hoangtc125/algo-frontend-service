@@ -8,10 +8,11 @@ import RadioForm from "./elements/RadioForm";
 import TextAreaForm from "./elements/TextAreaForm";
 import TextFieldForm from "./elements/TextFieldForm";
 import SelectForm from "./elements/SelectForm";
-import { formSelector } from "../../redux/selectors";
+import { accountSelector, formSelector } from "../../redux/selectors";
 import SectionForm from "./elements/SectionForm";
 import formSlice from "../formBuilder/formSlice";
 import { errorNotification, successNotification } from "../../utils/notification";
+import { post } from "../../utils/request";
 
 const BodyForm = ({ formId }) => {
 
@@ -19,6 +20,8 @@ const BodyForm = ({ formId }) => {
     const navigate = useNavigate()
     const formData = useSelector(formSelector)
     const sectionData = formData.sections.find(e => e.id == formId).data || []
+    const account = useSelector(accountSelector)
+    const hash = window.location.hash
 
     console.log("re-render");
 
@@ -57,13 +60,32 @@ const BodyForm = ({ formId }) => {
         return true
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         dispatch(formSlice.actions.setIsSubmit(true))
         if (!handlePreSubmit(sectionData)) {
             errorNotification("Gửi thất bại", "Kiểm tra lại các câu hỏi bắt buộc", "bottomRight")
         } else {
-            navigate(`/algo-frontend-service/form-store/${formId}/response`)
-            successNotification("Gửi thành công", "Câu trả lời của bạn sẽ sớm được xử lý", "bottomRight")
+            if (hash) {
+                navigate(`/algo-frontend-service/form-store/${formId}/response`)
+                successNotification("Gửi thành công", "Câu trả lời của bạn sẽ sớm được xử lý", "bottomRight")
+            } else {
+                try {
+                    const res = await post(`/recruit/form-answer/create`, {
+                        form_id: formId,
+                        sections: formData.sections,
+                        user_id: account?.id,
+                    })
+                    if (res?.status_code == 200) {
+                        navigate(`/algo-frontend-service/form-store/${formId}/response`)
+                        successNotification("Gửi thành công", "Câu trả lời của bạn sẽ sớm được xử lý", "bottomRight")
+                    } else {
+                        errorNotification("Gửi thất bại", res?.msg, "bottomRight")
+                    }
+                } catch (e) {
+                    console.log({ e });
+                    errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+                }
+            }
         }
     }
 

@@ -273,7 +273,11 @@ const ClubProfile = () => {
                     <Box className="w-full flex-1 text-center xl:text-end space-x-2">
                         {
                             !accountMember ?
-                                <Button variant="outlined" startIcon={<LoginIcon />}>
+                                <Button variant="outlined" startIcon={<LoginIcon />}
+                                    onClick={() => {
+                                        document.getElementById("event-list").scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    }}
+                                >
                                     Xin gia nhập
                                 </Button>
                                 : <Chip color='success' variant='outlined' label="Đã tham gia" />
@@ -427,7 +431,7 @@ const ClubProfile = () => {
                             : <></>
                     }
                 </Box>
-            } bordered={false}
+            } bordered={false} id='event-list'
                 className="p-8 sm:p-4 bg-white w-full shadow-md rounded-md"
             >
                 <ClubEventList />

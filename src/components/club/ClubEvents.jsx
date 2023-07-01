@@ -120,14 +120,16 @@ const ClubEvents = () => {
             render: (text, record, index) => {
                 return (text || []).map((round, idRound) => {
                     return (
-                        <Box className="flex w-full" key={idRound}>
-                            <Tag color={COLOR_REAL[idRound]} className='hover:cursor-pointer text-sm 2xl:text-base m-1 hover:text-lg' onClick={() => {
+                        <Box className="flex flex-col w-full" key={idRound}>
+                            <Tag color={COLOR_REAL[idRound]} className='text-sm 2xl:text-base m-1 hover:text-lg' onClick={() => {
                             }}>
                                 {round.name}
                             </Tag>
                             {
                                 round.kind == "FORM" && round.form_question_id &&
-                                <Link to={`/algo-frontend-service/form-store/${round.form_question_id}/preview`}>Đơn tuyển thành viên tại đây</Link>
+                                <Box className="flex flex-col ">
+                                    <Link to={`/algo-frontend-service/form-store/${round.form_question_id}/preview`}>Đơn tuyển thành viên tại đây</Link>
+                                </Box>
                             }
                         </Box>
                     )

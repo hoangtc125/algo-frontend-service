@@ -11,7 +11,7 @@ import { FORM_BUILDER } from '../../utils/constant';
 import { formSelector, infoFormSelector } from '../../redux/selectors';
 import { Link, useParams } from 'react-router-dom';
 import { get, put } from '../../utils/request';
-import { successNotification } from '../../utils/notification';
+import { errorNotification, successNotification } from '../../utils/notification';
 
 const FormBuilderPage = () => {
     const dispatch = useDispatch()
