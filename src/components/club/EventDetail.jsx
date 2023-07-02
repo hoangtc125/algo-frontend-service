@@ -9,6 +9,7 @@ import { COLOR_REAL, EVENT_TYPE, PROCESS_STATUS } from '../../utils/constant';
 import { Collapse, Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
 import Round from './Round';
 import { errorNotification } from '../../utils/notification';
+import Interview from './Interview';
 
 const EventDetail = () => {
 
@@ -294,7 +295,7 @@ const EventDetail = () => {
                         } else {
                             return (
                                 <Collapse.Panel header={round.name} key={idRound}>
-                                    <></>
+                                    <Interview key={idRound} idRound={idRound} round={round} eventId={eventId} clubId={event.club_id} />
                                 </Collapse.Panel>
                             )
                         }

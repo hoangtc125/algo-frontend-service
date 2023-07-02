@@ -40,9 +40,9 @@ const FormStore = ({ mode }) => {
         // dispatch(formStoreSlice.actions.fakeStore())
         getFormStore()
 
-        return () => {
-            dispatch(formSlice.actions.clear())
-        }
+        // return () => {
+        //     dispatch(formSlice.actions.clear())
+        // }
     }, [])
 
 

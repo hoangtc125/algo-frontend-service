@@ -59,7 +59,7 @@ const ClubEventList = () => {
                                 <Box
                                     className='relative h-96 text-center border'
                                 >
-                                    <Box className="w-full h-full items-center text-center">
+                                    <Box className="w-full h-full items-center text-center p-2">
                                         <Box className="w-full h-full flex flex-col text-center items-center justify-center whitespace-pre-line">
                                             <strong className='text-xl 2xl:text-3xl uppercase mb-1'>
                                                 {event?.name}
@@ -126,9 +126,9 @@ const ClubEventList = () => {
                                 </Box>
                             }
                         >
-                            <Typography variant='body1'>
+                            {/* <Typography variant='body1'>
                                 {`Diễn ra từ ${moment(parseInt(event?.start_time) * 1000).format('DD-MM-YYYY')} đến ${moment(parseInt(event?.end_time) * 1000).format('DD-MM-YYYY')}`}
-                            </Typography>
+                            </Typography> */}
                             {event?.owners.map(e => e?.user?.id).includes(account?.id) ?
                                 <div className='w-full items-center text-center' onClick={() => {
                                     navigate(`events/${event?.id}`)

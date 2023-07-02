@@ -81,7 +81,6 @@ const Round = ({ idRound, round, eventId, clubId }) => {
             weight: 0,
         }))
         const formBody = formData.slice(1)
-        console.log({formHeader, formBody});
         dispatch(clusterSlice.actions.setDataset(formBody));
         dispatch(clusterSlice.actions.setHeader(formHeader));
         dispatch(clusterSlice.actions.setVectorset({dataset: formBody.length, header: formHeader.length}))
@@ -168,10 +167,10 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                     {data.name}
                 </Tag>
                 <FormControl className='h-fit'>
-                    <InputLabel id="el-status-event-label">Trạng thái</InputLabel>
+                    <InputLabel id="el-status-form-label">Trạng thái</InputLabel>
                     <Select
-                        labelId="el-status-event-label"
-                        id="el-status-event"
+                        labelId="el-status-form-label"
+                        id="el-status-form"
                         label="Trạng thái"
                         defaultValue={round?.status || "NOT_BEGIN"}
                         onChange={(e) => { updataRoundStatus(e.target.value) }}
@@ -224,7 +223,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                                 {
                                     formQuestion.kind == "private" ?
                                         <Button onClick={publicFormQuestion}>Công khai biểu mẫu</Button> :
-                                        <Typography>Kho đơn: <Link to={`/algo-frontend-service/event`} className='text-blue-500'>Đã công khai</Link></Typography>
+                                        <Typography>Kho đơn: <Link to={`/algo-frontend-service/form-store`} className='text-blue-500'>Đã công khai</Link></Typography>
                                 }
                                 <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion.id}/preview`}</Link></Typography>
                                 <Typography>Số lượng câu trả lời: <span className='text-blue-500'>{(formQuestion?.answers || []).length}</span></Typography>

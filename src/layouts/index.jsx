@@ -45,7 +45,7 @@ const MainLayout = () => {
         };
 
         // Thực hiện cuộn về đầu trang khi component được render
-        if (location.pathname.includes("club/") && location.pathname.includes("events/")) {
+        if (location.pathname.includes("club/") && location.pathname.includes("events/") && location.hash) {
             return
         }
         scrollToTop();
