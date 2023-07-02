@@ -11,10 +11,11 @@ import { handleDownloadMany } from '../../utils/excel';
 import clusterSlice from './slice/clusterSlice';
 import clusterHistorySlice from './slice/clusterHistorySlice';
 import clusteringSlice from './slice/clusteringSlice';
-import { successNotification } from '../../utils/notification';
+import { errorNotification, successNotification } from '../../utils/notification';
 import { v4 } from 'uuid';
+import { post } from '../../utils/request';
 
-const ClusterPredLabel = ({ data }) => {
+const ClusterPredLabel = ({ data, idRound, eventId, clubId  }) => {
     const hash = window.location.hash
     const dispatch = useDispatch()
     const supervisedOptions = data.supervisedOptions
@@ -227,23 +228,51 @@ const ClusterPredLabel = ({ data }) => {
         successNotification("Đã chọn các bản ghi này", "Nhấn Tiến hành phân cụm hoặc trở lại bước 2 để chuẩn bị lại dữ liệu", "bottomRight")
     }
 
-    const handleSaveHistory = () => {
+    const handleSaveHistory = async () => {
         const id = v4()
-        const newHistory = {
-            id,
-            title: `Bản ghi ${id.substring(0, 8)}`,
-            data: {
-                header: header,
-                supervisedOptions: supervisedOptions,
-                supervisedSet: supervisedSet,
-                selectedRecord: selectedRecord,
-                predLabels: predLabels,
-                membership: membership,
-                predLoop: predLoop || predLabels.length - 1,
+        if (!eventId || !clubId || !idRound) {
+            const newHistory = {
+                id,
+                title: `Bản ghi ${id.substring(0, 8)}`,
+                data: {
+                    header: header,
+                    supervisedOptions: supervisedOptions,
+                    supervisedSet: supervisedSet,
+                    selectedRecord: selectedRecord,
+                    predLabels: predLabels,
+                    membership: membership,
+                    predLoop: predLoop || predLabels.length - 1,
+                }
+            }
+            dispatch(clusterHistorySlice.actions.pushHistory(newHistory))
+            successNotification("Lưu thành công", `Bản ghi ${id.substring(0, 8)}`, "bottomRight")
+        } else {
+            const newHistory = {
+                club_id: clubId, event_id: eventId, round_id: idRound,
+                title: `Bản ghi ${id.substring(0, 8)}`,
+                data: {
+                    header: header,
+                    supervisedOptions: supervisedOptions,
+                    supervisedSet: supervisedSet,
+                    selectedRecord: selectedRecord,
+                    predLabels: predLabels,
+                    membership: membership,
+                    predLoop: predLoop || predLabels.length - 1,
+                }
+            }
+            try {
+                const res = await post(`/recruit/cluster/create`, newHistory)
+                if (res?.status_code == 200) {
+                    dispatch(clusterHistorySlice.actions.pushHistory({...newHistory, id: res?.data}))
+                    successNotification("Lưu thành công", `Bản ghi ${String(res?.data).substring(0, 8)}`, "bottomRight")
+                } else {
+                    errorNotification(res?.status_code, res?.msg, "bottomRight")
+                }
+            } catch (e) {
+                console.log({ e });
+                errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
             }
         }
-        dispatch(clusterHistorySlice.actions.pushHistory(newHistory))
-        successNotification("Lưu thành công", `Bản ghi ${id.substring(0, 8)}`, "bottomRight")
     }
 
     return (

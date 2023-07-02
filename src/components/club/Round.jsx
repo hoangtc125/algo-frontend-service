@@ -52,6 +52,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
             return
         }
         let filteredData = [[]]
+        let clusterResult = []
         let types = ["text"]
         formQuestion.sections.map(s => s.data.map(e => {
             filteredData[0].push(e.value)
@@ -65,13 +66,16 @@ const Round = ({ idRound, round, eventId, clubId }) => {
             return 1
         }))
         for (let index = 0; index < formQuestion.answers.length; index++) {
+            const form_answer_item = formQuestion.answers[index]
+            clusterResult.push({ id: form_answer_item?.participant?.id, result: form_answer_item?.participant?.approve[0] })
             let answer = []
-            formQuestion.answers[index].sections.map(s => s.data.map(e => {
+            form_answer_item.sections.map(s => s.data.map(e => {
                 answer.push(e.answer)
                 return 1
             }))
             filteredData.push(answer)
         }
+        dispatch(clusterSlice.actions.setRoundResult(clusterResult))
         const formData = assignId(filteredData)
         const formHeader = formData[0].map((e, idx) => ({
             id: idx,
@@ -83,7 +87,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
         const formBody = formData.slice(1)
         dispatch(clusterSlice.actions.setDataset(formBody));
         dispatch(clusterSlice.actions.setHeader(formHeader));
-        dispatch(clusterSlice.actions.setVectorset({dataset: formBody.length, header: formHeader.length}))
+        dispatch(clusterSlice.actions.setVectorset({ dataset: formBody.length, header: formHeader.length }))
         dispatch(clusterSlice.actions.setCollDiffData(
             formHeader.map((item, index) => Array.from(new Set(formBody.map(e => e[index] || ''))))
         ))
@@ -136,6 +140,20 @@ const Round = ({ idRound, round, eventId, clubId }) => {
         }
     }
 
+    const endFormRound = async () => {
+        try {
+            const res = await put(`/recruit/round/form/end?event_id=${eventId}&round_id=${data.id}`)
+            if (res?.status_code == 200) {
+                setData({ ...data, status: "FINISHED" })
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    }
+
     const publicFormQuestion = async () => {
         try {
             const res = await put(`/recruit/form-question/update?form_question_id=${formQuestion.id}&event_id=${eventId}`, {
@@ -157,7 +175,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
         if (data.form_question_id) {
             getFormQuestion(data.form_question_id)
         }
-    }, [data])
+    }, [data.form_question_id])
 
     return (
         <Card title={
@@ -173,7 +191,13 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                         id="el-status-form"
                         label="Trạng thái"
                         defaultValue={round?.status || "NOT_BEGIN"}
-                        onChange={(e) => { updataRoundStatus(e.target.value) }}
+                        onChange={(e) => {
+                            if (e.target.value == "FINISHED") {
+                                endFormRound()
+                            } else {
+                                updataRoundStatus(e.target.value)
+                            }
+                        }}
                     >
                         {Object.keys(PROCESS_STATUS).map((e, idx) => (
                             <MenuItem key={idx} value={e}>
@@ -237,7 +261,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                         2. Đánh giá ứng viên
                     </Typography>
                     <Box className="w-full">
-                        <FormCluster />
+                        <FormCluster idRound={round.id} eventId={eventId} clubId={clubId} />
                     </Box>
                 </Box>
             </Box>

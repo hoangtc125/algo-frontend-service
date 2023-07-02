@@ -19,6 +19,7 @@ const clusterSlice = createSlice({
       { id: v4(), value: "Cụm 4" },
       { id: v4(), value: "Cụm 5" },
     ],
+    roundResults: clusterStorage?.roundResults || [],
   },
   reducers: {
     clear: (state, action) => {
@@ -35,10 +36,14 @@ const clusterSlice = createSlice({
         { id: v4(), value: "Cụm 5" },
       ]
       state.collDiffData = []
+      state.roundResults = []
     },
     setDataset: (state, action) => {
       state.dataset = action.payload
       state.supervisedSet = Array(action.payload.length).fill(null)
+    },
+    setRoundResult: (state, action) => {
+      state.roundResults = action.payload
     },
     setVectorset: (state, action) => {
       state.vectorset = Array.from({ length: action.payload.dataset }, () => Array(action.payload.header).fill({

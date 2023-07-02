@@ -16,7 +16,7 @@ import { LoadingButton } from '@mui/lab';
 import ClusterPredLabel from './ClusterPredLabels';
 import { checkDistinctElements } from '../../utils/cluster';
 
-const Clustering = () => {
+const Clustering = ({ idRound, eventId, clubId }) => {
     const dispatch = useDispatch()
     const clusterData = useSelector(clusterSelector)
     const process = useSelector(processSelector)
@@ -100,7 +100,7 @@ const Clustering = () => {
                             {
                                 process == 3
                                     ?
-                                    <ClusterPredLabel data={{ ...clusterData }} />
+                                    <ClusterPredLabel data={{ ...clusterData }} idRound={idRound} eventId={eventId} clubId={clubId} />
                                     :
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} className='w-full' />
                             }

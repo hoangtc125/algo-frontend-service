@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Modal, Descriptions, Empty, FloatButton, Table, Tag, Tooltip } from 'antd';
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import ClusterInfoHistory from './ClusterInfoHistory';
@@ -11,8 +11,11 @@ import ClusteringMembership from './ClusteringMembership';
 import ClusterChart from './ClusterChart';
 import ClusterPredLabel from './ClusterPredLabels';
 import { CLUSTER_TYPE, COLOR } from '../../utils/constant';
+import clusterHistorySlice, { getAllCluster } from './slice/clusterHistorySlice';
+import { errorNotification } from '../../utils/notification';
+import { put } from '../../utils/request';
 
-const ClusterHistory = () => {
+const ClusterHistory = ({ idRound, eventId, clubId }) => {
     const dispatch = useDispatch()
     const clusterData = useSelector(clusterSelector)
     const header = clusterData.header
@@ -21,9 +24,22 @@ const ClusterHistory = () => {
     const supervisedOptions = clusterData.supervisedOptions
     const selectedRecord = clusterData.selectedRecord
     const collDiffData = clusterData.collDiffData
+    const roundResults = clusterData.roundResults
     const clusterHistory = useSelector(clusterHistorySelector)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [record, setRecord] = useState()
+
+    console.log(roundResults);
+
+    useEffect(() => {
+        if (idRound && eventId && clubId) {
+            dispatch(getAllCluster({ idRound, eventId, clubId }))
+        }
+
+        return () => {
+            dispatch(clusterHistorySlice.actions.clear())
+        }
+    }, [])
 
     const predRecords = dataset.map(e => {
         if (!record?.data?.predLabels) {
@@ -126,7 +142,6 @@ const ClusterHistory = () => {
         width: 200,
         render: (text, recordrow, index) => {
             const idx = predRecords[recordrow[0]]
-            console.log(idx);
             if (idx == -1) {
                 return <></>
             }
@@ -163,11 +178,26 @@ const ClusterHistory = () => {
                     labelId="el-approve-label"
                     id="el-approve"
                     label="Đánh giá"
+                    defaultValue={roundResults[index]?.result}
+                    onChange={async (e) => {
+                        try {
+                            const res = await put(`/recruit/participant/update?participant_id=${roundResults[index]?.id}&event_id=${eventId}`, {
+                                approve: [e.target.value, false]
+                            })
+                            if (res?.status_code == 200) {
+                            } else {
+                                errorNotification(res?.status_code, res?.msg, "bottomRight")
+                            }
+                        } catch (e) {
+                            console.log({ e });
+                            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+                        }
+                    }}
                 >
-                    <MenuItem key={"reject"} value={`reject`}>
+                    <MenuItem key={false} value={false}>
                         <Tag className='text-base' color='red'>Loại</Tag>
                     </MenuItem>
-                    <MenuItem key={"approve"} value={`approve`}>
+                    <MenuItem key={true} value={true}>
                         <Tag className='text-base' color='green'>Chọn</Tag>
                     </MenuItem>
                 </Select>

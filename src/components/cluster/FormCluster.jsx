@@ -31,7 +31,7 @@ const steps = [
     },
 ]
 
-const FormCluster = () => {
+const FormCluster = ({ idRound, eventId, clubId }) => {
     const dispatch = useDispatch()
     const hash = String(window.location.hash)
     const [current, setCurrent] = useState(hash ? parseInt(hash.split("#")[1]) || 2 : 1);
@@ -81,19 +81,19 @@ const FormCluster = () => {
                         {
                             current == 1 &&
                             <Box className={`w-full h-full flex flex-col items-center justify-center`}>
-                                <ClusterPrepare />
+                                <ClusterPrepare idRound={idRound} eventId={eventId} clubId={clubId} />
                             </Box>
                         }
                         {
                             current == 2 &&
                             <Box className={`w-full h-full flex flex-col items-center justify-center`}>
-                                <Clustering />
+                                <Clustering idRound={idRound} eventId={eventId} clubId={clubId} />
                             </Box>
                         }
                         {
                             current == 3 &&
                             <Box className={`w-full h-full flex flex-col items-center justify-center`}>
-                                <ClusterHistory />
+                                <ClusterHistory idRound={idRound} eventId={eventId} clubId={clubId} />
                             </Box>
                         }
                     </Box>

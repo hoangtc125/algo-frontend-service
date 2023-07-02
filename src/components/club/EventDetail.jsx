@@ -125,39 +125,42 @@ const EventDetail = () => {
             width: 200, // Độ rộng cột
             render: (text, record, index) => {
                 return (
-                    <Button variant='outlined' onClick={async () => {
-                        try {
-                            const res = await post(`/recruit/form-answer/get-all`, { "event_id": eventId, "round_id": event?.rounds[0]?.id, "participant_id": record[0] })
-                            if (res?.status_code == 200 && res?.data.length == 1) {
-                                let record = []
-                                res?.data[0]?.sections.map(
-                                    s => s.data.map(e => {
-                                    record.push({value: e.value, answer: e.answer})
-                                }))
-                                Modal.info({
-                                    title: "Chi tiết bản ghi",
-                                    className: "min-w-[80vw] max-w-[90vw]",
-                                    centered: true,
-                                    content: (
-                                        <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
-                                            {
-                                                record.map((e, id) => (
-                                                    <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{e.answer}</Descriptions.Item>
-                                                ))
-                                            }
-                                        </Descriptions>
-                                    ),
-                                    onOk() { },
-                                    onCancel() { },
-                                });
-                            } else {
-                                errorNotification(res?.status_code, res?.msg, "bottomRight")
+                    <Box className="w-full space-x-1 flex justify-start items-center">
+                        <Tag className='text-base' color={record[7][0] ? "success" : 'red'}>{record[7][0] ? "Chọn" : "Loại"}</Tag>
+                        <Button variant='outlined' onClick={async () => {
+                            try {
+                                const res = await post(`/recruit/form-answer/get-all`, { "event_id": eventId, "round_id": event?.rounds[0]?.id, "participant_id": record[0] })
+                                if (res?.status_code == 200 && res?.data.length == 1) {
+                                    let record = []
+                                    res?.data[0]?.sections.map(
+                                        s => s.data.map(e => {
+                                        record.push({value: e.value, answer: e.answer})
+                                    }))
+                                    Modal.info({
+                                        title: "Chi tiết bản ghi",
+                                        className: "min-w-[80vw] max-w-[90vw]",
+                                        centered: true,
+                                        content: (
+                                            <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
+                                                {
+                                                    record.map((e, id) => (
+                                                        <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{e.answer}</Descriptions.Item>
+                                                    ))
+                                                }
+                                            </Descriptions>
+                                        ),
+                                        onOk() { },
+                                        onCancel() { },
+                                    });
+                                } else {
+                                    errorNotification(res?.status_code, res?.msg, "bottomRight")
+                                }
+                            } catch (e) {
+                                console.log({ e });
+                                errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
                             }
-                        } catch (e) {
-                            console.log({ e });
-                            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
-                        }
-                    }}>Xem</Button>
+                        }}>Xem</Button>
+                    </Box>
                 )
             }
         },
@@ -169,7 +172,11 @@ const EventDetail = () => {
             width: 200, // Độ rộng cột
             render: (text, record, index) => {
                 return (
-                    <Typography>{text}</Typography>
+                    <Box className="w-full space-x-1 flex justify-start items-center">
+                        <Tag className='text-base' color={record[7][1] ? "success" : 'red'}>{record[7][1] ? "Chọn" : "Loại"}</Tag>
+                        <Button variant='outlined' onClick={async () => {
+                        }}>Xem</Button>
+                    </Box>
                 )
             }
         },
@@ -180,8 +187,9 @@ const EventDetail = () => {
             ellipsis: true, // Giới hạn độ dài cột
             width: 200, // Độ rộng cột
             render: (text, record, index) => {
+                const res = (text || []).every((element) => element)
                 return (
-                    <Tag className='text-base' color={text ? "success" : 'red'}>{text ? "Chọn" : "Loại"}</Tag>
+                    <Tag className='text-base' color={res ? "success" : 'red'}>{res ? "Chọn" : "Loại"}</Tag>
                 )
             }
         },
