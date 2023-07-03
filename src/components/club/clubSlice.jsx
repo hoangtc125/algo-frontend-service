@@ -12,6 +12,7 @@ const clubSlice = createSlice({
     select: null,
     selectedUser: [],
     events: [],
+    shifts: [],
   },
   reducers: {
     clear: (state, action) => {
@@ -22,6 +23,7 @@ const clubSlice = createSlice({
       state.select = null
       state.selectedUser = []
       state.events = []
+      state.shifts = []
     },
     setId: (state, action) => {
       state.id = action.payload;
@@ -50,6 +52,9 @@ const clubSlice = createSlice({
     },
     setEvents: (state, action) => {
       state.events = action.payload;
+    },
+    setShifts: (state, action) => {
+      state.shifts = action.payload;
     },
   },
   extraReducers: (builder) => {

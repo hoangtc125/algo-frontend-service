@@ -49,3 +49,4 @@ export const clubGroupsSelector = (state) => state.club.groups || []
 export const selectModeSelector = (state) => state.club.select
 export const selectedUserSelector = (state) => state.club.selectedUser
 export const eventsSelector = (state) => state.club.events
+export const shiftsSelector = (state) => state.club.shifts

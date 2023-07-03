@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, DatePicker, Button, Table, Modal } from 'antd';
+import { Form, Input, DatePicker, Button, Table, Modal, Card, Tag } from 'antd';
 import { useFormik } from 'formik';
 import moment from 'moment';
-import { Box } from '@mui/material';
-import { del, post, put } from '../../utils/request';
-import { errorNotification } from '../../utils/notification';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Box, Typography } from '@mui/material';
+
+import FORM from '../../assets/images/form.png'
+import { del, get, post, put } from '../../utils/request';
+import { errorNotification, successNotification } from '../../utils/notification';
+import clubSlice from './clubSlice';
+import { PROCESS_STATUS } from '../../utils/constant';
 
 const { confirm } = Modal;
 
-const InterviewSchedule = ({ idRound, eventId, clubId }) => {
+const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
+    const dispatch = useDispatch()
     const [interviews, setInterviews] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [formQuestion, setFormQuestion] = useState(null)
     const [editIndex, setEditIndex] = useState(null);
 
     const getShift = async () => {
         try {
-            const res = await post(`/recruit/shift/get-all`, {club_id: clubId, event_id: eventId, round_id: idRound})
+            const res = await post(`/recruit/shift/get-all`, { club_id: clubId, event_id: eventId, round_id: idRound })
             if (res?.status_code == 200) {
                 setInterviews(res?.data)
             } else {
@@ -27,9 +35,49 @@ const InterviewSchedule = ({ idRound, eventId, clubId }) => {
         }
     }
 
+    const getFormQuestion = async () => {
+        try {
+            const res = await get(`/recruit/form-question/get?id=${round.form_question_id}`)
+            if (res?.status_code == 200) {
+                setFormQuestion(res?.data)
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    }
+
+    const updateFormQuestion = async (payload) => {
+        let updateQuestion = {...formQuestion}
+        updateQuestion.sections[0].data[0].options = payload
+        try {
+            const res = await put(`/recruit/form-question/update?form_question_id=${round.form_question_id}&event_id=${eventId}`, {
+                sections: updateQuestion.sections
+            })
+            if (res?.status_code == 200) {
+                successNotification("Cập nhật thành công", "Biểu mẫu thu thập đã được cập nhật theo", "bottomRight")
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    }
+
+    useEffect(() => {
+        dispatch(clubSlice.actions.setShifts(interviews))
+        if (formQuestion) {
+            updateFormQuestion(interviews.map(e => ({id: e?.id, to: "", value: `${e?.name} | ${e?.place} | ${moment(e.start_time).format('DD-MM-YYYY HH:mm')} - ${moment(e.end_time).format('DD-MM-YYYY HH:mm')}`})))
+        }
+    }, [interviews])
+
     useEffect(() => {
         getShift()
-    }, [])
+        getFormQuestion()
+    }, [round])
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -46,6 +94,20 @@ const InterviewSchedule = ({ idRound, eventId, clubId }) => {
         formik.setValues(interviews[index])
         showModal();
     };
+
+    const handleSendMailShift = async () => {
+        try {
+            const res = await put(`/recruit/shift/mail?form_question_id=${round.form_question_id}&event_id=${eventId}`)
+            if (res?.status_code == 200) {
+                successNotification("Thành công", "Biểu mẫu thu thập đã được send", "bottomRight")
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    }
 
     const handleDelete = (index, record) => {
         confirm({
@@ -74,10 +136,10 @@ const InterviewSchedule = ({ idRound, eventId, clubId }) => {
     const handleSubmit = async (values) => {
         if (editIndex != null) {
             try {
-                const res = await put(`/recruit/shift/update?shift_id=${interviews[editIndex]?.id}&event_id=${eventId}`, {...values, club_id: clubId, event_id: eventId, round_id: idRound})
+                const res = await put(`/recruit/shift/update?shift_id=${interviews[editIndex]?.id}&event_id=${eventId}`, { ...values, club_id: clubId, event_id: eventId, round_id: idRound })
                 if (res?.status_code == 200) {
                     const updatedInterviews = [...interviews];
-                    updatedInterviews[editIndex] = {...(interviews[editIndex]), ...values};
+                    updatedInterviews[editIndex] = { ...(interviews[editIndex]), ...values };
                     setInterviews(updatedInterviews);
                 } else {
                     errorNotification(res?.status_code, res?.msg, "bottomRight")
@@ -88,9 +150,9 @@ const InterviewSchedule = ({ idRound, eventId, clubId }) => {
             }
         } else {
             try {
-                const res = await post(`/recruit/shift/create`, {...values, club_id: clubId, event_id: eventId, round_id: idRound})
+                const res = await post(`/recruit/shift/create`, { ...values, club_id: clubId, event_id: eventId, round_id: idRound })
                 if (res?.status_code == 200) {
-                    setInterviews([...interviews, {id: res?.data, ...values}]);
+                    setInterviews([...interviews, { id: res?.data, ...values }]);
                 } else {
                     errorNotification(res?.status_code, res?.msg, "bottomRight")
                 }
@@ -153,9 +215,9 @@ const InterviewSchedule = ({ idRound, eventId, clubId }) => {
             ),
         },
         {
-          title: 'Địa điểm',
-          dataIndex: 'place',
-          key: 'place',
+            title: 'Địa điểm',
+            dataIndex: 'place',
+            key: 'place',
         },
         {
             title: 'Số lượng',
@@ -260,6 +322,38 @@ const InterviewSchedule = ({ idRound, eventId, clubId }) => {
                     </Button>
                 </Form>
             </Modal>
+            <Box className="w-full flex space-x-2 p-2">
+                <Card
+                    className='sm:w-72 w-96 shadow-lg m-4 lg:m-8'
+                    hoverable={true}
+                    cover={
+                        <Link to={`/algo-frontend-service/form-store/${formQuestion?.id}/builder`}>
+                            <img
+                                alt="example"
+                                src={FORM}
+                            />
+                        </Link>
+                    }
+                    actions={[
+                    ]}
+                >
+                    <Link to={`/algo-frontend-service/form-store/${formQuestion?.id}/builder`}>
+                        <Card.Meta
+                            className='h-24'
+                            title={(formQuestion?.sections || [])[0]?.title}
+                            description={(formQuestion?.sections || [])[0]?.description}
+                        />
+                    </Link>
+                </Card>
+                <Box className="w-full flex flex-col space-y-3 items-start">
+                    <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion?.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion?.id}/preview`}</Link></Typography>
+                    <Typography>Số lượng câu trả lời: <span className='text-blue-500'>{(formQuestion?.answers || []).length}</span></Typography>
+                    <Typography>Trạng thái:
+                        <Tag color={PROCESS_STATUS[round?.status || "NOT_BEGIN"]?.color || "success"}>{PROCESS_STATUS[round?.status || "NOT_BEGIN"]?.description}</Tag>
+                    </Typography>
+                    <Button type='primary' onClick={handleSendMailShift}>Gửi mail thu thập</Button>
+                </Box>
+            </Box>
         </div>
     );
 };

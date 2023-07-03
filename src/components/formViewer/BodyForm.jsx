@@ -70,10 +70,13 @@ const BodyForm = ({ formId }) => {
                 successNotification("Gửi thành công", "Câu trả lời của bạn sẽ sớm được xử lý", "bottomRight")
             } else {
                 try {
+                    const urlParams = new URLSearchParams(window.location.search)
+                    const participantId = urlParams.get("participant_id");
                     const res = await post(`/recruit/form-answer/create`, {
                         form_id: formId,
                         sections: formData.sections,
                         user_id: account?.id,
+                        participant_id: participantId,
                     })
                     if (res?.status_code == 200) {
                         navigate(`/algo-frontend-service/form-store/${formId}/response`)

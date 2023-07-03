@@ -54,7 +54,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
         let filteredData = [[]]
         let clusterResult = []
         let types = ["text"]
-        formQuestion.sections.map(s => s.data.map(e => {
+        formQuestion?.sections.map(s => s.data.map(e => {
             filteredData[0].push(e.value)
             if (["text", "textarea"].includes(e.type)) {
                 types.push("text")
@@ -65,12 +65,18 @@ const Round = ({ idRound, round, eventId, clubId }) => {
             }
             return 1
         }))
-        for (let index = 0; index < formQuestion.answers.length; index++) {
-            const form_answer_item = formQuestion.answers[index]
+        for (let index = 0; index < formQuestion?.answers.length; index++) {
+            const form_answer_item = formQuestion?.answers[index]
             clusterResult.push({ id: form_answer_item?.participant?.id, result: form_answer_item?.participant?.approve[0] })
             let answer = []
             form_answer_item.sections.map(s => s.data.map(e => {
-                answer.push(e.answer)
+                if (["radio", "section"].includes(e.type)) {
+                    answer.push((e.options || []).find(aw => e.answer == aw.id)?.value)
+                } else if ("select" == e.type) {
+                    answer.push((e.options || []).filter(aw => (e.answer || []).includes(aw.id)).map(aw => aw.value).join(', '))
+                } else {
+                    answer.push(e.answer)
+                }
                 return 1
             }))
             filteredData.push(answer)
@@ -156,7 +162,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
 
     const publicFormQuestion = async () => {
         try {
-            const res = await put(`/recruit/form-question/update?form_question_id=${formQuestion.id}&event_id=${eventId}`, {
+            const res = await put(`/recruit/form-question/update?form_question_id=${formQuestion?.id}&event_id=${eventId}`, {
                 kind: "public"
             })
             if (res?.status_code == 200) {
@@ -245,11 +251,11 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                             </Card>
                             <Box className="w-full flex flex-col space-y-3 items-start">
                                 {
-                                    formQuestion.kind == "private" ?
+                                    formQuestion?.kind == "private" ?
                                         <Button onClick={publicFormQuestion}>Công khai biểu mẫu</Button> :
                                         <Typography>Kho đơn: <Link to={`/algo-frontend-service/form-store`} className='text-blue-500'>Đã công khai</Link></Typography>
                                 }
-                                <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion.id}/preview`}</Link></Typography>
+                                <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion?.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion?.id}/preview`}</Link></Typography>
                                 <Typography>Số lượng câu trả lời: <span className='text-blue-500'>{(formQuestion?.answers || []).length}</span></Typography>
                                 <Typography>Trạng thái:
                                     <Tag color={PROCESS_STATUS[data?.status || "NOT_BEGIN"]?.color || "success"}>{PROCESS_STATUS[data?.status || "NOT_BEGIN"]?.description}</Tag>

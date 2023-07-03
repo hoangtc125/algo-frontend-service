@@ -134,8 +134,8 @@ const EventDetail = () => {
                                     let record = []
                                     res?.data[0]?.sections.map(
                                         s => s.data.map(e => {
-                                        record.push({value: e.value, answer: e.answer})
-                                    }))
+                                            record.push(e)
+                                        }))
                                     Modal.info({
                                         title: "Chi tiết bản ghi",
                                         className: "min-w-[80vw] max-w-[90vw]",
@@ -143,9 +143,15 @@ const EventDetail = () => {
                                         content: (
                                             <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
                                                 {
-                                                    record.map((e, id) => (
-                                                        <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{e.answer}</Descriptions.Item>
-                                                    ))
+                                                    record.map((e, id) => {
+                                                        if (["radio", "section"].includes(e.type)) {
+                                                            return <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{(e.options || []).find(aw => e.answer == aw.id)?.value}</Descriptions.Item>
+                                                        } else if ("select" == e.type) {
+                                                            return <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{(e.options || []).filter(aw => (e.answer || []).includes(aw.id)).map(aw => aw.value).join(', ')}</Descriptions.Item>
+                                                        } else {
+                                                            return <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{e.answer}</Descriptions.Item>
+                                                        }
+                                                    })
                                                 }
                                             </Descriptions>
                                         ),

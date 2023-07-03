@@ -198,7 +198,6 @@ const ClubEvents = () => {
                         <Box className="flex-1">
                             <Button variant='outlined'
                                 onClick={() => {
-                                    dispatch(clubSlice.actions.setSelect("select"))
                                     setIsModalOpen(true)
                                 }}
                             >Thêm sự kiện</Button>

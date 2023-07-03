@@ -18,7 +18,7 @@ const FormBuilderPage = () => {
     const { formId } = useParams()
     const formsInfo = useSelector(infoFormSelector)
     const formData = useSelector(formSelector)
-    const [eventId, setEventId] = useState()
+    const [eventId, setEventId] = useState(sessionStorage.getItem("eventId"))
     const [activeKey, setActiveKey] = useState();
     const [items, setItems] = useState([]);
     console.log("re-render");
@@ -58,6 +58,7 @@ const FormBuilderPage = () => {
                 if (res?.status_code == 200) {
                     dispatch(formSlice.actions.createForm({ id: res?.data?.id, data: res?.data?.sections }))
                     setEventId(res?.data?.event_id)
+                    sessionStorage.setItem("eventId", res?.data?.event_id)
                     setItems(res?.data?.sections.map((e, idx) => {
                         return {
                             label: "",

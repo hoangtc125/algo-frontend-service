@@ -56,7 +56,12 @@ const Interview = ({ idRound, round, eventId, clubId }) => {
                     <Typography variant='body1'>
                         1. Quản lý kíp phỏng vấn
                     </Typography>
-                    <InterviewSchedule idRound={round.id} eventId={eventId} clubId={clubId} />
+                    <InterviewSchedule idRound={round.id} round={data} eventId={eventId} clubId={clubId} />
+                </Box>
+                <Box className="w-full flex flex-col space-y-1">
+                    <Typography variant='body1'>
+                        2. Chia kíp phỏng vấn
+                    </Typography>
                 </Box>
             </Box>
         </Card>
