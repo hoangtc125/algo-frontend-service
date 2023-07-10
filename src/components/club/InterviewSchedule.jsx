@@ -11,6 +11,7 @@ import { del, get, post, put } from '../../utils/request';
 import { errorNotification, successNotification } from '../../utils/notification';
 import clubSlice from './clubSlice';
 import { PROCESS_STATUS } from '../../utils/constant';
+import InterviewScheduleTable from './InterviewScheduleTable';
 
 const { confirm } = Modal;
 
@@ -50,7 +51,7 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
     }
 
     const updateFormQuestion = async (payload) => {
-        let updateQuestion = {...formQuestion}
+        let updateQuestion = { ...formQuestion }
         updateQuestion.sections[0].data[0].options = payload
         try {
             const res = await put(`/recruit/form-question/update?form_question_id=${round.form_question_id}&event_id=${eventId}`, {
@@ -70,7 +71,7 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
     useEffect(() => {
         dispatch(clubSlice.actions.setShifts(interviews))
         if (formQuestion) {
-            updateFormQuestion(interviews.map(e => ({id: e?.id, to: "", value: `${e?.name} | ${e?.place} | ${moment(e.start_time).format('DD-MM-YYYY HH:mm')} - ${moment(e.end_time).format('DD-MM-YYYY HH:mm')}`})))
+            updateFormQuestion(interviews.map(e => ({ id: e?.id, to: "", value: `${e?.name} | ${e?.place} | ${moment(e.start_time).format('DD-MM-YYYY HH:mm')} - ${moment(e.end_time).format('DD-MM-YYYY HH:mm')}` })))
         }
     }, [interviews])
 
@@ -322,7 +323,7 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
                     </Button>
                 </Form>
             </Modal>
-            <Box className="w-full flex space-x-2 p-2">
+            <Box className="w-full h-fit flex space-x-2 p-2">
                 <Card
                     className='sm:w-72 w-96 shadow-lg m-4 lg:m-8'
                     hoverable={true}
@@ -345,15 +346,22 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
                         />
                     </Link>
                 </Card>
-                <Box className="w-full flex flex-col space-y-3 items-start">
-                    <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion?.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion?.id}/preview`}</Link></Typography>
-                    <Typography>Số lượng câu trả lời: <span className='text-blue-500'>{(formQuestion?.answers || []).length}</span></Typography>
-                    <Typography>Trạng thái:
-                        <Tag color={PROCESS_STATUS[round?.status || "NOT_BEGIN"]?.color || "success"}>{PROCESS_STATUS[round?.status || "NOT_BEGIN"]?.description}</Tag>
-                    </Typography>
-                    <Button type='primary' onClick={handleSendMailShift}>Gửi mail thu thập</Button>
+                <Box className="w-full h-full flex flex-col justify-between space-y-10">
+                    <Box className="w-full h-full flex flex-col space-y-3 items-start">
+                        <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion?.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion?.id}/preview`}</Link></Typography>
+                        <Typography>Số lượng câu trả lời: <span className='text-blue-500'>{(formQuestion?.answers || []).length}</span></Typography>
+                        <Typography>Trạng thái:
+                            <Tag color={PROCESS_STATUS[round?.status || "NOT_BEGIN"]?.color || "success"}>{PROCESS_STATUS[round?.status || "NOT_BEGIN"]?.description}</Tag>
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Button type='primary' onClick={handleSendMailShift}>Gửi mail thu thập</Button>
+                    </Box>
                 </Box>
             </Box>
+            {formQuestion &&
+                <InterviewScheduleTable data={formQuestion} />
+            }
         </div>
     );
 };

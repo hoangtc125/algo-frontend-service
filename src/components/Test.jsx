@@ -1,10 +1,10 @@
 import React from 'react';
-import Member from './club/Member';
+import SplitInterview from './club/SplitInterview';
 
 const Test = () => {
     return (
         <>
-            <Member />
+            <SplitInterview />
         </>
     );
 }

@@ -72,7 +72,8 @@ const BodyForm = ({ formId }) => {
                 try {
                     const urlParams = new URLSearchParams(window.location.search)
                     const participantId = urlParams.get("participant_id");
-                    const res = await post(`/recruit/form-answer/create`, {
+                    const url = participantId ? `/recruit/form-answer/create?is_interview=${true}` : `/recruit/form-answer/create`
+                    const res = await post(url, {
                         form_id: formId,
                         sections: formData.sections,
                         user_id: account?.id,

@@ -60,7 +60,7 @@ const Interview = ({ idRound, round, eventId, clubId }) => {
                 </Box>
                 <Box className="w-full flex flex-col space-y-1">
                     <Typography variant='body1'>
-                        2. Chia kíp phỏng vấn
+                        2. 
                     </Typography>
                 </Box>
             </Box>
