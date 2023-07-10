@@ -9,6 +9,7 @@ import { COLOR_REAL } from '../../utils/constant';
 import { post } from '../../utils/request';
 
 const SplitInterview = ({ m, rawData, rawShift }) => {
+    console.log({ rawShift });
     const [mode, setMode] = useState(m || 'trial');
     const [participantCount, setParticipantCount] = useState(rawData ? (rawData?.answers || []).length : 50);
     const [shiftCount, setShiftCount] = useState(rawShift ? (rawShift || []).length : 3);
@@ -29,11 +30,27 @@ const SplitInterview = ({ m, rawData, rawShift }) => {
             }
             setShiftCapacities(capacities)
             setCandidates(rawData.answers.map((e) => ({ ...e.participant, answer: e.sections[0].data[0].answer })));
-            let newShifts = rawShift.map((option) => ({ id: option.id, title: option.name, candidates: [] }))
-            newShifts.push({ id: 'unassigned', title: 'Chưa phân kíp', candidates: rawData.answers.map((answer) => answer.participant) })
+            console.log(rawData.answers);
+            let newShifts = rawShift.map((option) => ({
+                id: option.id, title: option.name, candidates: option.candidates.map(e => {
+                    const temp = rawData.answers.find(p => p.participant_id == e)
+                    console.log(temp);
+                    return { ...temp.participant, answer: temp.sections[0].data[0].answer }
+                })
+            }))
+            let unassignedCandidates = rawData.answers
+                .map((answer) => answer.participant)
+                .filter((e) => {
+                    const a = newShifts.some((subArray) => {
+                        return (subArray.candidates || []).includes(e.id)
+                    })
+                    return a
+                });
+            newShifts.push({ id: 'unassigned', title: 'Chưa phân kíp', candidates: unassignedCandidates })
             setShifts(newShifts)
+            setShiftCapacities(rawShift.map(e => e.capacity))
         }
-    }, [mode, rawData])
+    }, [mode, rawData, rawShift])
 
     const generateFakeData = () => {
         const options = Array.from({ length: shiftCount }, (v, idx) => ({
@@ -72,7 +89,7 @@ const SplitInterview = ({ m, rawData, rawShift }) => {
         setData(fakeData);
         let capacities = []
         for (let index = 0; index < shiftCount; index++) {
-            capacities.push(Math.ceil(participantCount / shiftCount))
+            capacities.push(Math.ceil(participantCount / (shiftCount + 1)))
         }
         setShiftCapacities(capacities)
         setCandidates(fakeData.answers.map((e) => ({ ...e.participant, answer: e.sections[0].data[0].answer })));
@@ -141,14 +158,22 @@ const SplitInterview = ({ m, rawData, rawShift }) => {
                 title: (
                     <div className='w-full items-center justify-center text-center flex space-x-2'>
                         <Tag color={COLOR_REAL[idx % COLOR_REAL.length]}>{shiftName}</Tag>
-                        <Typography>Max:</Typography>
-                        <InputNumber min={0} max={100} value={shiftCapacities[idx]}
-                            onChange={(e) => {
-                                let newCapacities = [...shiftCapacities]
-                                newCapacities[idx] = e
-                                setShiftCapacities(newCapacities)
-                            }}
-                        />
+                        {
+                            m == 'trial' ?
+                                <Box>
+                                    <Typography>Max:</Typography>
+                                    <InputNumber min={0} max={100} value={shiftCapacities[idx]}
+                                        onChange={(e) => {
+                                            let newCapacities = [...shiftCapacities]
+                                            newCapacities[idx] = e
+                                            setShiftCapacities(newCapacities)
+                                        }}
+                                    />
+                                </Box> :
+                                <Box>
+                                    <Typography>Max: {shiftCapacities[idx]}</Typography>
+                                </Box>
+                        }
                     </div>
                 ),
                 dataIndex: ['sections', 0, 'data', 0, 'answer'],
@@ -192,12 +217,13 @@ const SplitInterview = ({ m, rawData, rawShift }) => {
         try {
             const res = await post(`/recruit/interview/split?is_test=${mode == "trial" ? true : false}&auto_adjust=${isAutoAdjust}`, {
                 n_per_shift: shiftCapacities,
-                appointments_dict: payload
+                appointments_dict: payload,
+                shifts: shifts.slice(0, shifts.length - 1),
             })
             if (res?.status_code == 200) {
                 const updatedShifts = shifts.map((shift, idx) => ({
                     ...shift,
-                    candidates: res?.data[idx].map(e => candidates[e])
+                    candidates: res?.data[idx].map(e => candidates.find(c => c.id == e))
                 }));
                 setShifts(updatedShifts);
             } else {

@@ -34,8 +34,8 @@ const Shift = ({ id, color, title, capacity, candidates, onCandidateDrop }) => {
                 </Box>
             </Affix>
             {candidates.map((candidate) => (
-                <div key={candidate.id}>
-                    <Candidate id={candidate.id} name={candidate.name} candidate={candidate} current={id} />
+                <div key={candidate?.id}>
+                    <Candidate id={candidate?.id} name={candidate?.name} candidate={candidate} current={id} />
                 </div>
             ))}
         </div>
