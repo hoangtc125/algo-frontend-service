@@ -12,6 +12,7 @@ import { errorNotification, successNotification } from '../../utils/notification
 import clubSlice from './clubSlice';
 import { PROCESS_STATUS } from '../../utils/constant';
 import InterviewScheduleTable from './InterviewScheduleTable';
+import SplitInterview from './SplitInterview';
 
 const { confirm } = Modal;
 
@@ -360,7 +361,7 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
                 </Box>
             </Box>
             {formQuestion &&
-                <InterviewScheduleTable data={formQuestion} />
+                <SplitInterview m={'real'} rawData={formQuestion} rawShift={interviews}/>
             }
         </div>
     );

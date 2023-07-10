@@ -1,30 +1,44 @@
-import React, { useState } from 'react';
-import { Button, Form, InputNumber, Table } from 'antd';
-import { Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, InputNumber, Table, Tag } from 'antd';
+import { Box, Switch, Typography } from '@mui/material';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { TouchBackend } from 'react-dnd-touch-backend';
 
 import Shift from './Shift';
+import { COLOR_REAL } from '../../utils/constant';
+import { post } from '../../utils/request';
 
-
-const SplitInterview = () => {
-    const [mode, setMode] = useState('trial');
-    const [participantCount, setParticipantCount] = useState(50);
-    const [shiftCount, setShiftCount] = useState(3);
+const SplitInterview = ({ m, rawData, rawShift }) => {
+    const [mode, setMode] = useState(m || 'trial');
+    const [participantCount, setParticipantCount] = useState(rawData ? (rawData?.answers || []).length : 50);
+    const [shiftCount, setShiftCount] = useState(rawShift ? (rawShift || []).length : 3);
     const [shiftCapacities, setShiftCapacities] = useState([])
     const [data, setData] = useState(null);
     const [candidates, setCandidates] = useState([]);
     const [shifts, setShifts] = useState([]);
+    const [isAutoAdjust, setIsAutoAdjust] = useState(true)
 
-    const handleModeChange = () => {
-        setMode(mode === 'trial' ? 'real' : 'trial');
-    };
+    console.log("re-render");
+
+    useEffect(() => {
+        if (mode != 'trial' && rawData) {
+            setData(rawData);
+            let capacities = []
+            for (let index = 0; index < shiftCount; index++) {
+                capacities.push(Math.ceil(participantCount / shiftCount))
+            }
+            setShiftCapacities(capacities)
+            setCandidates(rawData.answers.map((e) => ({ ...e.participant, answer: e.sections[0].data[0].answer })));
+            let newShifts = rawShift.map((option) => ({ id: option.id, title: option.name, candidates: [] }))
+            newShifts.push({ id: 'unassigned', title: 'Chưa phân kíp', candidates: rawData.answers.map((answer) => answer.participant) })
+            setShifts(newShifts)
+        }
+    }, [mode, rawData])
 
     const generateFakeData = () => {
         const options = Array.from({ length: shiftCount }, (v, idx) => ({
             id: `option-${idx}`,
-            value: `Kíp ${idx + 1} | B1 604 | 03-07-2023 06:00 - 03-07-2023 07:00`,
+            value: `Kíp ${idx + 1}`,
         }));
 
         const fakeData = {
@@ -44,11 +58,15 @@ const SplitInterview = () => {
                     name: `Người dùng ${idx + 1}`,
                     email: `user${idx + 1}@example.com`,
                 },
-                data: [
+                sections: [
                     {
-                        answer: getRandomShifts(options),
-                    },
-                ],
+                        data: [
+                            {
+                                answer: getRandomShifts(options),
+                            },
+                        ],
+                    }
+                ]
             })),
         };
         setData(fakeData);
@@ -57,7 +75,7 @@ const SplitInterview = () => {
             capacities.push(Math.ceil(participantCount / shiftCount))
         }
         setShiftCapacities(capacities)
-        setCandidates(fakeData.answers.map((answer) => answer.participant));
+        setCandidates(fakeData.answers.map((e) => ({ ...e.participant, answer: e.sections[0].data[0].answer })));
         let newShifts = options.map((option) => ({ id: option.id, title: option.value, candidates: [] }))
         newShifts.push({ id: 'unassigned', title: 'Chưa phân kíp', candidates: fakeData.answers.map((answer) => answer.participant) })
         setShifts(newShifts)
@@ -79,13 +97,15 @@ const SplitInterview = () => {
 
     const getRandomInt = (min, max) => {
         min = Math.ceil(min);
-        max = Math.floor(max);
+        max = Math.floor(max + 1);
         return Math.floor(Math.random() * (max - min)) + min;
     };
 
     const handleCandidateDrop = (candidateId, currentId, shiftId) => {
-        console.log(candidateId, currentId, shiftId);
         const updatedShifts = shifts.map((shift) => {
+            if (currentId == shiftId) {
+                return shift
+            }
             if (shift.id == shiftId) {
                 return {
                     ...shift,
@@ -101,7 +121,7 @@ const SplitInterview = () => {
         });
         setShifts(updatedShifts);
     };
-    
+
     const columns = [
         {
             title: 'Tên',
@@ -119,41 +139,78 @@ const SplitInterview = () => {
             const shiftName = e.value.split('|')[0].trim();
             return {
                 title: (
-                    <div className='w-full items-center text-center flex flex-col'>
-                        <div>{shiftName}</div>
-                        <Box className='items-center text-center flex space-x-2'>
-                            <Typography>Max:</Typography>
-                            <InputNumber min={2} max={100} value={shiftCapacities[idx]}
-                                onChange={(e) => {
-                                    let newCapacities = [...shiftCapacities]
-                                    newCapacities[idx] = e
-                                    setShiftCapacities(newCapacities)
-                                }}
-                            />
-                        </Box>
+                    <div className='w-full items-center justify-center text-center flex space-x-2'>
+                        <Tag color={COLOR_REAL[idx % COLOR_REAL.length]}>{shiftName}</Tag>
+                        <Typography>Max:</Typography>
+                        <InputNumber min={0} max={100} value={shiftCapacities[idx]}
+                            onChange={(e) => {
+                                let newCapacities = [...shiftCapacities]
+                                newCapacities[idx] = e
+                                setShiftCapacities(newCapacities)
+                            }}
+                        />
                     </div>
                 ),
-                dataIndex: ['data', 0, 'answer'],
+                dataIndex: ['sections', 0, 'data', 0, 'answer'],
                 key: e.id,
                 width: 200,
                 render: (text, record, index) => {
                     return (
-                        <p className='w-full items-center text-center m-0'>
-                            {text?.includes(e.id) ? 'x' : ' '}
-                        </p>
+                        <Box className="w-full items-center text-center !h-[22px]">
+                            {
+                                text?.includes(e.id) ? <Tag className='items-center text-center' color={COLOR_REAL[idx % COLOR_REAL.length]}>x</Tag> : ' '
+                            }
+                        </Box>
                     );
                 },
             };
         }),
     ];
 
+    function convertData() {
+        const o_shifts = shifts.slice(0, shifts.length - 1)
+        const result = {};
+
+        candidates.forEach((user) => {
+            const binaryList = new Array(o_shifts.length).fill(0);
+
+            user.answer.forEach((answer) => {
+                const index = o_shifts.findIndex((ele) => ele.id === answer);
+                if (index !== -1) {
+                    binaryList[index] = 1;
+                }
+            });
+
+            result[user.id] = binaryList;
+        });
+
+        return result;
+    }
+
+    const handleSplitInterview = async () => {
+        const payload = convertData()
+        try {
+            const res = await post(`/recruit/interview/split?is_test=${mode == "trial" ? true : false}&auto_adjust=${isAutoAdjust}`, {
+                n_per_shift: shiftCapacities,
+                appointments_dict: payload
+            })
+            if (res?.status_code == 200) {
+                const updatedShifts = shifts.map((shift, idx) => ({
+                    ...shift,
+                    candidates: res?.data[idx].map(e => candidates[e])
+                }));
+                setShifts(updatedShifts);
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+        }
+    }
+
+
     return (
         <Box className="m-4 p-4 bg-white rounded-lg">
-            <div className='w-full items-end text-end'>
-                <Button onClick={handleModeChange}>
-                    Chế độ: {mode === 'trial' ? 'Dùng thử' : 'Thực tế'}
-                </Button>
-            </div>
             {mode === 'trial' && (
                 <Box className='w-full flex space-x-20'>
                     <Form layout='horizontal' className='flex space-x-10'>
@@ -168,21 +225,35 @@ const SplitInterview = () => {
                             />
                         </Form.Item>
                     </Form>
-                    <Button onClick={generateFakeData}>Tạo dữ liệu giả</Button>
+                    <Button type='primary' onClick={generateFakeData}>Tạo dữ liệu giả</Button>
                 </Box>
             )}
             <Table bordered={true} dataSource={data?.answers} columns={columns} rowKey={(record) => record?.id} className='w-full' />
 
-            <DndProvider backend={HTML5Backend}>
-                {shifts.map((shift) => (
-                    <Shift
-                        key={shift.id}
-                        id={shift.id}
-                        title={shift.title}
-                        candidates={shift.candidates}
-                        onCandidateDrop={handleCandidateDrop}
+            <Box className="my-2 w-full flex space-x-10 items-center">
+                <Box className="flex items-center">
+                    <Typography className=''>Tự động lấp đầy:</Typography>
+                    <Switch
+                        inputProps={{ 'aria-label': 'controlled' }}
+                        checked={isAutoAdjust} onChange={(e) => setIsAutoAdjust(e.target.checked)}
                     />
-                ))}
+                </Box>
+                <Button type='primary' onClick={handleSplitInterview}>Phân kíp tự động</Button>
+            </Box>
+            <DndProvider backend={HTML5Backend}>
+                <Box className="w-full flex">
+                    {shifts.map((shift, idx) => (
+                        <Shift
+                            key={shift.id}
+                            color={idx}
+                            id={shift.id}
+                            capacity={shiftCapacities[idx]}
+                            title={shift.title}
+                            candidates={shift.candidates}
+                            onCandidateDrop={handleCandidateDrop}
+                        />
+                    ))}
+                </Box>
             </DndProvider>
         </Box>
     );
