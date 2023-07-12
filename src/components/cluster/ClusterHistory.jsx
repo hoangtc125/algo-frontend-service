@@ -180,17 +180,19 @@ const ClusterHistory = ({ idRound, eventId, clubId }) => {
                     label="Đánh giá"
                     defaultValue={roundResults[index]?.result}
                     onChange={async (e) => {
-                        try {
-                            const res = await put(`/recruit/participant/update?participant_id=${roundResults[index]?.id}&event_id=${eventId}`, {
-                                approve: [e.target.value, false]
-                            })
-                            if (res?.status_code == 200) {
-                            } else {
-                                errorNotification(res?.status_code, res?.msg, "bottomRight")
+                        if (eventId) {
+                            try {
+                                const res = await put(`/recruit/participant/update?participant_id=${roundResults[index]?.id}&event_id=${eventId}`, {
+                                    approve: [e.target.value, false]
+                                })
+                                if (res?.status_code == 200) {
+                                } else {
+                                    errorNotification(res?.status_code, res?.msg, "bottomRight")
+                                }
+                            } catch (e) {
+                                console.log({ e });
+                                errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
                             }
-                        } catch (e) {
-                            console.log({ e });
-                            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
                         }
                     }}
                 >
