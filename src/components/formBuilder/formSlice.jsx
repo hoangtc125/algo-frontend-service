@@ -17,8 +17,8 @@ const formSlice = createSlice({
       state.isSubmit = action.payload
     },
     fakeForm: (state, action) => {
-      state.id = FORM_BUILDER.id;
-      state.sections = FORM_BUILDER.sections
+      state.id = action.payload.id;
+      state.sections = action.payload.sections
     },
     createForm: (state, action) => {
       state.id = action.payload.id;

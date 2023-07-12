@@ -5,8 +5,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import VerifiedIcon from '@mui/icons-material/Verified';
 
 import { get, post } from '../../utils/request';
-import { COLOR_REAL, EVENT_TYPE, PROCESS_STATUS } from '../../utils/constant';
-import { Collapse, Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
+import { COLOR_REAL, EVENT_TYPE, IMAGE, PROCESS_STATUS } from '../../utils/constant';
+import { Collapse, Descriptions, Image, Modal, Table, Tag, Tooltip } from 'antd';
 import Round from './Round';
 import { errorNotification } from '../../utils/notification';
 import Interview from './Interview';
@@ -22,7 +22,7 @@ const EventDetail = () => {
         try {
             const res = await post(`/recruit/participant/get-all`, { "event_id": eventId })
             if (res?.status_code == 200) {
-                setParticipant(res?.data.map(e => [e.id, e.name, e.email, e.user, e.photo, '', '', e.approve]))
+                setParticipant(res?.data.map(e => [e.id, e.name, e.email, e.user, e.photo_url, '', '', e.approve]))
             } else {
                 errorNotification(res?.status_code, res?.msg, "bottomRight")
             }
@@ -113,7 +113,11 @@ const EventDetail = () => {
             width: 200, // Độ rộng cột
             render: (text, record, index) => {
                 return (
-                    <Typography>{text}</Typography>
+                    <Image
+                        src={text}
+                        fallback={IMAGE}
+                        className='!h-20'
+                    />
                 )
             }
         },
@@ -181,6 +185,43 @@ const EventDetail = () => {
                     <Box className="w-full space-x-1 flex justify-start items-center">
                         <Tag className='text-base' color={record[7][1] ? "success" : 'red'}>{record[7][1] ? "Chọn" : "Loại"}</Tag>
                         <Button variant='outlined' onClick={async () => {
+                            try {
+                                const res = await post(`/recruit/form-answer/get-all`, { "event_id": eventId, "round_id": event?.rounds[1]?.id, "participant_id": record[0] })
+                                if (res?.status_code == 200 && res?.data[0]) {
+                                    let record = []
+                                    res?.data[0]?.sections.map(
+                                        s => s.data.map(e => {
+                                            record.push(e)
+                                        }))
+                                    Modal.info({
+                                        title: "Chi tiết bản ghi",
+                                        className: "min-w-[80vw] max-w-[90vw]",
+                                        centered: true,
+                                        content: (
+                                            <Descriptions bordered className="w-full max-h-[80vh] overflow-auto">
+                                                {
+                                                    record.map((e, id) => {
+                                                        if (["radio", "section"].includes(e.type)) {
+                                                            return <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{(e.options || []).find(aw => e.answer == aw.id)?.value}</Descriptions.Item>
+                                                        } else if ("select" == e.type) {
+                                                            return <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{(e.options || []).filter(aw => (e.answer || []).includes(aw.id)).map(aw => aw.value).join(', ')}</Descriptions.Item>
+                                                        } else {
+                                                            return <Descriptions.Item span={3} className='hover:bg-slate-100' label={e.value} key={id}>{e.answer}</Descriptions.Item>
+                                                        }
+                                                    })
+                                                }
+                                            </Descriptions>
+                                        ),
+                                        onOk() { },
+                                        onCancel() { },
+                                    });
+                                } else {
+                                    errorNotification(res?.status_code, res?.msg, "bottomRight")
+                                }
+                            } catch (e) {
+                                console.log({ e });
+                                errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+                            }
                         }}>Xem</Button>
                     </Box>
                 )

@@ -249,7 +249,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                                     />
                                 </Link>
                             </Card>
-                            <Box className="w-full flex flex-col space-y-3 items-start">
+                            <Box className="w-full flex flex-col justify-center space-y-3 items-start">
                                 {
                                     formQuestion?.kind == "private" ?
                                         <Button onClick={publicFormQuestion}>Công khai biểu mẫu</Button> :
@@ -271,7 +271,7 @@ const Round = ({ idRound, round, eventId, clubId }) => {
                     </Box>
                 </Box>
             </Box>
-            <Modal centered width={1250} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
+            <Modal centered width={1500} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
                 <FormStore mode={"#select"} />
             </Modal>
         </Card>

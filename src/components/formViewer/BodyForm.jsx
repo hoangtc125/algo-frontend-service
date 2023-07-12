@@ -19,9 +19,11 @@ const BodyForm = ({ formId }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const formData = useSelector(formSelector)
-    const sectionData = formData.sections.find(e => e.id == formId).data || []
+    const sectionData = formData.sections.find(e => e.id == formId)?.data || []
     const account = useSelector(accountSelector)
     const hash = window.location.hash
+
+    console.log(formId, formData.id);
 
     console.log("re-render");
 

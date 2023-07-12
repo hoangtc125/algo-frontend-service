@@ -157,15 +157,15 @@ export const CLUB_ROLE = {
 
 export const MEMBERSHIP_STATUS = {
     "ACTIVE": {
-        "color" :"#52C41A",
+        "color": "#52C41A",
         "label": "Đang hoạt động"
     },
     "PAUSE": {
-        "color" :"#1677FF",
+        "color": "#1677FF",
         "label": "Đang tạm dừng"
     },
     "INACTIVE": {
-        "color" :"#F5222D",
+        "color": "#F5222D",
         "label": "Dừng hoạt động"
     },
 }
@@ -207,22 +207,22 @@ export const GUEST = {
 
 export const PROCESS_STATUS = {
     "ON": {
-        "color" :"#52C41A",
+        "color": "#52C41A",
         "label": "Đang diễn ra",
         "description": "Đơn đang mở, ứng viên có thể điền đơn",
     },
     "NOT_BEGIN": {
-        "color" :"#1677FF",
+        "color": "#1677FF",
         "label": "Chưa diễn ra",
         "description": "Đơn chưa mở, không thể điền đơn",
     },
     "PAUSE": {
-        "color" :"#1677FF",
+        "color": "#1677FF",
         "label": "Đang tạm dừng",
         "description": "Đơn đang tạm dừng thu thập thông tin",
     },
     "FINISHED": {
-        "color" :"#F5222D",
+        "color": "#F5222D",
         "label": "Đã kết thúc",
         "description": "Đơn đã đóng, không thể điền đơn",
     },
@@ -232,8 +232,79 @@ export const EVENT_TYPE = {
     "RECRUIT": "Tuyển thành viên"
 }
 
+export const SHIFT_BUILDER = {
+    id: 'shift',
+    sections: [
+        {
+            id: 'shift',
+            title: 'Ghi chú quá trình phỏng vấn',
+            description: 'Đánh giá câu trả lời phỏng vấn của ứng viên',
+            data: [
+                {
+                    id: '7b4a79cb-4806-4dde-b2df-00a735d1a838',
+                    value: 'Thái độ của ứng viên khi phỏng vấn',
+                    type: 'radio',
+                    answer: '',
+                    required: true,
+                    options: [
+                        {
+                            id: 'a999531b-1f7b-4943-ba6a-870f02db5640',
+                            value: 'Rât tệ',
+                            to: ''
+                        },
+                        {
+                            id: '2bf5c467-6314-4832-bd1e-dfdf979c0ac1',
+                            value: 'Tệ',
+                            to: ''
+                        },
+                        {
+                            id: '726d9e59-4e2b-4464-b5bf-3f365cd9b4c8',
+                            value: 'Trung bình',
+                            to: ''
+                        },
+                        {
+                            id: '6c5e5d64-cb7d-47c1-9674-d93d9bf749cd',
+                            value: 'Tốt',
+                            to: ''
+                        },
+                        {
+                            id: '4e001885-aaad-47af-959d-07dcdb31822d',
+                            value: 'Rất tốt',
+                            to: ''
+                        }
+                    ]
+                },
+                {
+                    id: 'b5df7e0b-107d-4238-ab7e-853bb0f5bcbc',
+                    value: 'Bạn có thể cho tôi biết về những trăn trở trong công việc trước đây của bạn và cách bạn đã xử lý chúng?',
+                    type: 'textarea',
+                    answer: '',
+                    required: false,
+                    options: []
+                },
+                {
+                    id: 'd219c8d7-56ac-4b76-86ca-a08120625a69',
+                    value: 'Làm thế nào bạn duy trì một tinh thần đồng đội tốt và hợp tác trong nhóm làm việc?',
+                    type: 'textarea',
+                    answer: '',
+                    required: false,
+                    options: []
+                },
+                {
+                    id: 'a62c37f9-215b-4072-a2e8-f36f45461a41',
+                    value: 'Bạn có kỹ năng quản lý thời gian tốt không? Làm thế nào bạn tổ chức công việc và ưu tiên nhiệm vụ?',
+                    type: 'textarea',
+                    answer: '',
+                    required: false,
+                    options: []
+                }
+            ]
+        }
+    ],
+}
+
 export const FORM_BUILDER = {
-    id: 'sample', 
+    id: 'sample',
     sections: [
         {
             id: 'sample',

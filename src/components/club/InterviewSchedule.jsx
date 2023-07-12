@@ -39,7 +39,7 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
 
     const getFormQuestion = async () => {
         try {
-            const res = await get(`/recruit/form-question/get?id=${round.form_question_id}`)
+            const res = await get(`/recruit/form-question/get?id=${round.shift_question_id}`)
             if (res?.status_code == 200) {
                 setFormQuestion(res?.data)
             } else {
@@ -55,7 +55,7 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
         let updateQuestion = { ...formQuestion }
         updateQuestion.sections[0].data[0].options = payload
         try {
-            const res = await put(`/recruit/form-question/update?form_question_id=${round.form_question_id}&event_id=${eventId}`, {
+            const res = await put(`/recruit/form-question/update?form_question_id=${round.shift_question_id}&event_id=${eventId}`, {
                 sections: updateQuestion.sections
             })
             if (res?.status_code == 200) {
@@ -99,7 +99,7 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
 
     const handleSendMailShift = async () => {
         try {
-            const res = await put(`/recruit/shift/mail?form_question_id=${round.form_question_id}&event_id=${eventId}`)
+            const res = await put(`/recruit/shift/mail?form_question_id=${round.shift_question_id}&event_id=${eventId}`)
             if (res?.status_code == 200) {
                 successNotification("Thành công", "Biểu mẫu thu thập đã được send", "bottomRight")
             } else {
@@ -242,6 +242,20 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
         },
     ];
 
+    const handleSendMailInterview = async () => {
+        try {
+            const res = await post(`/recruit/shift/send-mail?event_id=${eventId}&round_id=${round.id}&club_id=${clubId}`)
+            if (res?.status_code == 200) {
+                successNotification("Thành công", "Thông báo đã được send", "bottomRight")
+            } else {
+                errorNotification(res?.status_code, res?.msg, "bottomRight")
+            }
+        } catch (e) {
+            console.log({ e });
+            errorNotification("Đã có lỗi xảy ra", "Hãy thử load lại", "bottomRight")
+        }
+    }
+
     return (
         <div>
             <Box className="w-full text-end">
@@ -347,8 +361,8 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
                         />
                     </Link>
                 </Card>
-                <Box className="w-full h-full flex flex-col justify-between space-y-10">
-                    <Box className="w-full h-full flex flex-col space-y-3 items-start">
+                <Box className="w-full flex flex-col justify-center space-y-10">
+                    <Box className="w-full flex flex-col space-y-3 items-start">
                         <Typography>Đường link trả lời: <Link to={`/algo-frontend-service/form-store/${formQuestion?.id}/preview`} className='text-blue-500'>{`${window.location.origin}/algo-frontend-service/form-store/${formQuestion?.id}/preview`}</Link></Typography>
                         <Typography>Số lượng câu trả lời: <span className='text-blue-500'>{(formQuestion?.answers || []).length}</span></Typography>
                         <Typography>Trạng thái:
@@ -361,7 +375,10 @@ const InterviewSchedule = ({ idRound, round, eventId, clubId }) => {
                 </Box>
             </Box>
             {formQuestion &&
-                <SplitInterview m={'real'} rawData={formQuestion} rawShift={interviews}/>
+                <Box className="w-full flex flex-col items-center justify-center">
+                    <SplitInterview m={'real'} rawData={formQuestion} rawShift={interviews}/>
+                    <Button type='primary' onClick={handleSendMailInterview}>Gửi mail hẹn phỏng vấn</Button>
+                </Box>
             }
         </div>
     );

@@ -25,14 +25,12 @@ const Shift = ({ id, color, title, capacity, candidates, onCandidateDrop }) => {
             }}
             className='flex-1 items-center '
         >
-            <Affix>
-                <Box className="w-full">
-                    <Tag color={COLOR_REAL[color % COLOR_REAL.length]} className='text-base w-full items-center text-center'>{title.trim()}</Tag>
-                    <Box className='w-full items-center bg-[#f0f0f0] text-center text-base py-1'>
-                        {`( ${candidates.length} / ${capacity || "unlimited"} )`}
-                    </Box>
+            <Box className="w-full">
+                <Tag color={COLOR_REAL[color % COLOR_REAL.length]} className='text-base w-full items-center text-center'>{title.trim()}</Tag>
+                <Box className='w-full items-center bg-[#f0f0f0] text-center text-base py-1'>
+                    {`( ${candidates.length} / ${capacity || "unlimited"} )`}
                 </Box>
-            </Affix>
+            </Box>
             {candidates.map((candidate) => (
                 <div key={candidate?.id}>
                     <Candidate id={candidate?.id} name={candidate?.name} candidate={candidate} current={id} />

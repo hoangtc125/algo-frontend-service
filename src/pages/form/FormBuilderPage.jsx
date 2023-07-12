@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 
 import FormBuilder from '../../components/formBuilder/FormBuilder';
 import formSlice from '../../components/formBuilder/formSlice';
-import { FORM_BUILDER } from '../../utils/constant';
+import { FORM_BUILDER, SHIFT_BUILDER } from '../../utils/constant';
 import { formSelector, infoFormSelector } from '../../redux/selectors';
 import { Link, useParams } from 'react-router-dom';
 import { get, put } from '../../utils/request';
@@ -42,8 +42,20 @@ const FormBuilderPage = () => {
     const getFormQuestion = async (id) => {
         if (formId == FORM_BUILDER.id) {
             dispatch(formSlice.actions.clear())
-            dispatch(formSlice.actions.fakeForm())
+            dispatch(formSlice.actions.fakeForm({id: FORM_BUILDER.id, sections: FORM_BUILDER.sections}))
             const fakeItems = FORM_BUILDER.sections.map((e, k) => {
+                return {
+                    label: e.title,
+                    children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,
+                    key: e.id,
+                    closable: k != 0,
+                }
+            })
+            setItems(fakeItems)
+        } else if (formId == SHIFT_BUILDER.id) {
+            dispatch(formSlice.actions.clear())
+            dispatch(formSlice.actions.fakeForm({id: SHIFT_BUILDER.id, sections: SHIFT_BUILDER.sections}))
+            const fakeItems = SHIFT_BUILDER.sections.map((e, k) => {
                 return {
                     label: e.title,
                     children: <div className='w-full min-h-[70vh] bg-blue-50 rounded-xl shadow-lg'><FormBuilder formId={e.id} /></div>,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
-import { HomeOutlined, CloudServerOutlined, DesktopOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { HomeOutlined, CloudServerOutlined, DesktopOutlined, VideoCameraOutlined, BorderlessTableOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Layout, Menu, Modal, Space } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
@@ -25,9 +25,9 @@ function getItem(label, key, icon, children) {
 const headerItems = [
     getItem(<Link to={"/algo-frontend-service/"}>Trang chủ</Link>, '/algo-frontend-service/', <HomeOutlined />),
     getItem(<Link to={"/algo-frontend-service/form-store"}>Kho đơn</Link>, '/algo-frontend-service/form-store', <CloudServerOutlined />),
-    getItem(<Link to={"/algo-frontend-service/try-cluster"}>Phân cụm</Link>, '/algo-frontend-service/try-cluster', <DesktopOutlined />),
     getItem(<Link to={"/algo-frontend-service/try-camera"}>Kết nối</Link>, '/algo-frontend-service/try-camera', <VideoCameraOutlined />),
-    getItem(<Link to={"/algo-frontend-service/test"}>Test</Link>, '/algo-frontend-service/test'),
+    getItem(<Link to={"/algo-frontend-service/try-cluster"}>Phân cụm</Link>, '/algo-frontend-service/try-cluster', <DesktopOutlined />),
+    getItem(<Link to={"/algo-frontend-service/test"}>Chia kíp</Link>, '/algo-frontend-service/test', <BorderlessTableOutlined />),
 ];
 
 const HeaderPage = () => {

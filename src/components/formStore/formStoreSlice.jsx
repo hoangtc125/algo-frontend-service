@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 } from 'uuid';
 
-import { FORM_BUILDER } from '../../utils/constant';
+import { FORM_BUILDER, SHIFT_BUILDER } from '../../utils/constant';
 
 const formStoreSlice = createSlice({
   name: 'formStore',
@@ -32,6 +32,12 @@ const formStoreSlice = createSlice({
           title: FORM_BUILDER.sections.find(e => e.id == FORM_BUILDER.id).title,
           description: FORM_BUILDER.sections.find(e => e.id == FORM_BUILDER.id).description,
           sections: FORM_BUILDER.sections,
+        },
+        {
+          id: SHIFT_BUILDER.id,
+          title: SHIFT_BUILDER.sections.find(e => e.id == SHIFT_BUILDER.id).title,
+          description: SHIFT_BUILDER.sections.find(e => e.id == SHIFT_BUILDER.id).description,
+          sections: SHIFT_BUILDER.sections,
         },
         ...action.payload.map(form => {
           return {

@@ -9,7 +9,6 @@ import { COLOR_REAL } from '../../utils/constant';
 import { post } from '../../utils/request';
 
 const SplitInterview = ({ m, rawData, rawShift }) => {
-    console.log({ rawShift });
     const [mode, setMode] = useState(m || 'trial');
     const [participantCount, setParticipantCount] = useState(rawData ? (rawData?.answers || []).length : 50);
     const [shiftCount, setShiftCount] = useState(rawShift ? (rawShift || []).length : 3);
@@ -30,11 +29,9 @@ const SplitInterview = ({ m, rawData, rawShift }) => {
             }
             setShiftCapacities(capacities)
             setCandidates(rawData.answers.map((e) => ({ ...e.participant, answer: e.sections[0].data[0].answer })));
-            console.log(rawData.answers);
             let newShifts = rawShift.map((option) => ({
-                id: option.id, title: option.name, candidates: option.candidates.map(e => {
+                id: option.id, title: option.name, candidates: (option.candidates || []).map(e => {
                     const temp = rawData.answers.find(p => p.participant_id == e)
-                    console.log(temp);
                     return { ...temp.participant, answer: temp.sections[0].data[0].answer }
                 })
             }))
@@ -159,8 +156,8 @@ const SplitInterview = ({ m, rawData, rawShift }) => {
                     <div className='w-full items-center justify-center text-center flex space-x-2'>
                         <Tag color={COLOR_REAL[idx % COLOR_REAL.length]}>{shiftName}</Tag>
                         {
-                            m == 'trial' ?
-                                <Box>
+                            mode == 'trial' ?
+                                <Box className="w-fit flex items-center text-center space-x-2">
                                     <Typography>Max:</Typography>
                                     <InputNumber min={0} max={100} value={shiftCapacities[idx]}
                                         onChange={(e) => {
