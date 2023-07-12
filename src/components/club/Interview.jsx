@@ -7,7 +7,7 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } fr
 import InterviewSchedule from './InterviewSchedule';
 import { COLOR_REAL, IMAGE, PROCESS_STATUS } from '../../utils/constant';
 import { get, post, put } from '../../utils/request';
-import { errorNotification } from '../../utils/notification';
+import { errorNotification, successNotification } from '../../utils/notification';
 import { imagesSelector, selectedFormSelector } from '../../redux/selectors';
 import FORM from '../../assets/images/form.png'
 import FormStore from '../formStore/formStore';
